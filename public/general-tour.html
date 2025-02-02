@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reagal Events</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            position: relative;
+            text-align: center;
+            color: white;
+        }
+
+        .banner {
+            width: 100%;
+            display: block;
+            height: auto; /* Ensures the image scales properly */
+        }
+
+        .banner2-container {
+            position: relative;
+            background: url('banner2.jpg') no-repeat center center/cover;
+            height: 400px;
+        }
+
+        #proudly-presents {
+            position: absolute;
+            top: 305px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black;
+            z-index: 10;
+        }
+
+        #menu {
+            position: relative;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 0;
+        }
+
+        #menu ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap; /* Ensures menu items wrap on smaller screens */
+        }
+
+        #menu ul li {
+            margin: 0 15px;
+        }
+
+        #menu ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+
+        .event {
+            display: flex;
+            align-items: flex-start;
+            background: #f4f4f4;
+            border: 1px solid #ccc;
+            margin: 15px auto;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 800px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap; /* Ensures the event details wrap on smaller screens */
+        }
+
+        .event-thumbnail {
+            flex-shrink: 0;
+            max-width: 30%;
+            height: auto;
+            border-radius: 3px;
+            margin-right: 15px;
+        }
+
+        .event-details {
+            flex-grow: 1;
+            min-width: 200px; /* Ensure it doesn't shrink too small */
+        }
+
+        .event-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: black;
+        }
+
+        .event-town-dates {
+            font-size: 1em;
+            margin: 5px 0;
+            color: black;
+        }
+
+        .event p {
+            font-size: 0.9em;
+            margin: 5px 0;
+            color: black;
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 5px;
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+
+        .book-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        .book-button:hover {
+            background-color: #0056b3;
+        }
+
+        #loading {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #007bff;
+            display: none;
+        }
+
+        .page-title {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-top: 20px;
+        }
+
+        .page-description {
+            text-align: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        /* Footer */
+     footer {
+            background: rgba(0, 0, 0, 0.6); /* Same transparency as menu */
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .event {
+                flex-direction: column;
+                align-items: center;
+                max-width: 95%;
+            }
+
+            .event-thumbnail {
+                max-width: 100%;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .event-details {
+                min-width: 100%;
+            }
+
+            #menu ul li {
+                margin: 5px 10px;
+            }
+
+            #menu ul li a {
+                font-size: 1rem;
+            }
+
+            #proudly-presents {
+                font-size: 1.5rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .page-description {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #proudly-presents {
+                font-size: 1.2rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .page-description {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
+        <h2 class="circus-font">Proudly Presents</h2>
+        <div class="banner2-container"></div>
+    </header>
+
+    <nav id="menu">
+        <ul>
+            <li><a href="index.html">Welcome</a></li>
+            <li><a href="all-shows.html">View All Shows</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="general-tour.html">General Tour</a></li>
+            <li><a href="summer-season.html">Summer Season</a></li>
+            <li><a href="halloween-circus.html">Halloween Circus</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-title">General Tour</div>
+    <div class="page-description">Details about our touring show.</div>
+
+    <div id="loading">Loading events...</div>
+    <div id="general-events" class="events"></div>
+
+    <script>
+        async function fetchEvents() {
+            document.getElementById("loading").style.display = "block"; // Show loading
+            try {
+                const response = await fetch("/api/events?reference=General");
+                const eventsByTown = await response.json();
+                displayEvents(eventsByTown);
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+            document.getElementById("loading").style.display = "none"; // Hide loading
+        }
+
+        function displayEvents(eventsByTown) {
+            const container = document.getElementById("general-events");
+            container.innerHTML = ""; // Clear any existing content
+
+            if (Object.keys(eventsByTown).length === 0) {
+                const noEventsMessage = document.createElement("p");
+                noEventsMessage.textContent = "No events found for the selected tour.";
+                container.appendChild(noEventsMessage);
+                return;
+            }
+
+            Object.entries(eventsByTown).forEach(([town, events]) => {
+                if (events.length === 0) return;
+
+                const allDates = events.flatMap((event) => event.dates);
+                const uniqueDates = [...new Set(allDates.map((d) => d.date))];
+
+                const fromDate = uniqueDates[0];
+                const toDate = uniqueDates[uniqueDates.length - 1];
+
+                const event = events[0]; // Display details from the first event only
+
+                const eventDiv = document.createElement("div");
+                eventDiv.className = "event";
+
+                // Thumbnail
+                if (event.thumbnail) {
+                    const img = document.createElement("img");
+                    img.src = event.thumbnail;
+                    img.alt = event.eventName;
+                    img.className = "event-thumbnail";
+                    eventDiv.appendChild(img);
+                }
+
+                // Event details container
+                const detailsDiv = document.createElement("div");
+                detailsDiv.className = "event-details";
+
+                // Event title and town with date range
+                const title = document.createElement("h2");
+                title.className = "event-title";
+                title.textContent = event.eventName;
+                detailsDiv.appendChild(title);
+
+                // Town name and date range
+                const townDates = document.createElement("p");
+                townDates.className = "event-town-dates";
+                townDates.textContent = `${town}: ${fromDate} - ${toDate}`;
+                detailsDiv.appendChild(townDates);
+
+                // Description
+                const description = document.createElement("p");
+                description.textContent = event.description;
+                detailsDiv.appendChild(description);
+
+                // Dropdown for selecting a date
+                const dateDropdown = document.createElement("select");
+                dateDropdown.className = "dropdown";
+                dateDropdown.innerHTML = `<option value="">Select a date</option>`;
+                uniqueDates.forEach((date) => {
+                    const option = document.createElement("option");
+                    option.value = date;
+                    option.textContent = date;
+                    dateDropdown.appendChild(option);
+                });
+                detailsDiv.appendChild(dateDropdown);
+
+                // Dropdown for selecting a time
+                const timeDropdown = document.createElement("select");
+                timeDropdown.className = "dropdown";
+                timeDropdown.innerHTML = `<option value="">Select a time</option>`;
+                detailsDiv.appendChild(timeDropdown);
+
+                // Update time dropdown based on selected date
+                dateDropdown.addEventListener("change", () => {
+                    const selectedDate = dateDropdown.value;
+                    timeDropdown.innerHTML = `<option value="">Select a time</option>`;
+
+                    const filteredDates = allDates.filter((d) => d.date === selectedDate);
+                    filteredDates.forEach((d) => {
+                        const option = document.createElement("option");
+                        option.value = d.bookNowLink;
+                        option.textContent = d.time;
+                        timeDropdown.appendChild(option);
+                    });
+                });
+
+                // Book Now button
+                const bookButton = document.createElement("a");
+                bookButton.href = "#"; // Default, updated when a time is selected
+                bookButton.target = "_blank";
+                bookButton.textContent = "Book Now";
+                bookButton.className = "book-button";
+                detailsDiv.appendChild(bookButton);
+
+                // Update book now button based on selected time
+                timeDropdown.addEventListener("change", () => {
+                    bookButton.href = timeDropdown.value || "#";
+                });
+
+                eventDiv.appendChild(detailsDiv);
+                container.appendChild(eventDiv);
+            });
+        }
+
+        fetchEvents();
+
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.scrollTo({
+                    top: 500, // Adjust this value to scroll by a specific pixel amount
+                    behavior: 'smooth'
+                });
+            }, 3000); // Adjust the 2000ms (2 seconds) delay to your preference
+        });
+    </script>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 Reagal Events. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

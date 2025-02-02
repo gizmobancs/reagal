@@ -1,0 +1,33 @@
+{
+  "name": "reagal-events",
+  "version": "1.0.0",
+  "description": "A web application for Reagal Events to display event listings and manage bookings.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gizmobancs/reagal.git"
+  },
+  "keywords": [
+    "events",
+    "reagal",
+    "tickets"
+  ],
+  "author": "Your Name",
+  "license": "ISC"
+}

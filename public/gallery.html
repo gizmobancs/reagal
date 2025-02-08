@@ -1,453 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<<<<<<< HEAD
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery</title> <!-- Page Title for the browser tab -->
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-
-        header {
-            position: relative;
-            text-align: center;
-            color: white;
-        }
-
-        .banner {
-            width: 100%;
-            display: block;
-        }
-
-        .banner2-container {
-            position: initial;
-            background: url('banner2.jpg') no-repeat center center/cover;
-            height: 400px;
-        }
-
-        .circus-font {
-            font-family: 'Cursive', sans-serif;
-            font-size: 3rem;
-            position: absolute;
-            bottom: 305px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: gold;
-            text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black;
-            z-index: 10;
-        }
-
-        #menu {
-            position: absolute;
-            bottom: auto;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        #menu ul {
-            display: flex;
-            justify-content: center;
-            list-style-type: none;
-            margin: 0;
-            padding: 10px 0;
-        }
-
-        #menu ul li {
-            margin: 0 15px;
-        }
-
-        #menu ul li a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.2rem;
-        }
-
-        /* Gallery Title */
-        .gallery-title {
-            font-size: 2.5rem;
-            color: white; /* Title in white */
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        /* Main content centered with grid layout */
-        #main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            padding: 20px;
-        }
-
-        #carousel {
-            width: 80%; /* Keeps the original width */
-            height: 400px; /* Original height */
-            aspect-ratio: 16 / 9;
-            overflow: hidden;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            background: #000;
-            position: relative;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .carousel-images {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .carousel-images img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
-
-        .carousel-controls {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-        }
-
-        .carousel-controls button {
-            background-color: rgba(0, 0, 0, 0.5);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .carousel-controls button:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        /* Gallery images will be split into left and right columns */
-        .gallery-left, .gallery-right {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 10px;
-            justify-content: center;
-            padding: 10px;
-            margin-top: 20px;
-            width: 80%;
-        }
-
-        .gallery-left img, .gallery-right img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 5px;
-            cursor: pointer; /* Change cursor on hover */
-        }
-
-        /* Spinner Styles */
-        .spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
-            display: none;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .circus-font {
-                font-size: 2rem;
-            }
-
-            .gallery-title {
-                font-size: 2rem;
-            }
-
-            #carousel {
-                width: 90%; /* Make carousel more responsive */
-                height: 300px; /* Reduce height for smaller screens */
-            }
-
-            .gallery-left img, .gallery-right img {
-                width: 50px;
-                height: 50px; /* Smaller thumbnails on smaller screens */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .circus-font {
-                font-size: 1.5rem; /* Even smaller text on smaller screens */
-            }
-
-            .gallery-title {
-                font-size: 1.5rem;
-            }
-
-            #carousel {
-                width: 100%; /* Carousel takes full width on mobile */
-                height: 250px; /* Reduce height even more for small devices */
-            }
-
-            .gallery-left img, .gallery-right img {
-                width: 40px;
-                height: 40px; /* Even smaller thumbnails for mobile */
-            }
-
-            #menu ul {
-                flex-direction: column;
-                padding: 10px 0;
-            }
-
-            #menu ul li {
-                margin: 5px 0;
-            }
-
-            #menu ul li a {
-                font-size: 1rem; /* Smaller text for mobile */
-            }
-        }
-    </style>
+    <title>Gallery - Reagal Events</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your external CSS -->
 </head>
 <body>
-    <header>
-        <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
-        <h2 class="circus-font">Proudly Presents</h2>
-        <div class="banner2-container"></div>
-		<nav id="menu">
-        <ul>
-            <li><a href="index.html">Welcome</a></li>
-            <li><a href="all-shows.html">View All Shows</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="general-tour.html">General Tour</a></li>
-            <li><a href="summer-season.html">Summer Season</a></li>
-            <li><a href="halloween-circus.html">Halloween Circus</a></li>
-        </ul>
-    </nav>
 
-    </header>
+<header>
+    <img src="banner1.jpg" alt="Reagal Events Banner 1" class="banner">
+    <div class="banner2-container">
+        <img src="banner2.jpg" alt="Reagal Events Banner 2" class="banner">
+        <div class="circus-font">Proudly Presents</div>
+    </div>
+</header>
 
-    
-    <main id="main-content">
-        <!-- Gallery Title -->
-        <div class="gallery-title">Gallery</div>
+<!-- Hamburger Menu Icon -->
+<div class="hamburger-menu">
+    &#9776;
+</div>
 
-        <!-- Carousel in the center -->
-        <div id="carousel">
-            <div class="carousel-images">
-                <!-- Dynamic carousel images will be added here -->
-            </div>
-
-            <div class="carousel-controls">
-                <button id="prev">❮</button>
-                <button id="next">❯</button>
-            </div>
-        </div>
-
-        <!-- Gallery images will be split into left and right columns -->
-        <div class="gallery-left" id="gallery-left">
-            <!-- Left half gallery images will be loaded dynamically here -->
-        </div>
-
-        <div class="gallery-right" id="gallery-right">
-            <!-- Right half gallery images will be loaded dynamically here -->
-        </div>
-    </main>
-<footer>
-        <p>&copy; 2025 Reagal Events. All rights reserved.</p>
-    </footer>
-    <script>
-        const imageCount = 31;
-        const galleryFolder = '/gallery/';  // Path to gallery folder in public folder
-        const images = document.querySelector('.carousel-images');
-        const galleryLeft = document.getElementById('gallery-left');
-        const galleryRight = document.getElementById('gallery-right');
-        const prevButton = document.getElementById('prev');
-        const nextButton = document.getElementById('next');
-        let currentIndex = 0;
-        let hoverTimeout;
-
-        // Dynamically load images
-        const allImages = [];
-        for (let i = 1; i <= imageCount; i++) {
-            const imgName = `${galleryFolder}img${i}.jpg`;
-
-            const img = new Image();
-            img.src = imgName;
-            img.alt = `Image ${i}`;
-            allImages.push(img);
-
-            img.onload = function() {
-                // Add to the carousel
-                const carouselImage = document.createElement('img');
-                carouselImage.src = imgName;
-                carouselImage.alt = `Image ${i}`;
-                images.appendChild(carouselImage);
-
-                // Split the images into left and right galleries
-                const galleryImage = document.createElement('img');
-                galleryImage.src = imgName;
-                galleryImage.alt = `Image ${i}`;
-                
-                // Event listeners for hover effects
-                galleryImage.addEventListener('mouseenter', () => onImageHover(i - 1)); // Ensure the correct index
-                galleryImage.addEventListener('mouseleave', cancelHover);
-
-                if (i <= Math.floor(imageCount / 2)) {
-                    galleryLeft.appendChild(galleryImage);
-                } else {
-                    galleryRight.appendChild(galleryImage);
-                }
-            };
-
-            img.onerror = function() {
-                console.log(`img${i}.jpg not found.`);
-            };
-        }
-
-        function onImageHover(index) {
-            console.log("Hovered over image with index: " + index);  // Debugging line
-            // Delay image change if mouse is hovering for more than 300ms
-            hoverTimeout = setTimeout(() => {
-                updateCarousel(index);
-            }, 300);
-        }
-
-        function cancelHover() {
-            // Cancel the hover effect if the mouse leaves before 300ms
-            clearTimeout(hoverTimeout);
-        }
-
-        function updateCarousel(index) {
-            console.log("Updating carousel to index: " + index);  // Debugging line
-            // Hide all images in the carousel and only display the selected one
-            const carouselImages = document.querySelectorAll('.carousel-images img');
-            carouselImages.forEach((img, idx) => {
-                img.style.display = idx === index ? 'block' : 'none'; // Show selected image, hide others
-            });
-            currentIndex = index;
-        }
-
-        // Navigation buttons for manual image cycling
-        prevButton.addEventListener('click', () => {
-            currentIndex = (currentIndex > 0) ? currentIndex - 1 : imageCount - 1;
-            updateCarousel(currentIndex);
-        });
-
-        nextButton.addEventListener('click', () => {
-            currentIndex = (currentIndex < imageCount - 1) ? currentIndex + 1 : 0;
-            updateCarousel(currentIndex);
-        });
-
-        // Initial display of the first image in the carousel
-        updateCarousel(currentIndex);
-        
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                window.scrollTo({
-                    top: 550,  // Adjust this value to scroll by a specific pixel amount
-                    behavior: 'smooth'
-                });
-            }, 2500); // Adjust the 2500ms (2.5 seconds) delay to your preference
-        });
-    </script>
-=======
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reagal Events</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <!-- Banner Section -->
-  <header>
-    <img src="banner1.jpg" alt="Reagal Events" class="banner">
-    <div class="circus-font">Proudly Presents</div>
-  </header>
-
-  <div class="banner2-container">
-    <img src="banner2.jpg" alt="Banner 2" class="banner">
-  </div>
-
-  <!-- Vertical Carousel Menu -->
-  <div id="carousel-menu-container">
-    <ul id="carousel-menu">
-      <li><a href="#welcome">Welcome</a></li>
-      <li><a href="#view-all-shows">View All Shows</a></li>
-      <li><a href="#gallery">Gallery</a></li>
-      <li><a href="#contact-us">Contact Us</a></li>
+<!-- Hamburger Menu Content -->
+<div class="hamburger-menu-content">
+    <ul>
+        <li><a href="#welcome">Welcome</a></li>
+        <li><a href="#viewAllShows">View All Shows</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contactUs">Contact Us</a></li>
     </ul>
-  </div>
+</div>
 
-  <!-- Main Content Sections -->
-  <section id="main-sections">
-    <div class="section">
-      <img src="gt.jpg" alt="General Tour" class="section-image">
-      <div class="section-title">General Tour</div>
-      <div class="section-info">Join us on our exciting General Tour! Explore new destinations and unforgettable experiences.</div>
-      <div class="carousel">
-        <img src="gt1.jpg" alt="Tour Image 1">
-        <img src="gt2.jpg" alt="Tour Image 2">
-      </div>
-      <!-- Display tickets matching "General" filter -->
-    </div>
+<!-- Gallery Page Content -->
+<main>
+    <section id="gallery">
+        <h1>Gallery</h1>
+        <p>Welcome to our gallery! Here are some snapshots of our incredible events.</p>
 
-    <div class="section">
-      <img src="ss.jpg" alt="Summer Season" class="section-image">
-      <div class="section-title">Summer Season</div>
-      <div class="section-info">The Summer Season brings warm weather and exciting shows! Don't miss out!</div>
-      <div class="carousel">
-        <img src="ss1.jpg" alt="Summer Image 1">
-        <img src="ss2.jpg" alt="Summer Image 2">
-      </div>
-      <!-- Display tickets matching "Summer" filter -->
-    </div>
+        <!-- Image Carousel -->
+        <div class="image-carousel">
+            <img src="image1.jpg" alt="Image 1">
+            <img src="image2.jpg" alt="Image 2">
+            <img src="image3.jpg" alt="Image 3">
+        </div>
+    </section>
+</main>
 
-    <div class="section">
-      <img src="hc.jpg" alt="Halloween Circus" class="section-image">
-      <div class="section-title">Halloween Circus</div>
-      <div class="section-info">Get ready for the spookiest and most thrilling circus experience this Halloween!</div>
-      <div class="carousel">
-        <img src="hc1.jpg" alt="Halloween Image 1">
-        <img src="hc2.jpg" alt="Halloween Image 2">
-      </div>
-      <!-- Display tickets matching "Halloween" filter -->
-    </div>
-  </section>
+<footer>
+    <p>Reagal Events - All rights reserved.</p>
+</footer>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Reagal Events</p>
-    <div>
-      <a href="https://www.facebook.com/story.php?story_fbid=610427098343014&id=100081271867855">Facebook</a> |
-      <a href="https://www.tiktok.com/@the.wonder.circus">TikTok</a> |
-      <a href="https://www.instagram.com/wondercircus_circus_of_wonders/">Instagram</a>
-    </div>
-  </footer>
-
-  <!-- Include Your JavaScript -->
-  <script src="scripts.js"></script>
->>>>>>> 1371df3 (Implement vertical carousel menu and layout changes)
+<script src="script.js"></script> <!-- Link to your JavaScript file -->
 </body>
 </html>

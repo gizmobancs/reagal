@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reagal Events</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <!-- Global Header -->
+    <header>
+        <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
+        <h2 class="circus-font">Proudly Presents</h2>
+        <div class="banner2-container"></div>
+		<!-- Navigation Menu -->
+    <nav id="menu">
+        <ul>
+            <li><a href="index.html">Welcome</a></li>
+            <li><a href="all-shows.html">View All Shows</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="general-tour.html">General Tour</a></li>
+            <li><a href="summer-season.html">Summer Season</a></li>
+            <li><a href="halloween-circus.html">Halloween Circus</a></li>
+        </ul>
+    </nav>
+
+    </header>
+
+    
+    <!-- Welcome Page Content -->
+    <main>
+        <section id="welcome">
+            <h1>Welcome to Reagal Events</h1>
+            <p>Discover the magic of live entertainment with our exciting shows and events. Explore more below!</p>
+        </section>
+
+        <!-- Container for the three sections to be side by side -->
+        <div id="main-sections">
+            <section id="general-tour-section" class="section">
+                <a href="general-tour.html">
+                    <div class="section-border">
+                        <div class="section-title">General Tour</div>
+                        <img src="gt.jpg" alt="General Tour" class="section-image">
+                        <div class="section-info">Join us on a journey across the country!</div>
+                    </div>
+                </a>
+            </section>
+
+            <section id="summer-season-section" class="section">
+                <a href="summer-season.html">
+                    <div class="section-border">
+                        <div class="section-title">Summer Season</div>
+                        <img src="ss.jpg" alt="Summer Season" class="section-image">
+                        <div class="section-info">Enjoy the best of summer performances!</div>
+                    </div>
+                </a>
+            </section>
+
+            <section id="halloween-circus-section" class="section">
+                <a href="halloween-circus.html">
+                    <div class="section-border">
+                        <div class="section-title">Halloween Circus</div>
+                        <img src="hc.jpg" alt="Halloween Circus" class="section-image">
+                        <div class="section-info">Get ready for spooky fun and thrilling acts!</div>
+                    </div>
+                </a>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Reagal Events. All rights reserved.</p>
+    </footer>
+
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.scrollTo({
+                    top: 550,  // Adjust this value to scroll by a specific pixel amount
+                    behavior: 'smooth'
+                });
+            }, 2500); // Adjust the 2000ms (2 seconds) delay to your preference
+        });
+    </script>
+</body>
+</html>

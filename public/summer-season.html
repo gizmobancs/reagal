@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reagal Events</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <style>
+       
+
+     
+
+        .event {
+            display: flex;
+            align-items: flex-start;
+            background: #f4f4f4;
+            border: 1px solid #ccc;
+            margin: 15px auto;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 800px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-thumbnail {
+            flex-shrink: 0;
+            max-width: 30%;
+            height: auto;
+            border-radius: 3px;
+            margin-right: 15px;
+        }
+
+        .event-details {
+            flex-grow: 1;
+        }
+
+        .event-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .event p {
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 5px;
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+
+        .book-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        .book-button:hover {
+            background-color: #0056b3;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+        }
+
+        .loading-spinner img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .no-events-message {
+            display: none;
+            text-align: center;
+            font-size: 1.5em;
+            color: #ff0000;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.6); /* Same transparency as menu */
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
+        <h2 class="circus-font">Proudly Presents</h2>
+        <div class="banner2-container"></div>
+		    <nav id="menu">
+        <ul>
+            <li><a href="index.html">Welcome</a></li>
+            <li><a href="all-shows.html">View All Shows</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="general-tour.html">General Tour</a></li>
+            <li><a href="summer-season.html">Summer Season</a></li>
+            <li><a href="halloween-circus.html">Halloween Circus</a></li>
+        </ul>
+    </nav>
+
+    </header>
+
+
+    <main>
+        <h1>Summer Season</h1>
+        <p>Details about our Summer Season show.</p>
+
+        <div class="loading-spinner">
+            <img src="spinner.gif" alt="Loading...">
+        </div>
+        <div class="no-events-message">
+            No events found for Summer Season.
+        </div>
+        <div id="summer-events" class="events"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Reagal Events. All rights reserved.</p>
+    </footer>
+
+    <script>
+        async function fetchEvents() {
+            try {
+                const response = await fetch("/api/events?reference=Summer");
+                const eventsByTown = await response.json();
+                
+                // Show no events found if empty
+                if (Object.keys(eventsByTown).length === 0) {
+                    document.querySelector('.no-events-message').style.display = 'block';
+                    document.querySelector('.loading-spinner').style.display = 'none';
+                    return;
+                }
+
+                displayEvents(eventsByTown);
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        }
+
+        function displayEvents(eventsByTown) {
+            const container = document.getElementById("summer-events");
+            container.innerHTML = "";
+
+            Object.entries(eventsByTown).forEach(([town, events]) => {
+                if (events.length === 0) return;
+
+                const allDates = events.flatMap((event) => event.dates);
+                const uniqueDates = [...new Set(allDates.map((d) => d.date))];
+
+                const event = events[0]; // Display details from the first event only
+
+                const eventDiv = document.createElement("div");
+                eventDiv.className = "event";
+
+                if (event.thumbnail) {
+                    const img = document.createElement("img");
+                    img.src = event.thumbnail;
+                    img.alt = event.eventName;
+                    img.className = "event-thumbnail";
+                    eventDiv.appendChild(img);
+                }
+
+                const detailsDiv = document.createElement("div");
+                detailsDiv.className = "event-details";
+
+                const title = document.createElement("h2");
+                title.className = "event-title";
+                title.textContent = `${event.eventName} (${town})`;
+                detailsDiv.appendChild(title);
+
+                const description = document.createElement("p");
+                description.textContent = event.description;
+                detailsDiv.appendChild(description);
+
+                const dateDropdown = document.createElement("select");
+                dateDropdown.className = "dropdown";
+                dateDropdown.innerHTML = `<option value="">Select a date</option>`;
+                uniqueDates.forEach((date) => {
+                    const option = document.createElement("option");
+                    option.value = date;
+                    option.textContent = date;
+                    dateDropdown.appendChild(option);
+                });
+                detailsDiv.appendChild(dateDropdown);
+
+                const timeDropdown = document.createElement("select");
+                timeDropdown.className = "dropdown";
+                timeDropdown.innerHTML = `<option value="">Select a time</option>`;
+                detailsDiv.appendChild(timeDropdown);
+
+                dateDropdown.addEventListener("change", () => {
+                    const selectedDate = dateDropdown.value;
+                    timeDropdown.innerHTML = `<option value="">Select a time</option>`;
+
+                    const filteredDates = allDates.filter((d) => d.date === selectedDate);
+                    filteredDates.forEach((d) => {
+                        const option = document.createElement("option");
+                        option.value = d.bookNowLink;
+                        option.textContent = d.time;
+                        timeDropdown.appendChild(option);
+                    });
+                });
+
+                const bookButton = document.createElement("a");
+                bookButton.href = "#";
+                bookButton.target = "_blank";
+                bookButton.textContent = "Book Now";
+                bookButton.className = "book-button";
+                detailsDiv.appendChild(bookButton);
+
+                timeDropdown.addEventListener("change", () => {
+                    bookButton.href = timeDropdown.value || "#";
+                });
+
+                eventDiv.appendChild(detailsDiv);
+                container.appendChild(eventDiv);
+            });
+
+            document.querySelector('.loading-spinner').style.display = 'none';
+        }
+
+        fetchEvents();
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.scrollTo({
+                    top: 500, 
+                    behavior: 'smooth'
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

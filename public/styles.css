@@ -1,0 +1,363 @@
+/* Basic styles for Reagal Events */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('background.png') no-repeat center center fixed;
+    background-size: 100% auto;
+}
+
+header {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.banner {
+    width: 100%;
+    display: block;
+}
+
+.banner2-container {
+    position: initial;
+    background: url('banner2.jpg') no-repeat center center/cover;
+    height: 400px;
+}
+
+.circus-font {
+    font-family: 'Cursive', sans-serif;
+    font-size: 3rem;
+    font-weight: bold;
+    position: absolute;
+    bottom: 350px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: gold;
+    text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black;
+    z-index: 10; /* Ensure it's on top */
+}
+
+/* Menu positioning: at the bottom of banner2 */
+#menu {
+    position: absolute;
+    bottom: 0; /* Position at the bottom of banner 2 */
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+}
+
+#menu ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 0;
+}
+
+#menu ul li {
+    margin: 0 15px;
+}
+
+#menu ul li a {
+    color: white; /* White text for links */
+    text-decoration: none;
+    font-size: 1.2rem; /* Font size for menu items */
+    font-weight: bold; /* Make text bold */
+}
+
+/* Hover effect for the menu items */
+#menu ul li a:hover {
+    color: gold; /* Change color on hover */
+}
+
+section {
+    padding: 2em;
+    margin: 1em;
+    background: transparent; /* Light transparent background */
+    border: 2px solid rgba(0, 0, 0, 0.2); /* Semi-transparent 2px border */
+    border-radius: 8px;
+    font-weight: bold; /* Make text bold */
+    color: white; /* White text for readability */
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    #menu {
+        display: none; /* Hide regular menu in portrait mode */
+    }
+    .hamburger-menu {
+        display: block; /* Ensure hamburger menu is displayed */
+    }
+}
+
+@media (min-width: 769px) {
+    .hamburger-menu {
+        display: none; /* Hide hamburger menu in landscape mode */
+    }
+}
+
+/* Ensure the three sections are side by side */
+#main-sections {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 100%; /* Ensure the sections fit within the page width */
+    margin: 0 auto; /* Center-align the sections */
+    width: 100%; /* Full width */
+}
+
+/* Ensure each section takes equal width */
+.section {
+    flex: 1 1 calc(33.33% - 20px); /* Equal width for each section */
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px; /* Optional: for rounded corners */
+}
+
+/* Style for the images */
+.section-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Makes sure the image covers the entire area */
+}
+
+/* Border around the image, with title and info text spacing */
+
+
+/* Title positioning */
+.section-title {
+    font-size: 1.5rem;
+    text-align: center;
+    color: white;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.5); /* Background for title area */
+    margin-bottom: 0;
+}
+
+/* Info text positioning */
+.section-info {
+    font-size: 1rem;
+    text-align: center;
+    color: white;
+    background: rgba(0, 0, 0, 0.5); /* Background for info area */
+    padding: 8px;
+}
+
+/* Carousel styles */
+.carousel {
+    margin: 1em 0;
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+}
+
+.carousel img {
+    height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+    #main-sections {
+        flex-direction: column; /* Stack the sections on smaller screens */
+    }
+
+    .section {
+        flex: 1 1 100%; /* Each section takes full width on smaller screens */
+        margin-bottom: 20px;
+    }
+
+    /* Adjust title and info text font size on mobile */
+    .section-title {
+        font-size: 1.2rem;
+    }
+
+    .section-info {
+        font-size: 0.9rem;
+    }
+
+    /* Adjust margins for better spacing on smaller screens */
+    .section-border {
+        margin: 5px;
+    }
+}
+
+/* Event section styling */
+#events-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+}
+
+.event-card, .event-details {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.event-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Updated text color for event cards */
+.event-card h2, .event-details h2 {
+    font-size: 18px;
+    margin: 10px 0;
+    font-weight: bold;
+    color: white; /* White text for event titles */
+}
+
+.event-card button, .event-details button {
+    padding: 10px 20px;
+    background-color: purple;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.event-card button:hover, .event-details button:hover {
+    background-color: darkviolet;
+}
+
+.event-details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.event-details ul li {
+    margin: 5px 0;
+}
+
+footer {
+    text-align: center;
+    padding: 1em;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+}
+.event-details {
+    color: black; /* This ensures event details are displayed in black */
+}
+
+.event-title, .event p {
+    color: black; /* Ensures the event title and description are in black */
+}
+
+.event {
+    background-color: #fff; /* Ensures event background remains white */
+}
+
+.all-shows-title, 
+.all-shows-description {
+  color: white !important; /* Forces white text */
+  background: transparent); /* Semi-transparent black background */
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  max-width: 90%;
+  margin: 20px auto;
+  display: block;
+}
+.event-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: black !important; /* Force black color */
+}
+
+.event-town-dates {
+    font-size: 1em;
+    margin: 5px 0;
+    color: black;
+}
+
+.event p {
+    font-size: 0.9em;
+    margin: 5px 0;
+    color: black;
+}
+
+   .event {
+      display: flex;
+      align-items: flex-start;
+      border: 1px solid #ccc;
+      margin: 15px auto;
+      padding: 10px;
+      border-radius: 5px;
+      max-width: 800px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-thumbnail {
+      flex-shrink: 0;
+      max-width: 30%;
+      height: auto;
+      border-radius: 3px;
+      margin-right: 15px;
+    }
+
+    .event-details {
+      flex-grow: 1;
+    }
+
+   
+
+
+    .dropdown {
+      width: 100%;
+      padding: 5px;
+      margin: 8px 0;
+      font-size: 0.9em;
+    }
+
+    .book-button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 3px;
+      font-size: 0.9em;
+      text-align: center;
+    }
+
+    .book-button:hover {
+      background-color: #0056b3;
+    }
+	
+        /* Gallery Title */
+        .gallery-title {
+            font-size: 2.5rem;
+            color: white; /* Title in white */
+		    text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #contact-title {
+            font-size: 2.5rem;
+            color: white;
+            margin-top: 50px;
+		    text-align: center;
+        }
+
+        #contact-address {
+            font-size: 1.5rem;
+            color: white;
+		 text-align: center;
+        }
+		   h1, p {
+            color: white; /* Set text color for the title and description */
+            text-align: center;
+        }

@@ -1,88 +1,97 @@
-/* Basic styles for Reagal Events */
+/* Ensure body and containers are properly sized */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background: url('background.png') no-repeat center center fixed;
-    background-size: cover; /* Ensure the background image covers the full container */
-    min-height: 100vh; /* Ensure the body takes full height of the viewport */
-}
-header {
-    position: relative;
-    text-align: center;
-    color: white;
+    background-size: cover;
+    min-height: 100vh;
 }
 
-.banner {
+/* Banner 1 & 2 styling */
+.banner, .banner2-container {
     width: 100%;
-    display: block;
+    max-width: 1080px;
+    margin: 0 auto;
 }
 
+/* Background container */
 .banner2-container {
-    position: initial;
-    background: url('banner2.jpg') no-repeat center center/cover;
-    height: 400px;
+    position: relative;
+    background: url('banner2.jpg') no-repeat center center;
+    background-size: cover;
+    height: calc(100vh - 100px);
 }
 
+/* Position "Proudly Presents" correctly */
 .circus-font {
     font-family: 'Cursive', sans-serif;
     font-size: 3rem;
     font-weight: bold;
     position: absolute;
-    bottom: 350px;
+    top: 100%; /* Position exactly at the bottom of banner1 */
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%); /* Center it horizontally */
     color: gold;
     text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black;
-    z-index: 10; /* Ensure it's on top */
+    z-index: 10;
 }
 
-/* Responsive layout */
+/* Ensure text is positioned correctly in portrait mode */
 @media (max-width: 768px) {
-    #menu {
-        display: none; /* Hide regular menu in portrait mode */
-    }
-    .hamburger-menu {
-        display: block; /* Ensure hamburger menu is displayed */
+    .circus-font {
+        font-size: 2rem;
+        top: 100%; /* Keeps it at the bottom of banner1 */
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }
 
-@media (min-width: 769px) {
-    .hamburger-menu {
-        display: none; /* Hide hamburger menu in landscape mode */
-    }
-}
-/* Menu positioning: at the bottom of banner2 */
+/* Two-row menu instead of a hamburger */
 #menu {
-    position: absolute;
-    bottom: 0; /* Position at the bottom of banner 2 */
     width: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 0;
+    display: flex;
+    flex-wrap: wrap; /* Allows items to break into multiple rows */
+    justify-content: center;
+    text-align: center;
 }
 
+/* Styling for menu items */
 #menu ul {
     display: flex;
+    flex-wrap: wrap; /* Enables two-row display */
     justify-content: center;
     list-style-type: none;
     margin: 0;
-    padding: 10px 0;
+    padding: 0;
 }
 
 #menu ul li {
-    margin: 0 15px;
+    padding: 10px 15px;
 }
 
 #menu ul li a {
-    color: white; /* White text for links */
+    color: white;
     text-decoration: none;
-    font-size: 1.2rem; /* Font size for menu items */
-    font-weight: bold; /* Make text bold */
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
-/* Hover effect for the menu items */
-#menu ul li a:hover {
-    color: gold; /* Change color on hover */
+/* Two-row layout for smaller screens */
+@media (max-width: 768px) {
+    #menu ul {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    #menu ul li {
+        flex: 1 1 50%; /* 50% width forces two columns */
+        text-align: center;
+    }
 }
+
 
 section {
     padding: 2em;

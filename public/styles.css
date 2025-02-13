@@ -4,9 +4,9 @@ body {
     margin: 0;
     padding: 0;
     background: url('background.png') no-repeat center center fixed;
-    background-size:100% auto ;
+    background-size: cover; /* Ensure the background image covers the full container */
+    min-height: 100vh; /* Ensure the body takes full height of the viewport */
 }
-
 header {
     position: relative;
     text-align: center;

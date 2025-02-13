@@ -1,4 +1,4 @@
-/* Ensure body and containers are properly sized */
+/*/* Basic styles for Reagal Events */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,60 +8,68 @@ body {
     min-height: 100vh;
 }
 
-/* Banner 1 & 2 styling */
-.banner, .banner2-container {
-    width: 100%;
-    max-width: 1080px;
-    margin: 0 auto;
-}
-
-/* Background container */
-.banner2-container {
+header {
     position: relative;
-    background: url('banner2.jpg') no-repeat center center;
-    background-size: cover;
-    height: calc(100vh - 100px);
+    text-align: center;
+    color: white;
 }
 
-/* Position "Proudly Presents" correctly */
+/* Style for both banners */
+.banner {
+    width: 100%;
+    display: block;
+}
+
+.banner1-container {
+    position: relative;
+    background: url('banner1.jpg') no-repeat center center/cover;
+    height: 400px; /* Ensure this is the height of banner1 */
+}
+
+/* "Proudly Presents" text positioning */
 .circus-font {
     font-family: 'Cursive', sans-serif;
     font-size: 3rem;
     font-weight: bold;
     position: absolute;
-    top: 100%; /* Position exactly at the bottom of banner1 */
     left: 50%;
-    transform: translate(-50%, -50%); /* Center it horizontally */
+    transform: translateX(-50%);
     color: gold;
     text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black;
-    z-index: 10;
+    z-index: 20;
+    top: 100px; /* Default position for portrait mode */
 }
 
-/* Ensure text is positioned correctly in portrait mode */
+/* Adjust for portrait mode */
 @media (max-width: 768px) {
     .circus-font {
-        font-size: 2rem;
-        top: 100%; /* Keeps it at the bottom of banner1 */
-        left: 50%;
-        transform: translate(-50%, -50%);
+        font-size: 2rem; /* Smaller text in portrait mode */
+        top: 30px; /* Position for portrait */
     }
 }
 
-/* Two-row menu instead of a hamburger */
+
+
+.banner2-container {
+    position: relative;
+    background: url('banner2.jpg') no-repeat center center/cover;
+    height: 400px; /* Ensure this matches banner2's height */
+}
+
+
+
+/* Menu styling */
 #menu {
+    position: absolute;
+    bottom: 0;
     width: 100%;
     background: rgba(0, 0, 0, 0.6);
     padding: 10px 0;
-    display: flex;
-    flex-wrap: wrap; /* Allows items to break into multiple rows */
-    justify-content: center;
-    text-align: center;
 }
 
-/* Styling for menu items */
 #menu ul {
     display: flex;
-    flex-wrap: wrap; /* Enables two-row display */
+    flex-wrap: wrap; /* Allows splitting into two rows */
     justify-content: center;
     list-style-type: none;
     margin: 0;
@@ -69,7 +77,7 @@ body {
 }
 
 #menu ul li {
-    padding: 10px 15px;
+    margin: 10px 15px;
 }
 
 #menu ul li a {
@@ -79,19 +87,34 @@ body {
     font-weight: bold;
 }
 
-/* Two-row layout for smaller screens */
+/* Menu changes for portrait mode */
 @media (max-width: 768px) {
     #menu ul {
         flex-direction: row;
-        justify-content: center;
+        flex-wrap: wrap; /* Allows breaking into two rows */
+        justify-content: space-evenly;
     }
 
     #menu ul li {
-        flex: 1 1 50%; /* 50% width forces two columns */
+        flex: 1 2 25%; /* Two items per row, 45% width each */
         text-align: center;
+    }
+
+    /* Adjust text size for portrait mode */
+    #menu ul li a {
+        font-size: 1rem; /* Smaller text in portrait */
+    }
+
+    /* Limit the menu to 2 rows */
+    #menu ul li:nth-child(n+7) {
+        display: none; /* Hides items beyond the 6th one */
     }
 }
 
+/* Hover effect */
+#menu ul li a:hover {
+    color: gold;
+}
 
 section {
     padding: 2em;

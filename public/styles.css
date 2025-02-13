@@ -4,11 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background: url('background.png') no-repeat center center fixed;
-<<<<<<< HEAD
-    background-size: 100% auto;
-=======
-    background-size: cover;
->>>>>>> 24eaae6cc04cc7ee532e6e015d6ffa01ab367058
+    background-size: 100% ;
 }
 
 header {
@@ -33,11 +29,7 @@ header {
     font-size: 3rem;
     font-weight: bold;
     position: absolute;
-<<<<<<< HEAD
     bottom: 350px;
-=======
-    bottom: 305px;
->>>>>>> 24eaae6cc04cc7ee532e6e015d6ffa01ab367058
     left: 50%;
     transform: translateX(-50%);
     color: gold;
@@ -45,6 +37,21 @@ header {
     z-index: 10; /* Ensure it's on top */
 }
 
+/* Responsive layout */
+@media (max-width: 768px) {
+    #menu {
+        display: none; /* Hide regular menu in portrait mode */
+    }
+    .hamburger-menu {
+        display: block; /* Ensure hamburger menu is displayed */
+    }
+}
+
+@media (min-width: 769px) {
+    .hamburger-menu {
+        display: none; /* Hide hamburger menu in landscape mode */
+    }
+}
 /* Menu positioning: at the bottom of banner2 */
 #menu {
     position: absolute;
@@ -77,7 +84,6 @@ header {
     color: gold; /* Change color on hover */
 }
 
-<<<<<<< HEAD
 section {
     padding: 2em;
     margin: 1em;
@@ -88,21 +94,7 @@ section {
     color: white; /* White text for readability */
 }
 
-/* Responsive layout */
-@media (max-width: 768px) {
-    #menu {
-        display: none; /* Hide regular menu in portrait mode */
-    }
-    .hamburger-menu {
-        display: block; /* Ensure hamburger menu is displayed */
-    }
-}
 
-@media (min-width: 769px) {
-    .hamburger-menu {
-        display: none; /* Hide hamburger menu in landscape mode */
-    }
-}
 
 /* Ensure the three sections are side by side */
 #main-sections {
@@ -129,7 +121,6 @@ section {
     object-fit: cover; /* Makes sure the image covers the entire area */
 }
 
-/* Border around the image, with title and info text spacing */
 
 
 /* Title positioning */
@@ -163,76 +154,10 @@ section {
     height: 200px;
     border-radius: 8px;
     object-fit: cover;
-=======
-/* Hamburger menu styles */
-.hamburger-menu {
-    display: none;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 20;
-}
-
-.hamburger-menu.open {
-    display: block;
-}
-
-/* Dropdown menu styling for hamburger */
-.hamburger-menu-content {
-    display: none;
-    position: absolute;
-    top: 50px;
-    right: 0;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 5px;
-    width: 200px;
-}
-
-.hamburger-menu-content ul {
-    list-style-type: none;
-    padding: 10px 0;
-    margin: 0;
-}
-
-.hamburger-menu-content ul li {
-    text-align: center;
-    margin: 10px 0;
-}
-
-.hamburger-menu-content ul li a {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.hamburger-menu-content ul li a:hover {
-    color: gold;
-}
-
-/* Display the menu when clicked */
-.hamburger-menu.open + .hamburger-menu-content {
-    display: block;
->>>>>>> 24eaae6cc04cc7ee532e6e015d6ffa01ab367058
 }
 
 /* Responsive layout for smaller screens */
 @media (max-width: 768px) {
-<<<<<<< HEAD
-=======
-    #menu {
-        display: none; /* Hide the default menu */
-    }
-
-    /* Show hamburger menu on mobile */
-    .hamburger-menu {
-        display: block;
-    }
-
->>>>>>> 24eaae6cc04cc7ee532e6e015d6ffa01ab367058
     #main-sections {
         flex-direction: column; /* Stack the sections on smaller screens */
     }
@@ -333,11 +258,7 @@ footer {
 .all-shows-title, 
 .all-shows-description {
   color: white !important; /* Forces white text */
-<<<<<<< HEAD
   background: transparent); /* Semi-transparent black background */
-=======
-  background: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
->>>>>>> 24eaae6cc04cc7ee532e6e015d6ffa01ab367058
   padding: 15px;
   border-radius: 5px;
   text-align: center;
@@ -363,7 +284,6 @@ footer {
     margin: 5px 0;
     color: black;
 }
-<<<<<<< HEAD
 
    .event {
       display: flex;
@@ -441,5 +361,3 @@ footer {
             color: white; /* Set text color for the title and description */
             text-align: center;
         }
-=======
->>>>>>> 24eaae6cc04cc7ee532e6e015d6ffa01ab367058

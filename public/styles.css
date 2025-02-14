@@ -28,6 +28,7 @@ header {
 }
 
 /* "Proudly Presents" text positioning */
+/* "Proudly Presents" text positioning */
 .circus-font {
     font-family: 'Cursive', sans-serif;
     font-size: 3rem;
@@ -38,16 +39,23 @@ header {
     color: gold;
     text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black;
     z-index: 20;
-    top: 100px; /* Default position for portrait mode */
+    top: 120px; /* Default position for portrait mode */
 }
 
 /* Adjust for portrait mode */
 @media (max-width: 768px) {
     .circus-font {
-        font-size: 1.2rem; /* Smaller text in portrait mode */
-        top: 60px; /* Position for portrait */
+        font-size: 1.5rem; /* Slightly smaller for mid-size screens */
+        top: 50px; /* Position for portrait */
     }
 }
+
+@media (max-width: 480px) {
+    .circus-font {
+        font-size: 1rem; /* Even smaller for small screens */
+    }
+}
+
 
 
 /* Default height for the banner */
@@ -277,12 +285,29 @@ section {
     margin: 5px 0;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;  /* This makes sure the content takes the available space */
+    padding-bottom: 2em;  /* Adjust according to footer height */
+    box-sizing: border-box;
+}
+
 footer {
     text-align: center;
     padding: 1em;
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
+    width: 100%;
+    margin-top: auto;  /* Ensures the footer stays at the bottom if content is short */
 }
+
+
 .event-details {
     color: black; /* This ensures event details are displayed in black */
 }
@@ -295,17 +320,7 @@ footer {
     background-color: #fff; /* Ensures event background remains white */
 }
 
-.all-shows-title, 
-.all-shows-description {
-  color: white !important; /* Forces white text */
-  background: transparent); /* Semi-transparent black background */
-  padding: 15px;
-  border-radius: 5px;
-  text-align: center;
-  max-width: 90%;
-  margin: 20px auto;
-  display: block;
-}
+
 .event-title {
     font-size: 1.2em;
     font-weight: bold;
@@ -388,7 +403,7 @@ footer {
         #contact-title {
             font-size: 2.5rem;
             color: white;
-            margin-top: 50px;
+            margin-top: 100px;
 		    text-align: center;
         }
 
@@ -501,9 +516,7 @@ footer {
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .circus-font {
-                font-size: 2rem;
-            }
+    }
 
             .gallery-title {
                 font-size: 2rem;
@@ -521,11 +534,7 @@ footer {
         }
 
         @media (max-width: 480px) {
-            .circus-font {
-                font-size: 1.5rem; /* Even smaller text on smaller screens */
-            }
-
-            .gallery-title {
+      			.gallery-title {
                 font-size: 1.5rem;
             }
 
@@ -538,3 +547,16 @@ footer {
                 width: 40px;
                 height: 40px; /* Even smaller thumbnails for mobile */
             }
+    
+        }
+ 
+        }
+	
+
+#loading {
+    color: red;
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 20px; /* Optional, adds space between the page description and loading text */
+}
+

@@ -1,102 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head> 
-    <link rel="stylesheet" href="styles.css">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reagal Events</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
     <style>
-<<<<<<< HEAD
-=======
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        main {
-            flex: 1;
-            text-align: center;
-            color: white;
-        }
-
-        header {
-            position: relative;
-            text-align: center;
-            color: white;
-        }
-
-        .banner {
-            width: 100%;
-            display: block;
-        }
-
-        .banner2-container {
-            position: initial;
-            background: url('banner2.jpg') no-repeat center center/cover;
-            height: 400px;
-        }
-
-        .circus-font {
-            font-family: 'Cursive', sans-serif;
-            font-size: 3rem;
-            position: absolute;
-            bottom: 305px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: gold;
-            text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black;
-            z-index: 10; /* Ensure it's on top */
-        }
-
-        #menu {
-            position: absolute;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        #menu ul {
-            display: flex;
-            justify-content: center;
-            list-style-type: none;
-            margin: 0;
-            padding: 10px 0;
-        }
-
-        #menu ul li {
-            margin: 0 15px;
-        }
-
-        #menu ul li a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.2rem;
-        }
-
-        #contact-title {
-            font-size: 2.5rem;
-            color: white;
-            margin-top: 50px;
-        }
-
-        #contact-address {
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        footer {
-            background: rgba(0, 0, 0, 0.6); /* Same transparency as menu */
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            width: 100%;
-        }
->>>>>>> 24eaae6cc04cc7ee532e6e015d6ffa01ab367058
     </style>
 </head>
 <body>
@@ -118,7 +28,7 @@
     </header>
 
    
-
+<div class="content">
     <main>
         <h1 id="contact-title">Contact Us</h1>
         <address id="contact-address">
@@ -128,16 +38,15 @@
             Animal licence number: 19/00613/AWEA
         </address>
     </main>
-
-    <footer>
+	</div>
+<footer>
         <p>&copy; 2025 Reagal Events. All rights reserved.</p>
     </footer>
-
     <script>
         window.addEventListener('load', function() {
             setTimeout(function() {
                 window.scrollTo({
-                    top: 400,  // Adjust this value to scroll by a specific pixel amount
+                    top: 200,  // Adjust this value to scroll by a specific pixel amount
                     behavior: 'smooth'
                 });
             }, 2000); // Adjust the 2000ms (2 seconds) delay to your preference

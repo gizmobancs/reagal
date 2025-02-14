@@ -176,6 +176,14 @@
         }
 
         fetchEvents();
+	    window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.scrollTo({
+                    top: 500,  // Adjust this value to scroll by a specific pixel amount
+                    behavior: 'smooth'
+                });
+            }, 2000); // Adjust the 2000ms (2 seconds) delay to your preference
+        });	
     </script>
 
     <!-- Footer Section -->

@@ -4,16 +4,31 @@ body {
     margin: 0;
     padding: 0;
     background: url('background.png') no-repeat center center fixed;
+    background-size: cover; /* Ensures it covers the entire screen */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat;
    
 	
 }
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
 html, body {
-  overflow-x: hidden;
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
+
+.container {
+  width: 100%;
+  max-width: 100%;
+}
+
 
 /* Add a wrapper to hold the content */
 #main-container {
@@ -54,7 +69,7 @@ header {
     color: gold;
     text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black;
     z-index: 20;
-    top: 120px; /* Default position for portrait mode */
+    top: 170px; /* Default position for portrait mode */
 }
 
 /* Adjust for portrait mode */
@@ -342,6 +357,7 @@ html, body {
 .footer-text {
     text-align: center;
     flex-grow: 1;
+    font-size: 1rem;
 }
 
 .ticketsource-button img {

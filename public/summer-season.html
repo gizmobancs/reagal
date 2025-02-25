@@ -82,6 +82,7 @@
             text-align: center;
             font-size: 1.5em;
             color: #ff0000;
+		    background: rgba(0, 0, 0, 0.5);
         }
 
     </style>
@@ -118,11 +119,7 @@
         <div id="summer-events" class="events"></div>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Reagal Events. All rights reserved.</p>
-    </footer>
-
-    <script>
+  <script>
         async function fetchEvents() {
             try {
                 const response = await fetch("/api/events?reference=Summer");
@@ -233,5 +230,32 @@
             }, 3000);
         });
     </script>
+	<!-- Include Font Awesome in <head> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<footer>
+    <div class="footer-container">
+        <!-- Social Media Links (Left) -->
+        <div class="social-links">
+            <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon">
+                <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon">
+                <i class="fa-brands fa-tiktok"></i>
+            
+        </div> 
+
+        <!-- Reagal Events Text (Centered) -->
+        <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>	
+
+        <!-- TicketSource Button (Right) -->
+        <div class="ticketsource-button">
+            <a href="https://www.ticketsource.co.uk/reagalevents">
+                <img border="0" width="130" height="56" alt="Book now"
+                src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
+            </a>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

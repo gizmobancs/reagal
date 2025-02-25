@@ -4,10 +4,25 @@ body {
     margin: 0;
     padding: 0;
     background: url('background.png') no-repeat center center fixed;
-    background-size: cover;
-    min-height: 100vh;
+   
+	
+}
+* {
+  box-sizing: border-box;
+}
+html, body {
+  overflow-x: hidden;
+  width: 100%;
 }
 
+/* Add a wrapper to hold the content */
+#main-container {
+    width: 100%; /* Ensure it takes up the full page width */
+    max-width: 1200px; /* Adjust this to your desired page width */
+    margin: 0 auto; /* Center-align the content */
+    background: url('background.png') no-repeat center center fixed;
+    background-size: cover;
+}
 header {
     position: relative;
     text-align: center;
@@ -298,14 +313,42 @@ html, body {
     box-sizing: border-box;
 }
 
-footer {
-    text-align: center;
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 1em;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.4);
     color: white;
     width: 100%;
-    margin-top: auto;  /* Ensures the footer stays at the bottom if content is short */
 }
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    font-size: 24px;
+    color: white;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #ffcc00; /* Change color on hover */
+    transform: scale(1.2);
+}
+
+.footer-text {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.ticketsource-button img {
+    width: 130px;
+    height: 56px;
+}
+
 
 
 .event-details {
@@ -553,10 +596,5 @@ footer {
         }
 	
 
-#loading {
-    color: red;
-    text-align: center;
-    font-size: 1.5rem;
-    margin-top: 20px; /* Optional, adds space between the page description and loading text */
-}
+
 

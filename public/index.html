@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reagal Events</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 </head>
 <body>
+<div id="main-container">
     <!-- Global Header -->
     <header>
         <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
@@ -70,9 +74,37 @@
         </div>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Reagal Events. All rights reserved.</p>
-    </footer>
+<!-- Include Font Awesome in <head> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<footer>
+    <div class="footer-container">
+        <!-- Social Media Links (Left) -->
+        <div class="social-links">
+            <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon">
+                <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon">
+                <i class="fa-brands fa-tiktok"></i>
+            
+        </div> 
+
+        <!-- Reagal Events Text (Centered) -->
+        <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>	
+
+        <!-- TicketSource Button (Right) -->
+        <div class="ticketsource-button">
+            <a href="https://www.ticketsource.co.uk/reagalevents">
+                <img border="0" width="130" height="56" alt="Book now"
+                src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
+            </a>
+        </div>
+    </div>
+</footer>
+
+
+
+
 
     <script>
         window.addEventListener('load', function() {
@@ -84,5 +116,6 @@
             }, 2500); // Adjust the 2000ms (2 seconds) delay to your preference
         });
     </script>
+</div>
 </body>
 </html>

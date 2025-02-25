@@ -7,145 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <style>
 
-        /* Main content centered with grid layout */
-        #main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            padding: 20px;
-        }
 
-        #carousel {
-            width: 80%; /* Keeps the original width */
-            height: 400px; /* Original height */
-            aspect-ratio: 16 / 9;
-            overflow: hidden;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            background: #000;
-            position: relative;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .carousel-images {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .carousel-images img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
-
-        .carousel-controls {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-        }
-
-        .carousel-controls button {
-            background-color: rgba(0, 0, 0, 0.5);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .carousel-controls button:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        /* Gallery images will be split into left and right columns */
-        .gallery-left, .gallery-right {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 10px;
-            justify-content: center;
-            padding: 10px;
-            margin-top: 20px;
-            width: 80%;
-        }
-
-        .gallery-left img, .gallery-right img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 5px;
-            cursor: pointer; /* Change cursor on hover */
-        }
-
-        /* Spinner Styles */
-        .spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
-            display: none;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .circus-font {
-                font-size: 2rem;
-            }
-
-            .gallery-title {
-                font-size: 2rem;
-            }
-
-            #carousel {
-                width: 90%; /* Make carousel more responsive */
-                height: 300px; /* Reduce height for smaller screens */
-            }
-
-            .gallery-left img, .gallery-right img {
-                width: 50px;
-                height: 50px; /* Smaller thumbnails on smaller screens */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .circus-font {
-                font-size: 1.5rem; /* Even smaller text on smaller screens */
-            }
-
-            .gallery-title {
-                font-size: 1.5rem;
-            }
-
-            #carousel {
-                width: 100%; /* Carousel takes full width on mobile */
-                height: 250px; /* Reduce height even more for small devices */
-            }
-
-            .gallery-left img, .gallery-right img {
-                width: 40px;
-                height: 40px; /* Even smaller thumbnails for mobile */
-            }
-        }
     </style>
 </head>
 <body>
@@ -193,9 +55,34 @@
             <!-- Right half gallery images will be loaded dynamically here -->
         </div>
     </main>
+<!-- Include Font Awesome in <head> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 <footer>
-        <p>&copy; 2025 Reagal Events. All rights reserved.</p>
-    </footer>
+    <div class="footer-container">
+        <!-- Social Media Links (Left) -->
+        <div class="social-links">
+            <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon">
+                <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon">
+                <i class="fa-brands fa-tiktok"></i>
+            
+        </div> 
+
+        <!-- Reagal Events Text (Centered) -->
+        <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>	
+
+        <!-- TicketSource Button (Right) -->
+        <div class="ticketsource-button">
+            <a href="https://www.ticketsource.co.uk/reagalevents">
+                <img border="0" width="130" height="56" alt="Book now"
+                src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
+            </a>
+        </div>
+    </div>
+</footer>
+
     <script>
         const imageCount = 31;
         const galleryFolder = '/gallery/';  // Path to gallery folder in public folder

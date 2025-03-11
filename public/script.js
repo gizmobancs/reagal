@@ -28,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchEvents('Summer', 'summer-events');
     fetchEvents('Halloween', 'halloween-events');
 });
-<<<<<<< HEAD
-=======
+
 // Hamburger Menu Functionality for Mobile Portrait Mode
 const hamburger = document.getElementById("hamburger");
 const menu = document.getElementById("menu");
@@ -46,4 +45,3 @@ document.addEventListener("click", function (e) {
     }
 });
 
->>>>>>> 24eaae6cc04cc7ee532e6e015d6ffa01ab367058

@@ -16,10 +16,11 @@ body {
   padding: 0;
 }
 
-html, body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
+  body {
+    overflow-x: hidden; /* Hide horizontal overflow */
+    overflow-y: auto;   /* Allow vertical scrolling when needed */
+}
+
   margin: 0;
   padding: 0;
 }
@@ -610,7 +611,11 @@ html, body {
         }
  
         }
-	
+	img {
+    max-width: 100%;
+    height: auto;
+}
+
 
 
 

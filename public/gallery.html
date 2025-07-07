@@ -83,100 +83,97 @@
     </div>
 </footer>
 
-    <script>
-        const imageCount = 31;
-        const galleryFolder = '/gallery/';  // Path to gallery folder in public folder
-        const images = document.querySelector('.carousel-images');
-        const galleryLeft = document.getElementById('gallery-left');
-        const galleryRight = document.getElementById('gallery-right');
-        const prevButton = document.getElementById('prev');
-        const nextButton = document.getElementById('next');
-        let currentIndex = 0;
-        let hoverTimeout;
+<script>
+    const imageCount = 31;
+    const galleryFolder = '/gallery/';
+    const images = document.querySelector('.carousel-images');
+    const galleryLeft = document.getElementById('gallery-left');
+    const galleryRight = document.getElementById('gallery-right');
+    const prevButton = document.getElementById('prev');
+    const nextButton = document.getElementById('next');
+    let currentIndex = 0;
+    let hoverTimeout;
 
-        // Dynamically load images
-        const allImages = [];
-        for (let i = 1; i <= imageCount; i++) {
-            const imgName = `${galleryFolder}img${i}.jpg`;
+    const allImages = [];
 
-            const img = new Image();
-            img.src = imgName;
-            img.alt = `Image ${i}`;
-            allImages.push(img);
+    for (let i = 1; i <= imageCount; i++) {
+        let imgName = `${galleryFolder}img${i}.jpg`;
+        const fallbackName = `${galleryFolder}img${i}.JPG`;
 
-            img.onload = function() {
-                // Add to the carousel
-                const carouselImage = document.createElement('img');
-                carouselImage.src = imgName;
-                carouselImage.alt = `Image ${i}`;
-                images.appendChild(carouselImage);
+        const img = new Image();
+        img.src = imgName;
+        img.alt = `Image ${i}`;
 
-                // Split the images into left and right galleries
-                const galleryImage = document.createElement('img');
-                galleryImage.src = imgName;
-                galleryImage.alt = `Image ${i}`;
-                
-                // Event listeners for hover effects
-                galleryImage.addEventListener('mouseenter', () => onImageHover(i - 1)); // Ensure the correct index
-                galleryImage.addEventListener('mouseleave', cancelHover);
+        img.onerror = function () {
+            console.warn(`img${i}.jpg not found. Trying .JPG`);
+            img.src = fallbackName;
+        };
 
-                if (i <= Math.floor(imageCount / 2)) {
-                    galleryLeft.appendChild(galleryImage);
-                } else {
-                    galleryRight.appendChild(galleryImage);
-                }
-            };
+        img.onload = function () {
+            const imgSrc = img.src;
 
-            img.onerror = function() {
-                console.log(`img${i}.jpg not found.`);
-            };
-        }
+            // Add to the carousel
+            const carouselImage = document.createElement('img');
+            carouselImage.src = imgSrc;
+            carouselImage.alt = `Image ${i}`;
+            images.appendChild(carouselImage);
 
-        function onImageHover(index) {
-            console.log("Hovered over image with index: " + index);  // Debugging line
-            // Delay image change if mouse is hovering for more than 300ms
-            hoverTimeout = setTimeout(() => {
-                updateCarousel(index);
-            }, 300);
-        }
+            // Add to left/right gallery
+            const galleryImage = document.createElement('img');
+            galleryImage.src = imgSrc;
+            galleryImage.alt = `Image ${i}`;
+            galleryImage.addEventListener('mouseenter', () => onImageHover(i - 1));
+            galleryImage.addEventListener('mouseleave', cancelHover);
 
-        function cancelHover() {
-            // Cancel the hover effect if the mouse leaves before 300ms
-            clearTimeout(hoverTimeout);
-        }
+            if (i <= Math.floor(imageCount / 2)) {
+                galleryLeft.appendChild(galleryImage);
+            } else {
+                galleryRight.appendChild(galleryImage);
+            }
+        };
+    }
 
-        function updateCarousel(index) {
-            console.log("Updating carousel to index: " + index);  // Debugging line
-            // Hide all images in the carousel and only display the selected one
-            const carouselImages = document.querySelectorAll('.carousel-images img');
-            carouselImages.forEach((img, idx) => {
-                img.style.display = idx === index ? 'block' : 'none'; // Show selected image, hide others
-            });
-            currentIndex = index;
-        }
+    function onImageHover(index) {
+        console.log("Hovered over image with index: " + index);
+        hoverTimeout = setTimeout(() => {
+            updateCarousel(index);
+        }, 300);
+    }
 
-        // Navigation buttons for manual image cycling
-        prevButton.addEventListener('click', () => {
-            currentIndex = (currentIndex > 0) ? currentIndex - 1 : imageCount - 1;
-            updateCarousel(currentIndex);
+    function cancelHover() {
+        clearTimeout(hoverTimeout);
+    }
+
+    function updateCarousel(index) {
+        console.log("Updating carousel to index: " + index);
+        const carouselImages = document.querySelectorAll('.carousel-images img');
+        carouselImages.forEach((img, idx) => {
+            img.style.display = idx === index ? 'block' : 'none';
         });
+        currentIndex = index;
+    }
 
-        nextButton.addEventListener('click', () => {
-            currentIndex = (currentIndex < imageCount - 1) ? currentIndex + 1 : 0;
-            updateCarousel(currentIndex);
-        });
-
-        // Initial display of the first image in the carousel
+    prevButton.addEventListener('click', () => {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : imageCount - 1;
         updateCarousel(currentIndex);
-        
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                window.scrollTo({
-                    top: 550,  // Adjust this value to scroll by a specific pixel amount
-                    behavior: 'smooth'
-                });
-            }, 2500); // Adjust the 2500ms (2.5 seconds) delay to your preference
-        });
-    </script>
+    });
+
+    nextButton.addEventListener('click', () => {
+        currentIndex = (currentIndex < imageCount - 1) ? currentIndex + 1 : 0;
+        updateCarousel(currentIndex);
+    });
+
+    updateCarousel(currentIndex);
+
+    window.addEventListener('load', function () {
+        setTimeout(function () {
+            window.scrollTo({
+                top: 550,
+                behavior: 'smooth'
+            });
+        }, 2500);
+    });
+</script>
+
 </body>
 </html>

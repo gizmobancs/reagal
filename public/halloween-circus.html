@@ -1,6 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!DOCTYPE html>
+ <html lang="en">
+ <head> 
+    <!-- Google tag (gtag.js) -->
+ <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
+ <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HF03R5RLBZ');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reagal Events</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+	<style>
+	/* General Tour Specific Styling */
+.page-title {
+    color: white;
+    text-align: center;
+    font-size: 2.5rem;
+}
+ .page-description {
+    color: white;
+    text-align: center;
+    font-size: 1rem;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reagal Events</title>
@@ -88,7 +116,8 @@
 
     </style>
 </head>
-<body>
+<body class="halloween-page">
+
     <header>
         <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
         <h2 class="circus-font">Proudly Presents</h2>
@@ -255,6 +284,33 @@
                 });
             }, 3000);
         });
+
+        document.addEventListener("DOMContentLoaded", () => {
+    const sound = new Audio("halloween.mp3");
+    sound.volume = 0.6;
+    sound.preload = "auto";
+
+    let played = false;
+
+    function playSound() {
+      if (played) return;
+      played = true;
+      sound.play().catch(() => {});
+      window.removeEventListener("click", playSound);
+      window.removeEventListener("touchstart", playSound);
+      window.removeEventListener("scroll", playSound);
+    }
+
+    /* Try autoplay (may be blocked) */
+    sound.play()
+      .then(() => played = true)
+      .catch(() => {
+        /* Fallback: play on first interaction */
+        window.addEventListener("click", playSound);
+        window.addEventListener("touchstart", playSound);
+        window.addEventListener("scroll", playSound);
+      });
+  });
     </script>
 </body>
 </html>

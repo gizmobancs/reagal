@@ -62,7 +62,7 @@ app.get("/api/events", async (req, res) => {
       console.log("Filtering events based on reference...");
 
       // Filter events by reference, using case-insensitive comparison
-      events = events.filter(event => {
+      events = events.filter((event) => {
         const eventReference = event.attributes?.reference?.toLowerCase(); // Normalize the event reference to lowercase
         console.log("Checking event reference:", eventReference); // Log the reference for each event
         return eventReference === reference; // Case-insensitive comparison
@@ -83,15 +83,16 @@ app.get("/api/events", async (req, res) => {
     const datesResponses = await Promise.all(dateRequests);
 
     const groupedEvents = {};
+
+    // Define "today" once at midnight (local time) for consistent filtering
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
     events.forEach((event, index) => {
       const venues = venuesResponses[index].data.data;
       const dates = datesResponses[index].data.data;
 
       const town = venues[0]?.attributes.address.line_3 || "Unknown Town";
-
-      if (!groupedEvents[town]) {
-        groupedEvents[town] = [];
-      }
 
       const eventDetails = {
         eventName: event.attributes.name,
@@ -101,11 +102,19 @@ app.get("/api/events", async (req, res) => {
         fromDate: null,
         toDate: null,
         dates: [],
-        reference: event.attributes.reference,  // Include the reference field here
+        reference: event.attributes.reference, // Include the reference field here
       };
+
+      // Track real Date objects for range calculation (avoid parsing dd/mm/yyyy later)
+      let minStart = null;
+      let maxStart = null;
 
       dates.forEach((date) => {
         const startDate = new Date(date.attributes.start);
+
+        // ✅ FILTER OUT PAST DATES (anything before today)
+        if (startDate < today) return;
+
         const formattedDate = startDate.toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "2-digit",
@@ -122,13 +131,28 @@ app.get("/api/events", async (req, res) => {
           bookNowLink: date.links.book_now,
         });
 
-        if (!eventDetails.fromDate || startDate < new Date(eventDetails.fromDate)) {
-          eventDetails.fromDate = formattedDate;
-        }
-        if (!eventDetails.toDate || startDate > new Date(eventDetails.toDate)) {
-          eventDetails.toDate = formattedDate;
-        }
+        if (!minStart || startDate < minStart) minStart = startDate;
+        if (!maxStart || startDate > maxStart) maxStart = startDate;
       });
+
+      // ✅ If there are no upcoming dates for this event, skip it entirely
+      if (eventDetails.dates.length === 0) return;
+
+      // Set from/to based on min/max upcoming dates (formatted for display)
+      eventDetails.fromDate = minStart.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      eventDetails.toDate = maxStart.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+
+      if (!groupedEvents[town]) {
+        groupedEvents[town] = [];
+      }
 
       groupedEvents[town].push(eventDetails);
     });

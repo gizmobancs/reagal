@@ -718,4 +718,54 @@ body.halloween-page p {
   padding: 10px;
   border-radius: 8px;
 }
+/* Semi-transparent event cards */
+/* ================================
+   Pro "glass" styling for events
+   (outer card + inner details)
+   Paste at very bottom of styles.css
+   ================================ */
 
+/* Outer event card */
+.event {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.20) !important;
+  border-radius: 12px;
+}
+
+/* Inner event details panel (NOT fully transparent) */
+.event-details {
+  background: rgba(255, 255, 255, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+/* Keep all event text black for readability (matches your requirement) */
+.event-title,
+.event-town-dates,
+.event p,
+.event-details,
+.event-details p,
+.event-details h2,
+.event-details h3,
+.event-details span,
+.event-details li {
+  color: #000 !important;
+}
+
+/* Optional: make dropdowns sit nicely on the glass panel */
+.event select,
+.dropdown {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+/* Optional: subtle hover polish */
+.event:hover {
+  background: rgba(255, 255, 255, 0.63) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24) !important;
+}

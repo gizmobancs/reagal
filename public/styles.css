@@ -867,3 +867,35 @@ header { position: relative; }
     min-height: 70px; /* adjust if needed */
   }
 }
+/* ================================
+   MOBILE HARD FIXES (DO NOT REMOVE)
+   ================================ */
+@media (max-width: 768px) {
+
+  html, body {
+    height: auto !important;
+    overflow-x: hidden;
+  }
+
+  body {
+    background-attachment: scroll !important;
+    background-position: top center !important;
+  }
+
+  /* Prevent white gap under banners */
+  .page-wrapper,
+  .content,
+  .main-content {
+    min-height: 100vh;
+  }
+
+  /* Banner + menu stacking fix */
+  .banner2-container {
+    min-height: 70px;
+  }
+
+  .menu {
+    position: relative !important;
+    top: auto !important;
+  }
+}

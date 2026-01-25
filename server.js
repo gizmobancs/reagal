@@ -574,20 +574,32 @@ async function fetchAllEvents(apiUrl, reference = null) {
 }
 
 async function buildGroupedEvents(reference = null) {
-  const ref = reference ? String(reference).toLowerCase() : null;
-  let events = await fetchAllEvents("https://api.ticketsource.io/events", ref);
+  // TicketSource reference values are case-sensitive in some contexts.
+  // We accept any case from the client, but we match events case-insensitively
+  // while *preferring* an exact reference query first for efficiency.
+  const refRaw = reference ? String(reference).trim() : null;
+  const refNorm = refRaw ? refRaw.toLowerCase() : null;
 
-  if (ref) {
-    events = events.filter((event) => {
-      const eventReference = event.attributes?.reference?.toLowerCase();
-      return eventReference === ref;
+  // Try exact reference first (efficient if TicketSource supports it)
+  let events = await fetchAllEvents("https://api.ticketsource.io/events", refRaw);
+
+  // Fallback: if nothing returned (or TicketSource ignores/mis-matches), fetch all and filter locally
+  if (refRaw && (!events || events.length === 0)) {
+    events = await fetchAllEvents("https://api.ticketsource.io/events", null);
+  }
+
+  // Local filter (case-insensitive) to guarantee "General"/"Summer"/"Halloween" work reliably
+  if (refNorm) {
+    events = (events || []).filter((event) => {
+      const eventReference = String(event.attributes?.reference || "").trim().toLowerCase();
+      return eventReference === refNorm;
     });
   }
 
-  const venueRequests = events.map((event) =>
+  const venueRequests = (events || []).map((event) =>
     axios.get(event.links.venues, { headers: { Authorization: `Bearer ${API_KEY}` } })
   );
-  const dateRequests = events.map((event) =>
+  const dateRequests = (events || []).map((event) =>
     axios.get(event.links.dates, { headers: { Authorization: `Bearer ${API_KEY}` } })
   );
 
@@ -597,7 +609,7 @@ async function buildGroupedEvents(reference = null) {
   const groupedEvents = {};
   const today = startOfTodayLocal();
 
-  events.forEach((event, index) => {
+  (events || []).forEach((event, index) => {
     const venues = venuesResponses[index].data.data;
     const dates = datesResponses[index].data.data;
 
@@ -783,7 +795,7 @@ ${urls
 // -------------------------
 app.get("/api/events", async (req, res) => {
   try {
-    const reference = req.query.reference ? req.query.reference.toLowerCase() : null;
+    const reference = req.query.reference ? String(req.query.reference).trim() : null;
     const groupedEvents = await buildGroupedEvents(reference);
     res.json(groupedEvents);
   } catch (error) {
@@ -1096,7 +1108,7 @@ app.get("/circus-in/:townSlug", async (req, res) => {
 
         .town-events .town-row{
           display: grid !important;
-          grid-template-columns: 280px auto;
+          grid-template-columns: minmax(0, 280px) auto;
           column-gap: 18px;
           align-items: center;
           justify-content: start;
@@ -1105,13 +1117,13 @@ app.get("/circus-in/:townSlug", async (req, res) => {
         .town-events .town-row .town-field:nth-child(1){
           grid-column: 1;
           grid-row: 1;
-          width: 280px;
+          max-width: 280px; width: 100%;
         }
 
         .town-events .town-row .town-field:nth-child(2){
           grid-column: 1;
           grid-row: 2;
-          width: 280px;
+          max-width: 280px; width: 100%;
           margin-top: 12px;
         }
 

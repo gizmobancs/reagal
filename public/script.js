@@ -40,10 +40,12 @@
           window.matchMedia &&
           window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        const y = menu.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
-
-        cleanup();
+        // Wait a tick for layout to settle (banners/images can shift the menu)
+        requestAnimationFrame(() => {
+          const y = menu.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+          cleanup();
+        });
       }, delay);
     });
   }

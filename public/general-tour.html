@@ -1,228 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
-    <!-- Google tag (gtag.js) -->
- <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
- <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HF03R5RLBZ');
+  </script>
 
-  gtag('config', 'G-HF03R5RLBZ');
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reagal Events</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-	<style>
-	/* General Tour Specific Styling */
-.page-title {
-    color: white;
-    text-align: center;
-    font-size: 2.5rem;
-}
- .page-description {
-    color: white;
-    text-align: center;
-    font-size: 1rem;
-}
-#loading {
-    color: red;
-    text-align: center;
-    font-size: 1.5rem;
-    margin-top: 20px; /* Optional, adds space between the page description and loading text */
-    background: rgba(0, 0, 0, 0.5);
-}
-#general-events {
-    margin-left: 20px;
-    margin-right: 20px;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>General Tour | Reagal Events</title>
 
-
-  </style>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
+
 <body>
-    <header>
-        <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
-        <h2 class="circus-font">Proudly Presents</h2>
-        <div class="banner2-container"></div>
-        <nav id="menu">
-            <ul>
-                <li><a href="index.html">Welcome</a></li>
-                <li><a href="all-shows.html">View All Shows</a></li>
-                <li><a href="gallery.html">Gallery</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
-                <li><a href="general-tour.html">General Tour</a></li>
-                <li><a href="summer-season.html">Summer Season</a></li>
-                <li><a href="halloween-circus.html">Halloween Circus</a></li>
-            </ul>
-        </nav>
-    </header>
+  <header>
+    <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
+    <h2 class="circus-font">Proudly Presents</h2>
+    <div class="banner2-container"></div>
+    <nav id="menu">
+      <ul>
+        <li><a href="index.html">Welcome</a></li>
+        <li><a href="all-shows.html">View All Shows</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="general-tour.html">General Tour</a></li>
+        <li><a href="summer-season.html">Summer Season</a></li>
+        <li><a href="halloween-circus.html">Halloween Circus</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <div class="page-title">General Tour</div>
-    <div class="page-description">Details about our touring show.</div>
+  <section class="page-title-box">
+    <h1>General Tour</h1>
+    <p>Details about our touring show.</p>
+  </section>
 
-    <div id="loading">Loading events...</div>
-    <div id="general-events" class="events"></div>
+  <div id="loading" class="no-events-message" style="display:none;">Loading events...</div>
+  <div id="general-events" class="events" style="margin-left:20px; margin-right:20px;"></div>
 
-    <script>
-        async function fetchEvents() {
-            document.getElementById("loading").style.display = "block"; // Show loading
-            try {
-                const response = await fetch("/api/events?reference=General");
-                const eventsByTown = await response.json();
-                displayEvents(eventsByTown);
-            } catch (error) {
-                console.error("Error fetching events:", error);
-            }
-            document.getElementById("loading").style.display = "none"; // Hide loading
-        }
-
-        function displayEvents(eventsByTown) {
-            const container = document.getElementById("general-events");
-            container.innerHTML = ""; // Clear any existing content
-
-            if (Object.keys(eventsByTown).length === 0) {
-                const noEventsMessage = document.createElement("p");
-                noEventsMessage.textContent = "No events found for the selected tour.";
-                container.appendChild(noEventsMessage);
-                return;
-            }
-
-            Object.entries(eventsByTown).forEach(([town, events]) => {
-                if (events.length === 0) return;
-
-                const allDates = events.flatMap((event) => event.dates);
-                const uniqueDates = [...new Set(allDates.map((d) => d.date))];
-
-                const fromDate = uniqueDates[0];
-                const toDate = uniqueDates[uniqueDates.length - 1];
-
-                const event = events[0]; // Display details from the first event only
-
-                const eventDiv = document.createElement("div");
-                eventDiv.className = "event";
-
-                // Thumbnail
-                if (event.thumbnail) {
-                    const img = document.createElement("img");
-                    img.src = event.thumbnail;
-                    img.alt = event.eventName;
-                    img.className = "event-thumbnail";
-                    eventDiv.appendChild(img);
-                }
-
-                // Event details container
-                const detailsDiv = document.createElement("div");
-                detailsDiv.className = "event-details";
-
-                // Event title and town with date range
-                const title = document.createElement("h2");
-                title.className = "event-title";
-                title.textContent = event.eventName;
-                detailsDiv.appendChild(title);
-
-                // Town name and date range
-                const townDates = document.createElement("p");
-                townDates.className = "event-town-dates";
-                townDates.textContent = `${town}: ${fromDate} - ${toDate}`;
-                detailsDiv.appendChild(townDates);
-
-                // Description
-                const description = document.createElement("p");
-                description.textContent = event.description;
-                detailsDiv.appendChild(description);
-
-                // Dropdown for selecting a date
-                const dateDropdown = document.createElement("select");
-                dateDropdown.className = "dropdown";
-                dateDropdown.innerHTML = `<option value="">Select a date</option>`;
-                uniqueDates.forEach((date) => {
-                    const option = document.createElement("option");
-                    option.value = date;
-                    option.textContent = date;
-                    dateDropdown.appendChild(option);
-                });
-                detailsDiv.appendChild(dateDropdown);
-
-                // Dropdown for selecting a time
-                const timeDropdown = document.createElement("select");
-                timeDropdown.className = "dropdown";
-                timeDropdown.innerHTML = `<option value="">Select a time</option>`;
-                detailsDiv.appendChild(timeDropdown);
-
-                // Update time dropdown based on selected date
-                dateDropdown.addEventListener("change", () => {
-                    const selectedDate = dateDropdown.value;
-                    timeDropdown.innerHTML = `<option value="">Select a time</option>`;
-
-                    const filteredDates = allDates.filter((d) => d.date === selectedDate);
-                    filteredDates.forEach((d) => {
-                        const option = document.createElement("option");
-                        option.value = d.bookNowLink;
-                        option.textContent = d.time;
-                        timeDropdown.appendChild(option);
-                    });
-                });
-
-                // Book Now button
-                const bookButton = document.createElement("a");
-                bookButton.href = "#"; // Default, updated when a time is selected
-                bookButton.target = "_blank";
-                bookButton.textContent = "Book Now";
-                bookButton.className = "book-button";
-                detailsDiv.appendChild(bookButton);
-
-                // Update book now button based on selected time
-                timeDropdown.addEventListener("change", () => {
-                    bookButton.href = timeDropdown.value || "#";
-                });
-
-                eventDiv.appendChild(detailsDiv);
-                container.appendChild(eventDiv);
-            });
-        }
-
-        fetchEvents();
-	    window.addEventListener('load', function() {
-            setTimeout(function() {
-                window.scrollTo({
-                    top: 550,  // Adjust this value to scroll by a specific pixel amount
-                    behavior: 'smooth'
-                });
-            }, 2500); // Adjust the 2000ms (2 seconds) delay to your preference
-        });	
-    </script>
-
-    <!-- Include Font Awesome in <head> -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-<footer>
+  <footer>
     <div class="footer-container">
-        <!-- Social Media Links (Left) -->
-        <div class="social-links">
-            <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon">
-                <i class="fa-brands fa-facebook-f"></i>
-            </a>
-            <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon">
-                <i class="fa-brands fa-tiktok"></i>
-            
-        </div> 
+      <div class="social-links">
+        <a href="https://www.facebook.com/story.php?story_fbid=610427098343014&id=100081271867855" target="_blank" class="social-icon" rel="noopener">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon" rel="noopener">
+          <i class="fa-brands fa-tiktok"></i>
+        </a>
+        <a href="https://www.instagram.com/wondercircus_circus_of_wonders/" target="_blank" class="social-icon" rel="noopener">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+      </div>
 
-        <!-- Reagal Events Text (Centered) -->
-        <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>	
+      <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>
 
-        <!-- TicketSource Button (Right) -->
-        <div class="ticketsource-button">
-            <a href="https://www.ticketsource.co.uk/reagalevents">
-                <img border="0" width="130" height="56" alt="Book now"
-                src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
-            </a>
-        </div>
+      <div class="ticketsource-button">
+        <a href="https://www.ticketsource.co.uk/reagalevents">
+          <img border="0" width="130" height="56" alt="Book now"
+               src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
+        </a>
+      </div>
     </div>
-</footer>
-
+  </footer>
 </body>
 </html>

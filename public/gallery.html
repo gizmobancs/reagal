@@ -1,117 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!DOCTYPE html>
- <html lang="en">
- <head> 
-    <!-- Google tag (gtag.js) -->
- <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
- <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HF03R5RLBZ');
+  </script>
 
-  gtag('config', 'G-HF03R5RLBZ');
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reagal Events</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-	<style>
-	/* General Tour Specific Styling */
-.page-title {
-    color: white;
-    text-align: center;
-    font-size: 2.5rem;
-}
- .page-description {
-    color: white;
-    text-align: center;
-    font-size: 1rem;
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery</title> <!-- Page Title for the browser tab -->
-    <link rel="stylesheet" href="styles.css">
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Gallery | Reagal Events</title>
+  <meta name="description" content="Look back at some of our magical moments. Browse the Reagal Events photo gallery.">
+  <meta name="robots" content="index, follow">
 
-    </style>
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Reagal Events">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:title" content="Gallery | Reagal Events">
+  <meta property="og:description" content="Look back at some of our magical moments.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/banner1.jpg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gallery | Reagal Events">
+  <meta name="twitter:description" content="Look back at some of our magical moments.">
+  <meta name="twitter:image" content="/banner1.jpg">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <script src="script.js" defer></script>
 </head>
+
 <body>
-    <header>
-        <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
-        <h2 class="circus-font">Proudly Presents</h2>
-        <div class="banner2-container"></div>
-		<nav id="menu">
-        <ul>
-            <li><a href="index.html">Welcome</a></li>
-            <li><a href="all-shows.html">View All Shows</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="general-tour.html">General Tour</a></li>
-            <li><a href="summer-season.html">Summer Season</a></li>
-            <li><a href="halloween-circus.html">Halloween Circus</a></li>
-        </ul>
+  <header>
+    <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
+    <h2 class="circus-font">Proudly Presents</h2>
+    <div class="banner2-container"></div>
+
+    <nav id="menu">
+      <ul>
+        <li><a href="index.html">Welcome</a></li>
+        <li><a href="all-shows.html">View All Shows</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="general-tour.html">General Tour</a></li>
+        <li><a href="summer-season.html">Summer Season</a></li>
+        <li><a href="halloween-circus.html">Halloween Circus</a></li>
+      </ul>
     </nav>
+  </header>
 
-    </header>
+  <main id="main-content">
+    <!-- ✅ FIX: span full grid so title stays centered -->
+    <section class="page-title-box" style="grid-column: 1 / -1; text-align:center;">
+      <h1 class="gallery-title">Gallery</h1>
+      <p class="page-description">Look back at some of our magical moments</p>
+    </section>
 
-    
-    <main id="main-content">
-        <!-- Gallery Title -->
-        <div class="gallery-title">Gallery</div>
+    <!-- Carousel -->
+    <div id="carousel">
+      <div class="carousel-images"></div>
 
-        <!-- Carousel in the center -->
-        <div id="carousel">
-            <div class="carousel-images">
-                <!-- Dynamic carousel images will be added here -->
-            </div>
-
-            <div class="carousel-controls">
-                <button id="prev">❮</button>
-                <button id="next">❯</button>
-            </div>
-        </div>
-
-        <!-- Gallery images will be split into left and right columns -->
-        <div class="gallery-left" id="gallery-left">
-            <!-- Left half gallery images will be loaded dynamically here -->
-        </div>
-
-        <div class="gallery-right" id="gallery-right">
-            <!-- Right half gallery images will be loaded dynamically here -->
-        </div>
-    </main>
-<!-- Include Font Awesome in <head> -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-<footer>
-    <div class="footer-container">
-        <!-- Social Media Links (Left) -->
-        <div class="social-links">
-            <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon">
-                <i class="fa-brands fa-facebook-f"></i>
-            </a>
-            <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon">
-                <i class="fa-brands fa-tiktok"></i>
-            
-        </div> 
-
-        <!-- Reagal Events Text (Centered) -->
-        <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>	
-
-        <!-- TicketSource Button (Right) -->
-        <div class="ticketsource-button">
-            <a href="https://www.ticketsource.co.uk/reagalevents">
-                <img border="0" width="130" height="56" alt="Book now"
-                src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
-            </a>
-        </div>
+      <div class="carousel-controls">
+        <button id="prev" aria-label="Previous image">❮</button>
+        <button id="next" aria-label="Next image">❯</button>
+      </div>
     </div>
-</footer>
 
-<script>
+    <!-- Thumbnails -->
+    <div class="gallery-left" id="gallery-left"></div>
+    <div class="gallery-right" id="gallery-right"></div>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="social-links">
+        <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon" rel="noopener">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon" rel="noopener">
+          <i class="fa-brands fa-tiktok"></i>
+        </a>
+      </div>
+
+      <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>
+
+      <div class="ticketsource-button">
+        <a href="https://www.ticketsource.co.uk/reagalevents">
+          <img border="0" width="130" height="56" alt="Book now"
+               src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Gallery JS (updated for .webp first, with jpg/JPG fallback) -->
+  <script>
     const imageCount = 31;
     const galleryFolder = '/gallery/';
     const images = document.querySelector('.carousel-images');
@@ -122,90 +113,53 @@
     let currentIndex = 0;
     let hoverTimeout;
 
-    const allImages = [];
-
     for (let i = 1; i <= imageCount; i++) {
-        let imgName = `${galleryFolder}img${i}.jpg`;
-        const fallbackName = `${galleryFolder}img${i}.JPG`;
+      const img = new Image();
 
-        const img = new Image();
-        img.src = imgName;
-        img.alt = `Image ${i}`;
+      // ✅ Prefer WebP (smaller/faster)
+      img.src = `${galleryFolder}img${i}.webp`;
+      img.alt = `Gallery image ${i}`;
 
-        img.onerror = function () {
-            console.warn(`img${i}.jpg not found. Trying .JPG`);
-            img.src = fallbackName;
-        };
+      // ✅ Fallbacks: .jpg then .JPG (for older sets / mixed case)
+      img.onerror = () => {
+        if (img.src.endsWith(`img${i}.webp`)) {
+          img.src = `${galleryFolder}img${i}.jpg`;
+        } else if (img.src.endsWith(`img${i}.jpg`)) {
+          img.src = `${galleryFolder}img${i}.JPG`;
+        }
+      };
 
-        img.onload = function () {
-            const imgSrc = img.src;
+      img.onload = () => {
+        const cImg = document.createElement('img');
+        cImg.src = img.src;
+        cImg.alt = img.alt;
+        images.appendChild(cImg);
 
-            // Add to the carousel
-            const carouselImage = document.createElement('img');
-            carouselImage.src = imgSrc;
-            carouselImage.alt = `Image ${i}`;
-            images.appendChild(carouselImage);
-                // Show first image immediately when it loads
-            if (images.children.length === 1) {
-            updateCarousel(0);
-            }
+        if (images.children.length === 1) updateCarousel(0);
 
-            // Add to left/right gallery
-            const galleryImage = document.createElement('img');
-            galleryImage.src = imgSrc;
-            galleryImage.alt = `Image ${i}`;
-            galleryImage.addEventListener('mouseenter', () => onImageHover(i - 1));
-            galleryImage.addEventListener('mouseleave', cancelHover);
+        const tImg = document.createElement('img');
+        tImg.src = img.src;
+        tImg.alt = img.alt;
+        tImg.addEventListener('mouseenter', () => hover(i - 1));
+        tImg.addEventListener('mouseleave', () => clearTimeout(hoverTimeout));
 
-            if (i <= Math.floor(imageCount / 2)) {
-                galleryLeft.appendChild(galleryImage);
-            } else {
-                galleryRight.appendChild(galleryImage);
-            }
-        };
+        (i <= imageCount / 2 ? galleryLeft : galleryRight).appendChild(tImg);
+      };
     }
 
-    function onImageHover(index) {
-        console.log("Hovered over image with index: " + index);
-        hoverTimeout = setTimeout(() => {
-            updateCarousel(index);
-        }, 300);
+    function hover(i){
+      hoverTimeout = setTimeout(() => updateCarousel(i), 300);
     }
 
-    function cancelHover() {
-        clearTimeout(hoverTimeout);
+    function updateCarousel(i){
+      [...images.children].forEach((img, idx) => {
+        img.style.display = idx === i ? 'block' : 'none';
+      });
+      currentIndex = i;
     }
 
-    function updateCarousel(index) {
-        console.log("Updating carousel to index: " + index);
-        const carouselImages = document.querySelectorAll('.carousel-images img');
-        carouselImages.forEach((img, idx) => {
-            img.style.display = idx === index ? 'block' : 'none';
-        });
-        currentIndex = index;
-    }
-
-    prevButton.addEventListener('click', () => {
-        currentIndex = (currentIndex > 0) ? currentIndex - 1 : imageCount - 1;
-        updateCarousel(currentIndex);
-    });
-
-    nextButton.addEventListener('click', () => {
-        currentIndex = (currentIndex < imageCount - 1) ? currentIndex + 1 : 0;
-        updateCarousel(currentIndex);
-    });
-
-    updateCarousel(currentIndex);
-
-    window.addEventListener('load', function () {
-        setTimeout(function () {
-            window.scrollTo({
-                top: 590,
-                behavior: 'smooth'
-            });
-        }, 2500);
-    });
-</script>
-
+    prevButton.onclick = () => updateCarousel((currentIndex - 1 + imageCount) % imageCount);
+    nextButton.onclick = () => updateCarousel((currentIndex + 1) % imageCount);
+  </script>
 </body>
 </html>

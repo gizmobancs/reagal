@@ -1,291 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!DOCTYPE html>
- <html lang="en">
- <head> 
-    <!-- Google tag (gtag.js) -->
- <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
- <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HF03R5RLBZ');
+  </script>
 
-  gtag('config', 'G-HF03R5RLBZ');
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reagal Events</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-	<style>
-	/* General Tour Specific Styling */
-.page-title {
-    color: white;
-    text-align: center;
-    font-size: 2.5rem;
-}
- .page-description {
-    color: white;
-    text-align: center;
-    font-size: 1rem;
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reagal Events</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-    <style>
-        .event {
-            display: flex;
-            align-items: flex-start;
-            background: #f4f4f4;
-            border: 1px solid #ccc;
-            margin: 15px auto;
-            padding: 10px;
-            border-radius: 8px;
-            max-width: 800px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .event-thumbnail {
-            flex-shrink: 0;
-            max-width: 30%;
-            height: auto;
-            border-radius: 3px;
-            margin-right: 15px;
-        }
+  <title>Halloween Circus | Reagal Events</title>
 
-        .event-details {
-            flex-grow: 1;
-        }
-
-        .event-title {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .event p {
-            font-size: 0.9em;
-            margin: 5px 0;
-        }
-
-        .dropdown {
-            width: 100%;
-            padding: 5px;
-            margin: 8px 0;
-            font-size: 0.9em;
-        }
-
-        .book-button {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 3px;
-            font-size: 0.9em;
-            text-align: center;
-        }
-
-        .book-button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Loading Spinner */
-        .loading-spinner {
-            display: none;
-            text-align: center;
-        }
-
-        .loading-spinner img {
-            width: 50px;
-            height: 50px;
-        }
-
-        /* No Events Found Message */
-        .no-events-message {
-            display: none;
-            text-align: center;
-            font-size: 1.5em;
-            color: #ff0000;
-		    background: rgba(0, 0, 0, 0.5);
-        }
-
-    </style>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
+
 <body class="halloween-page">
+<header>
+  <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
+  <h2 class="circus-font">Proudly Presents</h2>
+  <div class="banner2-container"></div>
 
-    <header>
-        <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
-        <h2 class="circus-font">Proudly Presents</h2>
-        <div class="banner2-container"></div>
-    <nav id="menu">
+  <nav id="menu">
+    <ul>
+      <li><a href="index.html">Welcome</a></li>
+      <li><a href="all-shows.html">View All Shows</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="general-tour.html">General Tour</a></li>
+      <li><a href="summer-season.html">Summer Season</a></li>
+      <li><a href="halloween-circus.html">Halloween Circus</a></li>
+    </ul>
+  </nav>
+</header>
 
-        <ul>
-            <li><a href="index.html">Welcome</a></li>
-            <li><a href="all-shows.html">View All Shows</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="general-tour.html">General Tour</a></li>
-            <li><a href="summer-season.html">Summer Season</a></li>
-            <li><a href="halloween-circus.html">Halloween Circus</a></li>
-        </ul>
-    </nav>
-    </header>
-    <h1>Halloween Circus</h1>
-    <p>Details about our Halloween Circus show.</p>
+<!-- Page title -->
+<section class="page-title-box">
+  <h1>Halloween Circus</h1>
+  <p>Spooky fun, eerie surprises, and thrilling circus magic under the big top.</p>
+</section>
 
-    <div class="loading-spinner">
-        <img src="spinner.gif" alt="Loading...">
-    </div>
-    <div class="no-events-message">
-        No events found for Halloween Circus.
-    </div>
-    <div id="halloween-events" class="events"></div>
+<!-- Spinner -->
+<div class="spinner loading-spinner"></div>
 
-   <!-- Include Font Awesome in <head> -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<!-- No events message (styled globally in styles.css) -->
+<div class="no-events-message" style="display:none;">
+  No Halloween Circus events are currently available.
+</div>
+
+
+<!-- Events injected here -->
+<div id="halloween-events" class="events" style="margin: 0 20px;"></div>
 
 <footer>
-    <div class="footer-container">
-        <!-- Social Media Links (Left) -->
-        <div class="social-links">
-            <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon">
-                <i class="fa-brands fa-facebook-f"></i>
-            </a>
-            <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon">
-                <i class="fa-brands fa-tiktok"></i>
-            
-        </div> 
-
-        <!-- Reagal Events Text (Centered) -->
-        <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>	
-
-        <!-- TicketSource Button (Right) -->
-        <div class="ticketsource-button">
-            <a href="https://www.ticketsource.co.uk/reagalevents">
-                <img border="0" width="130" height="56" alt="Book now"
-                src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
-            </a>
-        </div>
+  <div class="footer-container">
+    <div class="social-links">
+      <a href="https://www.facebook.com/story.php?story_fbid=610427098343014&id=100081271867855"
+         target="_blank" class="social-icon" rel="noopener">
+        <i class="fa-brands fa-facebook-f"></i>
+      </a>
+      <a href="https://www.tiktok.com/@the.wonder.circus"
+         target="_blank" class="social-icon" rel="noopener">
+        <i class="fa-brands fa-tiktok"></i>
+      </a>
+      <a href="https://www.instagram.com/wondercircus_circus_of_wonders/"
+         target="_blank" class="social-icon" rel="noopener">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
     </div>
+
+    <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>
+
+    <div class="ticketsource-button">
+      <a href="https://www.ticketsource.co.uk/reagalevents">
+        <img border="0" width="130" height="56" alt="Book now"
+             src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
+      </a>
+    </div>
+  </div>
 </footer>
 
-
-    <script>
-        async function fetchEvents() {
-            try {
-                const response = await fetch("/api/events?reference=Halloween");
-                const eventsByTown = await response.json();
-                
-                if (Object.keys(eventsByTown).length === 0) {
-                    document.querySelector('.no-events-message').style.display = 'block';
-                    document.querySelector('.loading-spinner').style.display = 'none';
-                    return;
-                }
-
-                displayEvents(eventsByTown);
-            } catch (error) {
-                console.error("Error fetching events:", error);
-            }
-        }
-
-        function displayEvents(eventsByTown) {
-            const container = document.getElementById("halloween-events");
-            container.innerHTML = "";
-
-            Object.entries(eventsByTown).forEach(([town, events]) => {
-                if (events.length === 0) return;
-
-                const allDates = events.flatMap((event) => event.dates);
-                const uniqueDates = [...new Set(allDates.map((d) => d.date))];
-
-                const event = events[0];
-
-                const eventDiv = document.createElement("div");
-                eventDiv.className = "event";
-
-                if (event.thumbnail) {
-                    const img = document.createElement("img");
-                    img.src = event.thumbnail;
-                    img.alt = event.eventName;
-                    img.className = "event-thumbnail";
-                    eventDiv.appendChild(img);
-                }
-
-                const detailsDiv = document.createElement("div");
-                detailsDiv.className = "event-details";
-
-                const title = document.createElement("h2");
-                title.className = "event-title";
-                title.textContent = `${event.eventName} (${town})`;
-                detailsDiv.appendChild(title);
-
-                const description = document.createElement("p");
-                description.textContent = event.description;
-                detailsDiv.appendChild(description);
-
-                const dateDropdown = document.createElement("select");
-                dateDropdown.className = "dropdown";
-                dateDropdown.innerHTML = `<option value="">Select a date</option>`;
-                uniqueDates.forEach((date) => {
-                    const option = document.createElement("option");
-                    option.value = date;
-                    option.textContent = date;
-                    dateDropdown.appendChild(option);
-                });
-                detailsDiv.appendChild(dateDropdown);
-
-                const timeDropdown = document.createElement("select");
-                timeDropdown.className = "dropdown";
-                timeDropdown.innerHTML = `<option value="">Select a time</option>`;
-                detailsDiv.appendChild(timeDropdown);
-
-                dateDropdown.addEventListener("change", () => {
-                    const selectedDate = dateDropdown.value;
-                    timeDropdown.innerHTML = `<option value="">Select a time</option>`;
-
-                    const filteredDates = allDates.filter((d) => d.date === selectedDate);
-                    filteredDates.forEach((d) => {
-                        const option = document.createElement("option");
-                        option.value = d.bookNowLink;
-                        option.textContent = d.time;
-                        timeDropdown.appendChild(option);
-                    });
-                });
-
-                const bookButton = document.createElement("a");
-                bookButton.href = "#";
-                bookButton.target = "_blank";
-                bookButton.textContent = "Book Now";
-                bookButton.className = "book-button";
-                detailsDiv.appendChild(bookButton);
-
-                timeDropdown.addEventListener("change", () => {
-                    bookButton.href = timeDropdown.value || "#";
-                });
-
-                eventDiv.appendChild(detailsDiv);
-                container.appendChild(eventDiv);
-            });
-
-            document.querySelector('.loading-spinner').style.display = 'none';
-        }
-
-        fetchEvents();
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                window.scrollTo({
-                    top: 500,
-                    behavior: 'smooth'
-                });
-            }, 3000);
-        });
-
-        document.addEventListener("DOMContentLoaded", () => {
+<!-- Halloween audio (same behaviour as your working version) -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
     const sound = new Audio("halloween.mp3");
     sound.volume = 0.6;
     sound.preload = "auto";
@@ -301,16 +103,14 @@
       window.removeEventListener("scroll", playSound);
     }
 
-    /* Try autoplay (may be blocked) */
     sound.play()
       .then(() => played = true)
       .catch(() => {
-        /* Fallback: play on first interaction */
-        window.addEventListener("click", playSound);
-        window.addEventListener("touchstart", playSound);
-        window.addEventListener("scroll", playSound);
+        window.addEventListener("click", playSound, { passive: true });
+        window.addEventListener("touchstart", playSound, { passive: true });
+        window.addEventListener("scroll", playSound, { passive: true });
       });
   });
-    </script>
+</script>
 </body>
 </html>

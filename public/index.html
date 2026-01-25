@@ -1,124 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
- <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
- <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HF03R5RLBZ');
+  </script>
 
-  gtag('config', 'G-HF03R5RLBZ');
- </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reagal Events</title>
-    <link rel="stylesheet" href="styles.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Reagal Events</title>
+  <meta name="description" content="Reagal Events presents family-friendly circus shows, seasonal events, and touring performances across the UK. Find your next town and book tickets online.">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Reagal Events">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:title" content="Reagal Events">
+  <meta property="og:description" content="Family-friendly circus shows, seasonal events, and touring performances across the UK. Find your next town and book tickets online.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/banner1.jpg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Reagal Events">
+  <meta name="twitter:description" content="Family-friendly circus shows, seasonal events, and touring performances across the UK. Find your next town and book tickets online.">
+  <meta name="twitter:image" content="/banner1.jpg">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <script src="script.js" defer></script>
+
+  <!-- ✅ Homepage-only visual refinements (keeps page looking EXACTLY like your working version) -->
+  <style>
+    /* Title box matches site glass-black style */
+    .page-title-box{
+      background: rgba(0,0,0,0.35) !important;
+      border: 1px solid rgba(255,255,255,0.18) !important;
+    }
+
+    /* Main tour tiles hover polish (3 event boxes) */
+    #main-sections .section .section-border{
+      display: block;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    #main-sections .section .section-border:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    /* ✅ Town cards layout = Left (Town) | Center (Dates) | Right (Badge) */
+    .town-card{
+      padding: 14px 16px;
+    }
+
+    /* Make the whole card a clean 3-column row */
+    .town-card a{
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;           /* ✅ vertical center */
+      gap: 10px;
+    }
+
+    /* Remove old flex layout impact */
+    .town-header{
+      display: contents;
+    }
+
+    /* Town (left) */
+    .town-name{
+      grid-column: 1;
+      justify-self: start;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    /* Dates (center) */
+    .town-dates{
+      grid-column: 2;
+      justify-self: center;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      opacity: 0.95;
+      margin: 0;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    /* Badge (right) */
+    .town-badge{
+      grid-column: 3;
+      justify-self: end;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    /* ✅ Mobile: stack neatly */
+    @media (max-width: 600px){
+      .town-card a{
+        grid-template-columns: 1fr;
+        row-gap: 8px;
+        text-align: center;
+      }
+      .town-name,
+      .town-dates,
+      .town-badge{
+        grid-column: 1;
+        justify-self: center;
+        white-space: normal;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <!-- Global Header -->
-    <header>
-        <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
-        <h2 class="circus-font">Proudly Presents</h2>
-        <div class="banner2-container"></div>
-		<!-- Navigation Menu -->
+  <!-- Global Header -->
+  <header>
+    <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
+    <h2 class="circus-font">Proudly Presents</h2>
+    <div class="banner2-container"></div>
+
+    <!-- Navigation Menu -->
     <nav id="menu">
-        <ul>
-            <li><a href="index.html">Welcome</a></li>
-            <li><a href="all-shows.html">View All Shows</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="general-tour.html">General Tour</a></li>
-            <li><a href="summer-season.html">Summer Season</a></li>
-            <li><a href="halloween-circus.html">Halloween Circus</a></li>
-        </ul>
+      <ul>
+        <li><a href="index.html">Welcome</a></li>
+        <li><a href="all-shows.html">View All Shows</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="general-tour.html">General Tour</a></li>
+        <li><a href="summer-season.html">Summer Season</a></li>
+        <li><a href="halloween-circus.html">Halloween Circus</a></li>
+      </ul>
     </nav>
+  </header>
 
-    </header>
+   <main>
+  <!-- ✅ Single tight glass box (H1 + welcome + supporting line) -->
+  <section id="welcome" class="page-title-box">
+    <h1>Family Friendly Circus Shows &amp; Live Events Across the UK</h1>
 
-    
-    <!-- Welcome Page Content -->
-    <main>
-        <section id="welcome">
-            <h1>Welcome to Reagal Events</h1>
-            <p>Discover the magic of live entertainment with our exciting shows and events. Explore more below!</p>
-        </section>
+    <h2>Welcome to Reagal Events</h2>
 
-        <!-- Container for the three sections to be side by side -->
-        <div id="main-sections">
-            <section id="general-tour-section" class="section">
-                <a href="general-tour.html">
-                    <div class="section-border">
-                        <div class="section-title">General Tour</div>
-                        <img src="gt.jpg" alt="General Tour" class="section-image">
-                        <div class="section-info">Join us on a journey across the country!</div>
-                    </div>
-                </a>
-            </section>
+    <p class="page-description">
+      Reagal Events proudly presents family-friendly circus shows, seasonal events, and touring live entertainment across the UK.
+      Discover the magic of live entertainment with our exciting shows and events. Explore more below!
+      
+    </section>
 
-            <section id="summer-season-section" class="section">
-                <a href="summer-season.html">
-                    <div class="section-border">
-                        <div class="section-title">Summer Season</div>
-                        <img src="ss.jpg" alt="Summer Season" class="section-image">
-                        <div class="section-info">Enjoy the best of summer performances!</div>
-                    </div>
-                </a>
-            </section>
+    <!-- Tour status badges -->
+    <section id="tour-status" class="tour-status">
+      <div id="in-town-now"></div>
+      <div id="coming-soon"></div>
+    </section>
 
-            <section id="halloween-circus-section" class="section">
-                <a href="halloween-circus.html">
-                    <div class="section-border">
-                        <div class="section-title">Halloween Circus</div>
-                        <img src="hc.jpg" alt="Halloween Circus" class="section-image">
-                        <div class="section-info">Get ready for spooky fun and thrilling acts!</div>
-                    </div>
-                </a>
-            </section>
-        </div>
-    </main>
+    <!-- 3 main sections -->
+    <div id="main-sections">
+      <section id="general-tour-section" class="section">
+        <a href="general-tour.html">
+          <div class="section-border">
+            <div class="section-title">General Tour</div>
+            <img src="gt.jpg" alt="General Tour" class="section-image">
+            <div class="section-info">Join us on a journey across the country!</div>
+          </div>
+        </a>
+      </section>
 
-<!-- Include Font Awesome in <head> -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+      <section id="summer-season-section" class="section">
+        <a href="summer-season.html">
+          <div class="section-border">
+            <div class="section-title">Summer Season</div>
+            <img src="ss.jpg" alt="Summer Season" class="section-image">
+            <div class="section-info">Enjoy the best of summer performances!</div>
+          </div>
+        </a>
+      </section>
 
-<footer>
-    <div class="footer-container">
-        <!-- Social Media Links (Left) -->
-        <div class="social-links">
-            <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon">
-                <i class="fa-brands fa-facebook-f"></i>
-            </a>
-            <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon">
-                <i class="fa-brands fa-tiktok"></i>
-            
-        </div> 
-
-        <!-- Reagal Events Text (Centered) -->
-        <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>	
-
-        <!-- TicketSource Button (Right) -->
-        <div class="ticketsource-button">
-            <a href="https://www.ticketsource.co.uk/reagalevents">
-                <img border="0" width="130" height="56" alt="Book now"
-                src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
-            </a>
-        </div>
+      <section id="halloween-circus-section" class="section">
+        <a href="halloween-circus.html">
+          <div class="section-border">
+            <div class="section-title">Halloween Circus</div>
+            <img src="hc.jpg" alt="Halloween Circus" class="section-image">
+            <div class="section-info">Get ready for spooky fun and thrilling acts!</div>
+          </div>
+        </a>
+      </section>
     </div>
-</footer>
-    <script>
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-          window.scrollTo({
-              top: 550,  // Adjust this value to scroll by a specific pixel amount
-              behavior: 'smooth'
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="social-links">
+        <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon" rel="noopener">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon" rel="noopener">
+          <i class="fa-brands fa-tiktok"></i>
+        </a>
+      </div>
+
+      <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>
+
+      <div class="ticketsource-button">
+        <a href="https://www.ticketsource.co.uk/reagalevents">
+          <img border="0" width="130" height="56" alt="Book now"
+               src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    async function loadTownBadges() {
+      try {
+        const res = await fetch("/api/town-index");
+        const towns = await res.json();
+
+        const inTown = towns.filter(
+          t => t.status === "IN_TOWN_NOW" || t.status === "FINAL_DAY"
+        );
+
+        const sorted = [...towns].sort(
+          (a, b) => new Date(a.startDateISO) - new Date(b.startDateISO)
+        );
+
+        let nextStop = [];
+
+        if (inTown.length > 0) {
+          const currentEnd = new Date(
+            Math.max(...inTown.map(t => new Date(t.endDateISO)))
+          );
+
+          const nextTown = sorted.find(
+            t => new Date(t.startDateISO) > currentEnd
+          );
+
+          if (nextTown) nextStop = [nextTown];
+        } else {
+          const firstFuture = sorted.find(
+            t => new Date(t.startDateISO) > new Date()
+          );
+          if (firstFuture) nextStop = [firstFuture];
+        }
+
+        const inTownEl = document.getElementById("in-town-now");
+        const comingSoonEl = document.getElementById("coming-soon");
+
+        const fmt = (iso) =>
+          new Date(iso).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short"
           });
-      }, 2500);  // Adjust the 2500ms (2.5 seconds) delay to your preference
-});
 
-    </script>
+        function renderTown(t, badgeOverride = null) {
+          const badge = badgeOverride ?? (
+            t.status === "FINAL_DAY"
+              ? "🔴 Final day"
+              : t.status === "IN_TOWN_NOW"
+              ? "🟢 In town now"
+              : "🟡 Coming soon"
+          );
 
+          return `
+            <div class="town-card">
+              <a href="/circus-in/${t.townSlug}">
+                <div class="town-header">
+                  <div class="town-name">${t.town}</div>
+                  <div class="town-badge">${badge}</div>
+                </div>
+                <div class="town-dates">
+                  ${fmt(t.startDateISO)} – ${fmt(t.endDateISO)}
+                </div>
+              </a>
+            </div>
+          `;
+        }
+
+        inTownEl.innerHTML = inTown.length
+          ? `<h2>🟢 In town now</h2>` + inTown.map(t => renderTown(t)).join("")
+          : "";
+
+        comingSoonEl.innerHTML = nextStop.length
+          ? `<h2>🟡 Next stop</h2>` + nextStop.map(t => renderTown(t, "🟡 Next stop")).join("")
+          : "";
+
+      } catch (err) {
+        console.error("Failed to load town badges:", err);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadTownBadges);
+  </script>
 </body>
 </html>

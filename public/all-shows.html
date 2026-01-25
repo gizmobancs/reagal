@@ -1,90 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!DOCTYPE html>
- <html lang="en">
- <head> 
-    <!-- Google tag (gtag.js) -->
- <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
- <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HF03R5RLBZ');
+  </script>
 
-  gtag('config', 'G-HF03R5RLBZ');
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reagal Events</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-	<style>
-	/* General Tour Specific Styling */
-.page-title {
-    color: white;
-    text-align: center;
-    font-size: 2.5rem;
-}
- .page-description {
-    color: white;
-    text-align: center;
-    font-size: 1rem;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>All Shows | Reagal Events</title>
+  <meta name="description" content="Browse all upcoming Reagal Events shows by town. Pick a date, choose a time, and book tickets online.">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Reagal Events">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:title" content="All Shows | Reagal Events">
+  <meta property="og:description" content="Browse all upcoming Reagal Events shows by town. Pick a date, choose a time, and book tickets online.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/banner1.jpg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="All Shows | Reagal Events">
+  <meta name="twitter:description" content="Browse all upcoming Reagal Events shows by town. Pick a date, choose a time, and book tickets online.">
+  <meta name="twitter:image" content="/banner1.jpg">
+
   <link rel="stylesheet" href="styles.css">
-  <title>All Shows</title>
-  <style>
-  </style>
-  </head>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <script src="script.js" defer></script>
+</head>
 
 <body>
   <header>
     <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
     <h2 class="circus-font">Proudly Presents</h2>
     <div class="banner2-container"></div>
-	  <nav id="menu">
-    <ul>
-      <li><a href="index.html">Welcome</a></li>
-      <li><a href="all-shows.html">View All Shows</a></li>
-      <li><a href="gallery.html">Gallery</a></li>
-      <li><a href="contact.html">Contact Us</a></li>
-      <li><a href="general-tour.html">General Tour</a></li>
-      <li><a href="summer-season.html">Summer Season</a></li>
-      <li><a href="halloween-circus.html">Halloween Circus</a></li>
-    </ul>
-  </nav>
+
+    <nav id="menu">
+      <ul>
+        <li><a href="index.html">Welcome</a></li>
+        <li><a href="all-shows.html">View All Shows</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="general-tour.html">General Tour</a></li>
+        <li><a href="summer-season.html">Summer Season</a></li>
+        <li><a href="halloween-circus.html">Halloween Circus</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <h1 class="all-shows-title">All Shows</h1>
-  <p class="all-shows-description">Discover all our exciting shows happening near you!</p>
+  <!-- ✅ Title + description in the same shaded box style as the rest of the site -->
+  <section class="page-title-box">
+    <h1 class="all-shows-title">All Shows</h1>
+    <p class="all-shows-description">Discover all our exciting shows happening near you!</p>
+  </section>
 
   <div id="events-container"></div>
-  <!-- Include Font Awesome in <head> -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<footer>
+
+  <footer>
     <div class="footer-container">
-        <!-- Social Media Links (Left) -->
-        <div class="social-links">
-            <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon">
-                <i class="fa-brands fa-facebook-f"></i>
-            </a>
-            <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon">
-                <i class="fa-brands fa-tiktok"></i>
-            
-        </div> 
+      <div class="social-links">
+        <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon" rel="noopener">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon" rel="noopener">
+          <i class="fa-brands fa-tiktok"></i>
+        </a>
+      </div>
 
-        <!-- Reagal Events Text (Centered) -->
-        <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>	
+      <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>
 
-        <!-- TicketSource Button (Right) -->
-        <div class="ticketsource-button">
-            <a href="https://www.ticketsource.co.uk/reagalevents">
-                <img border="0" width="130" height="56" alt="Book now"
-                src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
-            </a>
-        </div>
+      <div class="ticketsource-button">
+        <a href="https://www.ticketsource.co.uk/reagalevents">
+          <img border="0" width="130" height="56" alt="Book now"
+               src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
+        </a>
+      </div>
     </div>
-</footer>
+  </footer>
+
   <script>
     async function fetchEvents() {
       try {
@@ -101,10 +103,10 @@
       container.innerHTML = "";
 
       Object.entries(eventsByTown).forEach(([town, events]) => {
-        if (events.length === 0) return;
+        if (!events || events.length === 0) return;
 
         // Combine all unique dates from all events in the town
-        const allDates = events.flatMap((event) => event.dates);
+        const allDates = events.flatMap((event) => event.dates || []);
         const uniqueDates = [...new Set(allDates.map((d) => d.date))];
 
         if (uniqueDates.length === 0) return;
@@ -193,17 +195,6 @@
     }
 
     fetchEvents();
-
-    // Auto-scroll functionality
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        window.scrollTo({
-          top: 550,
-          behavior: 'smooth',
-        });
-      }, 2500);
-    });
   </script>
- 
 </body>
 </html>

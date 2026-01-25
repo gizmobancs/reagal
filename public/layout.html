@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{DESCRIPTION}}" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<body>
+
+<header>
+  <img src="/banner1.jpg" alt="Reagal Events Banner" class="banner">
+  <h2 class="circus-font">Proudly Presents</h2>
+  <div class="banner2-container"></div>
+
+  <nav id="menu">
+    <ul>
+      <li><a href="/index.html">Welcome</a></li>
+      <li><a href="/all-shows.html">View All Shows</a></li>
+      <li><a href="/gallery.html">Gallery</a></li>
+      <li><a href="/contact.html">Contact Us</a></li>
+      <li><a href="/general-tour.html">General Tour</a></li>
+      <li><a href="/summer-season.html">Summer Season</a></li>
+      <li><a href="/halloween-circus.html">Halloween Circus</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  {{CONTENT}}
+</main>
+
+<footer>
+  <div class="footer-container">
+    <div class="social-links">
+      <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon">
+        <i class="fa-brands fa-facebook-f"></i>
+      </a>
+      <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon">
+        <i class="fa-brands fa-tiktok"></i>
+      </a>
+    </div>
+
+    <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>
+
+    <div class="ticketsource-button">
+      <a href="https://www.ticketsource.co.uk/reagalevents">
+        <img width="130" height="56"
+          src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
+      </a>
+    </div>
+  </div>
+</footer>
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    window.scrollTo({
+      top: 550,
+      behavior: 'smooth'
+    });
+  }, 2500);
+});
+</script>
+
+</body>
+</html>

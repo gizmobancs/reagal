@@ -37,6 +37,9 @@ if (!API_KEY) {
 // Example: https://www.reagalevents.com
 const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || "").trim();
 
+
+// Cache-busting version for static assets (set in Render env vars, e.g. 20260125-1)
+const APP_VERSION = (process.env.APP_VERSION || "").trim();
 const SEO_FLAGS = {
   enableJsonLd: true,
   enableFaq: true,
@@ -68,10 +71,12 @@ app.use(
         return;
       }
 
+      // CSS/JS: always revalidate (prevents "old CSS/JS on phone" after deploy)
       if ([".css", ".js"].includes(ext)) {
-        res.setHeader("Cache-Control", "public, max-age=604800"); // 7 days
-        return;
+      res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
+      return;
       }
+
     },
   })
 );
@@ -403,6 +408,9 @@ function renderShell({
           .join("\n")
       : "";
 
+
+  // Cache-buster for CSS/JS so browsers fetch latest assets after deploy
+  const assetV = APP_VERSION || (process.env.NODE_ENV === "production" ? "prod" : String(Date.now()));
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -443,7 +451,7 @@ function renderShell({
   <meta property="og:image:width" content="1080"/>
   <meta property="og:image:height" content="333"/>
 
-  <link rel="stylesheet" href="/styles.css"/>
+  <link rel="stylesheet" href="/styles.css?v=${escapeHtml(assetV)}"/>
 
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">

@@ -526,50 +526,39 @@ function renderShell({
 
   <!-- Autoscroll: bring menu into view, without breaking mobile -->
 <script>
-  (function () {
-    let cancelled = false;
-    let userInteracted = false;
+(function () {
+  // Only run autoscroll ONCE per page load
+  let ran = false;
 
-    function markUserInteracted() {
-      userInteracted = true;
-      cancelled = true;
-      cleanup();
+  function runAutoScroll() {
+    if (ran) return;
+    ran = true;
+
+    const reduce =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const menu = document.getElementById('menu');
+    if (!menu) return;
+
+    // Scroll to menu position, but only if user hasn't already scrolled down
+    const alreadyScrolled = window.pageYOffset > 30;
+    if (alreadyScrolled) return;
+
+    const y = menu.getBoundingClientRect().top + window.pageYOffset;
+
+    try {
+      window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+    } catch (e) {
+      window.scrollTo(0, y);
     }
+  }
 
-    function cleanup() {
-      window.removeEventListener('wheel', markUserInteracted, { passive: true });
-      window.removeEventListener('touchmove', markUserInteracted, { passive: true });
-      window.removeEventListener('keydown', markUserInteracted);
-      window.removeEventListener('scroll', markUserInteracted, { passive: true });
-    }
-
-    // Cancel only on real user scrolling / movement (NOT touchstart)
-    window.addEventListener('wheel', markUserInteracted, { passive: true });
-    window.addEventListener('touchmove', markUserInteracted, { passive: true });
-    window.addEventListener('keydown', markUserInteracted);
-    window.addEventListener('scroll', markUserInteracted, { passive: true });
-
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        if (cancelled || userInteracted) return;
-
-        const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const menu = document.getElementById('menu');
-        if (!menu) return;
-
-        const y = menu.getBoundingClientRect().top + window.pageYOffset;
-
-        try {
-          window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
-        } catch (e) {
-          window.scrollTo(0, y);
-        }
-
-        cleanup();
-      }, 900);
-    });
-  })();
+  window.addEventListener('load', function () {
+    // Faster than 2500ms; also avoids iOS oddities
+    setTimeout(runAutoScroll, 700);
+  });
+})();
 </script>
+
 </body>
 </html>`;
 }

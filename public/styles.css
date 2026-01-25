@@ -824,3 +824,46 @@ body {
 @supports (-webkit-touch-callout: none) {
   body { background-attachment: scroll; }
 }
+/* ===== Mobile background + white gap hard fix ===== */
+html, body { min-height: 100%; height: auto; }
+
+body {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+/* Prevent any container from showing a white page behind */
+body, main { background-color: transparent !important; }
+
+/* iOS/Android: fixed backgrounds can glitch; use scroll */
+@media (max-width: 900px) {
+  body { background-attachment: scroll !important; }
+}
+/* ===== Mobile header/menu spacing fix ===== */
+header { position: relative; }
+
+#menu { position: relative; z-index: 5; }
+
+@media (max-width: 600px) {
+  #menu ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 8px;
+    margin: 0;
+  }
+
+  #menu a {
+    padding: 8px 10px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  /* Ensure banner2 area doesn't get covered when menu wraps */
+  .banner2-container {
+    min-height: 70px; /* adjust if needed */
+  }
+}

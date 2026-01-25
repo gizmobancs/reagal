@@ -551,19 +551,11 @@ body.halloween-page p {
 /* -------------------------
    Tour Status Badges (Homepage)
 ------------------------- */
- .tour-status {
+.tour-status {
   max-width: 1080px;
   margin: 20px auto 30px auto;
-  padding: 14px 12px;
-
-  /* Glass container so headings + cards sit on a consistent panel */
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 18px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  padding: 0 12px;
 }
-
 
 .tour-status h2 {
   color: #fff;
@@ -775,26 +767,60 @@ body.halloween-page p {
 }
 
 
-/* Link color safety: avoid browser-default blue inside glass panels */
-.page-title-box a,
-.town-page-box a,
-.tour-status a,
-.town-card a {
-  color: #fff;
+/* === REAGAL MOBILE FIX PACK v20260125 === */
+/* --- Mobile header/menu fixes: prevent overlap and ugly wrapping --- */
+header { position: relative; }
+
+.banner { display: block; width: 100%; height: auto; }
+
+#menu { width: 100%; box-sizing: border-box; }
+
+#menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 8px;
+  margin: 0;
+  list-style: none;
+  box-sizing: border-box;
+}
+
+#menu li { margin: 0; padding: 0; }
+
+#menu a {
+  display: inline-block;
+  padding: 10px 12px;
+  line-height: 1;
   text-decoration: none;
-}
-.page-title-box a:hover,
-.town-page-box a:hover,
-.tour-status a:hover,
-.town-card a:hover {
-  text-decoration: underline;
+  white-space: nowrap;
+  color: #fff;
 }
 
-/* Event detail panels on light backgrounds must stay black */
-.event-details, .event-details a,
-.event-info, .event-info a {
-  color: #000 !important;
+/* If any link styles are forcing blue, override inside content boxes too */
+a { color: inherit; }
+.town-page-box a, .event-container a, .title-box a, .content-box a { color: #fff; }
+
+@media (max-width: 520px) {
+  #menu a {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
 }
 
+/* --- Restore full-page background reveal feel --- */
+html, body { height: 100%; }
 
-select { max-width: 100%; }
+body {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  /* Many browsers: gives the "content scrolls over background" look */
+  background-attachment: fixed;
+}
+
+/* iOS Safari often ignores fixed backgrounds; keep it stable anyway */
+@supports (-webkit-touch-callout: none) {
+  body { background-attachment: scroll; }
+}

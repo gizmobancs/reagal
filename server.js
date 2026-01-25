@@ -38,7 +38,7 @@ if (!API_KEY) {
 const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || "").trim();
 
 
-// Cache-busting version for static assets (set in Render env vars, e.g. 20260125-1)
+// Cache-busting version for static assets (set in Render env vars, e.g. 20260125-2)
 const APP_VERSION = (process.env.APP_VERSION || "").trim();
 const SEO_FLAGS = {
   enableJsonLd: true,
@@ -71,12 +71,10 @@ app.use(
         return;
       }
 
-      // CSS/JS: always revalidate (prevents "old CSS/JS on phone" after deploy)
       if ([".css", ".js"].includes(ext)) {
-      res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
-      return;
+        res.setHeader("Cache-Control", "public, max-age=0, must-revalidate"); // always revalidate
+        return;
       }
-
     },
   })
 );
@@ -409,7 +407,7 @@ function renderShell({
       : "";
 
 
-  // Cache-buster for CSS/JS so browsers fetch latest assets after deploy
+  // Cache-buster for CSS/JS so browsers fetch the latest assets after deploy
   const assetV = APP_VERSION || (process.env.NODE_ENV === "production" ? "prod" : String(Date.now()));
   return `<!doctype html>
 <html lang="en">
@@ -526,37 +524,52 @@ function renderShell({
     </div>
   </footer>
 
-  <script>
-    (function () {
-      let cancelled = false;
+  <!-- Autoscroll: bring menu into view, without breaking mobile -->
+<script>
+  (function () {
+    let cancelled = false;
+    let userInteracted = false;
 
-      function cancel() { cancelled = true; cleanup(); }
-      function cleanup() {
-        window.removeEventListener('wheel', cancel, { passive: true });
-        window.removeEventListener('touchstart', cancel, { passive: true });
-        window.removeEventListener('keydown', cancel);
-      }
+    function markUserInteracted() {
+      userInteracted = true;
+      cancelled = true;
+      cleanup();
+    }
 
-      window.addEventListener('wheel', cancel, { passive: true });
-      window.addEventListener('touchstart', cancel, { passive: true });
-      window.addEventListener('keydown', cancel);
+    function cleanup() {
+      window.removeEventListener('wheel', markUserInteracted, { passive: true });
+      window.removeEventListener('touchmove', markUserInteracted, { passive: true });
+      window.removeEventListener('keydown', markUserInteracted);
+      window.removeEventListener('scroll', markUserInteracted, { passive: true });
+    }
 
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          if (cancelled) return;
+    // Cancel only on real user scrolling / movement (NOT touchstart)
+    window.addEventListener('wheel', markUserInteracted, { passive: true });
+    window.addEventListener('touchmove', markUserInteracted, { passive: true });
+    window.addEventListener('keydown', markUserInteracted);
+    window.addEventListener('scroll', markUserInteracted, { passive: true });
 
-          const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          const menu = document.getElementById('menu');
-          if (!menu) return;
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        if (cancelled || userInteracted) return;
 
-          const y = menu.getBoundingClientRect().top + window.pageYOffset;
+        const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const menu = document.getElementById('menu');
+        if (!menu) return;
+
+        const y = menu.getBoundingClientRect().top + window.pageYOffset;
+
+        try {
           window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+        } catch (e) {
+          window.scrollTo(0, y);
+        }
 
-          cleanup();
-        }, 2500);
-      });
-    })();
-  </script>
+        cleanup();
+      }, 900);
+    });
+  })();
+</script>
 </body>
 </html>`;
 }
@@ -582,32 +595,20 @@ async function fetchAllEvents(apiUrl, reference = null) {
 }
 
 async function buildGroupedEvents(reference = null) {
-  // TicketSource reference values are case-sensitive in some contexts.
-  // We accept any case from the client, but we match events case-insensitively
-  // while *preferring* an exact reference query first for efficiency.
-  const refRaw = reference ? String(reference).trim() : null;
-  const refNorm = refRaw ? refRaw.toLowerCase() : null;
+  const ref = reference ? String(reference).toLowerCase() : null;
+  let events = await fetchAllEvents("https://api.ticketsource.io/events", ref);
 
-  // Try exact reference first (efficient if TicketSource supports it)
-  let events = await fetchAllEvents("https://api.ticketsource.io/events", refRaw);
-
-  // Fallback: if nothing returned (or TicketSource ignores/mis-matches), fetch all and filter locally
-  if (refRaw && (!events || events.length === 0)) {
-    events = await fetchAllEvents("https://api.ticketsource.io/events", null);
-  }
-
-  // Local filter (case-insensitive) to guarantee "General"/"Summer"/"Halloween" work reliably
-  if (refNorm) {
-    events = (events || []).filter((event) => {
-      const eventReference = String(event.attributes?.reference || "").trim().toLowerCase();
-      return eventReference === refNorm;
+  if (ref) {
+    events = events.filter((event) => {
+      const eventReference = event.attributes?.reference?.toLowerCase();
+      return eventReference === ref;
     });
   }
 
-  const venueRequests = (events || []).map((event) =>
+  const venueRequests = events.map((event) =>
     axios.get(event.links.venues, { headers: { Authorization: `Bearer ${API_KEY}` } })
   );
-  const dateRequests = (events || []).map((event) =>
+  const dateRequests = events.map((event) =>
     axios.get(event.links.dates, { headers: { Authorization: `Bearer ${API_KEY}` } })
   );
 
@@ -617,7 +618,7 @@ async function buildGroupedEvents(reference = null) {
   const groupedEvents = {};
   const today = startOfTodayLocal();
 
-  (events || []).forEach((event, index) => {
+  events.forEach((event, index) => {
     const venues = venuesResponses[index].data.data;
     const dates = datesResponses[index].data.data;
 
@@ -803,7 +804,7 @@ ${urls
 // -------------------------
 app.get("/api/events", async (req, res) => {
   try {
-    const reference = req.query.reference ? String(req.query.reference).trim() : null;
+    const reference = req.query.reference ? req.query.reference.toLowerCase() : null;
     const groupedEvents = await buildGroupedEvents(reference);
     res.json(groupedEvents);
   } catch (error) {
@@ -1116,7 +1117,7 @@ app.get("/circus-in/:townSlug", async (req, res) => {
 
         .town-events .town-row{
           display: grid !important;
-          grid-template-columns: minmax(0, 280px) auto;
+          grid-template-columns: 280px auto;
           column-gap: 18px;
           align-items: center;
           justify-content: start;
@@ -1125,13 +1126,13 @@ app.get("/circus-in/:townSlug", async (req, res) => {
         .town-events .town-row .town-field:nth-child(1){
           grid-column: 1;
           grid-row: 1;
-          max-width: 280px; width: 100%;
+          width: 280px;
         }
 
         .town-events .town-row .town-field:nth-child(2){
           grid-column: 1;
           grid-row: 2;
-          max-width: 280px; width: 100%;
+          width: 280px;
           margin-top: 12px;
         }
 

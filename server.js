@@ -6,12 +6,6 @@ const axios = require("axios");
 const cors = require("cors");
 const path = require("path");
 
-// Optional: load .env locally (safe in production; Render injects env vars anyway)
-try {
-  // eslint-disable-next-line global-require
-  require("dotenv").config();
-} catch (_) {}
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 

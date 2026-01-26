@@ -6,10 +6,27 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// NOTE: sort API key later (as requested)
-const API_KEY =
-  process.env.TICKETSOURCE_API_KEY ||
-  "skl-J9fLpV5K6RoPnQbCFALr16aANibrWRf4OhxwxENOUu2NFWNtEJdvm8FLNgpa";
+/**
+ * IMPORTANT:
+ * - DO NOT hardcode your TicketSource API key in the repo.
+ * - Set TICKETSOURCE_API_KEY in Render Environment.
+ */
+const API_KEY = process.env.TICKETSOURCE_API_KEY;
+
+// Fail fast in production if key is missing (prevents silent breakage)
+if (!API_KEY) {
+  const msg =
+    "Missing TICKETSOURCE_API_KEY env var. Set it in Render (and in .env locally if needed).";
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(msg);
+  } else {
+    console.warn(`[WARN] ${msg}`);
+  }
+}
+
+// Force canonical base URL for robots/sitemap/canonicals in production
+// Example: https://www.reagalevents.com
+const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || "").trim();
 
 const SEO_FLAGS = {
   enableJsonLd: true,
@@ -20,8 +37,35 @@ const SEO_FLAGS = {
   enableRobotsTxt: true,
 };
 
+// Render/proxies: needed so req.protocol becomes https behind proxy
+app.set("trust proxy", 1);
+
 app.use(cors());
-app.use(express.static(path.join(__dirname, "public")));
+
+app.use(
+  express.static(path.join(__dirname, "public"), {
+    maxAge: "30d",
+    immutable: false,
+    setHeaders(res, filePath) {
+      const ext = path.extname(filePath).toLowerCase();
+
+      if (ext === ".html") {
+        res.setHeader("Cache-Control", "no-cache");
+        return;
+      }
+
+      if ([".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".ico"].includes(ext)) {
+        res.setHeader("Cache-Control", "public, max-age=2592000"); // 30 days
+        return;
+      }
+
+      if ([".css", ".js"].includes(ext)) {
+        res.setHeader("Cache-Control", "public, max-age=604800"); // 7 days
+        return;
+      }
+    },
+  })
+);
 
 // -------------------------
 // Helpers

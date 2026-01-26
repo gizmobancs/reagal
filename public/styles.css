@@ -20,7 +20,7 @@ body {
   margin: 0;
   padding: 0;
 
-  background: url('background.png') no-repeat center center fixed;
+  background: url('background.webp') no-repeat center center fixed;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -49,7 +49,7 @@ html, body {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  background: url('background.png') no-repeat center center fixed;
+  background: url('background.webp') no-repeat center center fixed;
   background-size: cover;
 }
 
@@ -67,14 +67,14 @@ header {
 
 .banner1-container {
   position: relative;
-  background: url('banner1.jpg') no-repeat center center / cover;
+  background: url('banner1.webp') no-repeat center center / cover;
   height: 400px;
 }
 
 /* Banner2 */
 .banner2-container {
   position: relative;
-  background: url('banner2.jpg') no-repeat center center / cover;
+  background: url('banner2.webp') no-repeat center center / cover;
   height: 400px;
 }
 
@@ -103,52 +103,74 @@ header {
   .circus-font { font-size: 1rem; }
 }
 
-/* ---------- Menu (single line on mobile) ---------- */
-#menu{
-  position: relative;
-  width: 100%;
-  background: rgba(0,0,0,0.45);
-  padding: 5px 0;
-  z-index: 50;
+/* Menu styling */
+#menu {
+    position: absolute;
+    bottom: -10;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 1px 0;
 }
 
-#menu ul{
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  gap: 12px;
-  list-style: none;
-  margin: 0;
-  padding: 0 10px;
-
-  /* if it can't fit, it scrolls horizontally (no 2nd row) */
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
+#menu ul {
+    display: flex;
+    flex-wrap: wrap; /* Allows splitting into two rows */
+    justify-content: center;
+    list-style-type: none;
+    margin: 0;
+    padding: -20px;
 }
 
-#menu li{ flex: 0 0 auto; }
-
-#menu a{
-  display: inline-block;
-  padding: 8px 14px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #fff;
-  white-space: nowrap;
+#menu ul li {
+    margin: 5px 10px;
 }
 
-#menu a:hover{ color: gold; }
+#menu ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
 
-/* squeeze a bit on phones */
-@media (max-width: 768px){
-  #menu{ padding: 2px 0; }
-  #menu ul{ gap: 2px; justify-content: space-between; padding: 0 6px; }
-  #menu a{ padding: 6px 4px; font-size: 0.70rem; letter-spacing: -0.3px; }
+/* Menu changes for portrait mode */
+@media (max-width: 768px) {
+    #menu ul {
+        flex-direction: row;
+        flex-wrap: wrap; /* Allows breaking into two rows */
+        justify-content: space-evenly;
+    }
+
+    #menu ul li {
+        flex: 1 1 1 1  5%; /* Two items per row, 45% width each */
+        text-align: center;
+    }
+
+    /* Adjust text size for portrait mode */
+    #menu ul li a {
+        font-size: 0.8rem; /* Smaller text in portrait */
+    }
+
+    /* Limit the menu to 2 rows */
+    #menu ul li:nth-child(n+8) {
+        display: none; /* Hides items beyond the 6th one */
+    }
 }
-@media (max-width: 420px){
-  #menu a{ padding: 5px 3px; font-size: 0.62rem; letter-spacing: -0.4px; }
+
+/* Hover effect */
+#menu ul li a:hover {
+    color: gold;
 }
+
+section {
+    padding: 2em;
+    margin: 1em;
+    background: transparent; /* Light transparent background */
+    border: 0px solid rgba(0, 0, 0, 0.2); /* Semi-transparent 2px border */
+    border-radius: 8px;
+    font-weight: bold; /* Make text bold */
+    color: white; /* White text for readability */
+}
+
 
 /* -------------------------
    Global text defaults
@@ -484,13 +506,13 @@ section {
    Halloween page theme overrides
 ------------------------- */
 body.halloween-page {
-  background: url('Hbackground.png') no-repeat center center fixed;
+  background: url('Hbackground.webp') no-repeat center center fixed;
   background-size: cover;
   background-position: center;
 }
 
 body.halloween-page .banner2-container {
-  background: url('Hbanner2.jpg') no-repeat center center / cover;
+  background: url('Hbanner2.webp') no-repeat center center / cover;
 }
 
 body.halloween-page h1,

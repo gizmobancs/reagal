@@ -101,7 +101,7 @@
     </div>
   </footer>
 
-  <!-- Gallery JS (unchanged behaviour) -->
+  <!-- Gallery JS (updated for .webp first, with jpg/JPG fallback) -->
   <script>
     const imageCount = 31;
     const galleryFolder = '/gallery/';
@@ -115,20 +115,31 @@
 
     for (let i = 1; i <= imageCount; i++) {
       const img = new Image();
-      img.src = `${galleryFolder}img${i}.jpg`;
+
+      // ✅ Prefer WebP (smaller/faster)
+      img.src = `${galleryFolder}img${i}.webp`;
       img.alt = `Gallery image ${i}`;
 
-      img.onerror = () => img.src = `${galleryFolder}img${i}.JPG`;
+      // ✅ Fallbacks: .jpg then .JPG (for older sets / mixed case)
+      img.onerror = () => {
+        if (img.src.endsWith(`img${i}.webp`)) {
+          img.src = `${galleryFolder}img${i}.jpg`;
+        } else if (img.src.endsWith(`img${i}.jpg`)) {
+          img.src = `${galleryFolder}img${i}.JPG`;
+        }
+      };
 
       img.onload = () => {
         const cImg = document.createElement('img');
         cImg.src = img.src;
+        cImg.alt = img.alt;
         images.appendChild(cImg);
 
         if (images.children.length === 1) updateCarousel(0);
 
         const tImg = document.createElement('img');
         tImg.src = img.src;
+        tImg.alt = img.alt;
         tImg.addEventListener('mouseenter', () => hover(i - 1));
         tImg.addEventListener('mouseleave', () => clearTimeout(hoverTimeout));
 

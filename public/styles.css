@@ -1,4 +1,4 @@
-/* Reagal Events - consolidated styles.css (updated menu fix)
+/* Reagal Events - consolidated styles.css (no duplicates / no contradictions)
    ---------------------------------------------------------------
    Notes:
    - Global site uses dark "glass" overlays.
@@ -20,23 +20,13 @@ body {
   margin: 0;
   padding: 0;
 
-  /* ✅ OPTIMISED: prefer WebP, fallback to PNG */
-  background-image: image-set(
-    url('background.webp') type('image/webp'),
-    url('background.png') type('image/png')
-  );
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed;
+  background: url('background.png') no-repeat center center fixed;
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
   overflow-x: hidden;
   overflow-y: auto;
-}
-
-/* Optional perf tweak for mobile */
-@media (max-width: 768px){
-  body{ background-attachment: scroll; }
 }
 
 /* Sticky-ish footer structure */
@@ -54,23 +44,13 @@ html, body {
 
 .container { width: 100%; max-width: 100%; }
 
+/* Optional wrapper */
 #main-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-
-  background-image: image-set(
-    url('background.webp') type('image/webp'),
-    url('background.png') type('image/png')
-  );
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed;
+  background: url('background.png') no-repeat center center fixed;
   background-size: cover;
-}
-
-@media (max-width: 768px){
-  #main-container{ background-attachment: scroll; }
 }
 
 /* -------------------------
@@ -91,15 +71,10 @@ header {
   height: 400px;
 }
 
+/* Banner2 */
 .banner2-container {
   position: relative;
-  background-image: image-set(
-    url('banner2.webp') type('image/webp'),
-    url('banner2.jpg') type('image/jpeg')
-  );
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  background: url('banner2.jpg') no-repeat center center / cover;
   height: 400px;
 }
 
@@ -128,58 +103,51 @@ header {
   .circus-font { font-size: 1rem; }
 }
 
-/* -------------------------
-   Menu (FIXED)
-------------------------- */
-#menu {
-  position: relative; /* ensures it stays below banner */
+/* ---------- Menu (single line on mobile) ---------- */
+#menu{
+  position: relative;
   width: 100%;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0,0,0,0.45);
   padding: 5px 0;
-  box-sizing: border-box;
-  z-index: 30;
+  z-index: 50;
 }
 
-#menu ul {
+#menu ul{
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   gap: 12px;
-  margin: 0;
-  padding: 0;
   list-style: none;
-}
-
-#menu li {
   margin: 0;
-  padding: 0;
-  flex: 0 1 auto;
+  padding: 0 10px;
+
+  /* if it can't fit, it scrolls horizontally (no 2nd row) */
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
-#menu a {
+#menu li{ flex: 0 0 auto; }
+
+#menu a{
   display: inline-block;
   padding: 8px 14px;
   font-size: 1rem;
   font-weight: bold;
-  color: white;
-  text-decoration: none;
-  text-align: center;
+  color: #fff;
+  white-space: nowrap;
 }
 
-#menu a:hover { color: gold; }
+#menu a:hover{ color: gold; }
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  #menu ul {
-    justify-content: center;
-    gap: 6px;
-  }
-
-  #menu a {
-    padding: 6px 8px;
-    font-size: 0.85rem;
-    white-space: normal; /* allow wrapping on small screens */
-  }
+/* squeeze a bit on phones */
+@media (max-width: 768px){
+  #menu{ padding: 2px 0; }
+  #menu ul{ gap: 2px; justify-content: space-between; padding: 0 6px; }
+  #menu a{ padding: 6px 4px; font-size: 0.70rem; letter-spacing: -0.3px; }
+}
+@media (max-width: 420px){
+  #menu a{ padding: 5px 3px; font-size: 0.62rem; letter-spacing: -0.4px; }
 }
 
 /* -------------------------
@@ -278,6 +246,8 @@ section {
 
 /* -------------------------
    Events (All Shows / Tour pages)
+   - Keep outer "glass" DARK
+   - Keep details panel LIGHT with BLACK text
 ------------------------- */
 .event {
   display: flex;
@@ -463,7 +433,7 @@ section {
   background: rgba(0,0,0,0.6);
 }
 
-/* Desktop gallery layout */
+/* Desktop gallery layout: thumbs | viewer | thumbs */
 @media (min-width: 900px) {
   #main-content {
     display: grid;
@@ -472,10 +442,14 @@ section {
     column-gap: 20px;
     align-items: start;
   }
+
   .gallery-title { grid-column: 1 / -1; }
+
   #carousel { grid-column: 2; grid-row: 2; }
+
   .gallery-left { grid-column: 1; grid-row: 2; width: 100%; }
   .gallery-right { grid-column: 3; grid-row: 2; width: 100%; }
+
   .gallery-left, .gallery-right { grid-template-columns: repeat(3, 1fr); }
 }
 
@@ -510,27 +484,13 @@ section {
    Halloween page theme overrides
 ------------------------- */
 body.halloween-page {
-  background-image: image-set(
-    url('Hbackground.webp') type('image/webp'),
-    url('Hbackground.png') type('image/png')
-  );
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed;
+  background: url('Hbackground.png') no-repeat center center fixed;
   background-size: cover;
-}
-@media (max-width: 768px){
-  body.halloween-page{ background-attachment: scroll; }
+  background-position: center;
 }
 
 body.halloween-page .banner2-container {
-  background-image: image-set(
-    url('Hbanner2.webp') type('image/webp'),
-    url('Hbanner2.jpg') type('image/jpeg')
-  );
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  background: url('Hbanner2.jpg') no-repeat center center / cover;
 }
 
 body.halloween-page h1,
@@ -542,19 +502,11 @@ body.halloween-page p {
 /* -------------------------
    Tour Status Badges (Homepage)
 ------------------------- */
- .tour-status {
+.tour-status {
   max-width: 1080px;
   margin: 20px auto 30px auto;
-  padding: 14px 12px;
-
-  /* Glass container so headings + cards sit on a consistent panel */
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 18px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  padding: 0 12px;
 }
-
 
 .tour-status h2 {
   color: #fff;
@@ -580,6 +532,8 @@ body.halloween-page p {
 .town-card a {
   text-decoration: none;
   color: inherit;
+
+  /* 3-column layout: Town | Dates | Badge */
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -589,6 +543,7 @@ body.halloween-page p {
 /* Neutralise legacy wrapper impact */
 .town-header { display: contents; }
 
+/* Town (left) */
 .town-name{
   grid-column: 1;
   justify-self: start;
@@ -597,6 +552,7 @@ body.halloween-page p {
   line-height: 1.15;
 }
 
+/* Dates (center) */
 .town-dates{
   grid-column: 2;
   justify-self: center;
@@ -609,6 +565,7 @@ body.halloween-page p {
   white-space: nowrap;
 }
 
+/* Badge (right) */
 .town-badge{
   grid-column: 3;
   justify-self: end;
@@ -642,10 +599,9 @@ body.halloween-page p {
   margin: 18px auto;
   padding: 18px 22px;
   border-radius: 18px;
-  background: rgba(0, 0, 0, 0.28);
-  color: #fff;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   text-align: center;
-<<<<<<< HEAD
 }
 
 .town-events {
@@ -749,40 +705,3 @@ body.halloween-page p {
   margin-left: auto;
   margin-right: auto;
 }
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-
-/* Link color safety: avoid browser-default blue inside glass panels */
-.page-title-box a,
-.town-page-box a,
-.tour-status a,
-.town-card a {
-  color: #fff;
-  text-decoration: none;
-}
-.page-title-box a:hover,
-.town-page-box a:hover,
-.tour-status a:hover,
-.town-card a:hover {
-  text-decoration: underline;
-}
-
-/* Event detail panels on light backgrounds must stay black */
-.event-details, .event-details a,
-.event-info, .event-info a {
-  color: #000 !important;
-}
-
-
-select { max-width: 100%; }
-  line-height: 1.5;

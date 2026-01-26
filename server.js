@@ -1,6 +1,3 @@
-// server.js
-"use strict";
-
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
@@ -9,31 +6,11 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/**
- * IMPORTANT:
- * - DO NOT hardcode your TicketSource API key in the repo.
- * - Set TICKETSOURCE_API_KEY in Render Environment.
- */
-const API_KEY = process.env.TICKETSOURCE_API_KEY;
+// NOTE: sort API key later (as requested)
+const API_KEY =
+  process.env.TICKETSOURCE_API_KEY ||
+  "skl-J9fLpV5K6RoPnQbCFALr16aANibrWRf4OhxwxENOUu2NFWNtEJdvm8FLNgpa";
 
-// Fail fast in production if key is missing (prevents silent breakage)
-if (!API_KEY) {
-  const msg =
-    "Missing TICKETSOURCE_API_KEY env var. Set it in Render (and in .env locally if needed).";
-  if (process.env.NODE_ENV === "production") {
-    throw new Error(msg);
-  } else {
-    console.warn(`[WARN] ${msg}`);
-  }
-}
-
-// Force canonical base URL for robots/sitemap/canonicals in production
-// Example: https://www.reagalevents.com
-const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || "").trim();
-
-
-// Cache-busting version for static assets (set in Render env vars, e.g. 20260125-2)
-const APP_VERSION = (process.env.APP_VERSION || "").trim();
 const SEO_FLAGS = {
   enableJsonLd: true,
   enableFaq: true,
@@ -43,35 +20,8 @@ const SEO_FLAGS = {
   enableRobotsTxt: true,
 };
 
-// Render/proxies: needed so req.protocol becomes https behind proxy
-app.set("trust proxy", 1);
-
 app.use(cors());
-
-app.use(
-  express.static(path.join(__dirname, "public"), {
-    maxAge: "30d",
-    immutable: false,
-    setHeaders(res, filePath) {
-      const ext = path.extname(filePath).toLowerCase();
-
-      if (ext === ".html") {
-        res.setHeader("Cache-Control", "no-cache");
-        return;
-      }
-
-      if ([".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".ico"].includes(ext)) {
-        res.setHeader("Cache-Control", "public, max-age=2592000"); // 30 days
-        return;
-      }
-
-      if ([".css", ".js"].includes(ext)) {
-        res.setHeader("Cache-Control", "public, max-age=0, must-revalidate"); // always revalidate
-        return;
-      }
-    },
-  })
-);
+app.use(express.static(path.join(__dirname, "public")));
 
 // -------------------------
 // Helpers
@@ -115,18 +65,8 @@ function toTimeLabel(iso) {
   return new Date(iso).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
 }
 
-/**
- * Base URL logic:
- * - If PUBLIC_BASE_URL is set -> always use it (best for production canonical URLs)
- * - Otherwise -> derive from request (fine for local dev)
- */
 function getBaseUrl(req) {
-  if (PUBLIC_BASE_URL) return PUBLIC_BASE_URL.replace(/\/+$/, "");
-
-  const proto =
-    (req.headers["x-forwarded-proto"] && String(req.headers["x-forwarded-proto"]).split(",")[0]) ||
-    req.protocol ||
-    "http";
+  const proto = req.headers["x-forwarded-proto"] || req.protocol;
   return `${proto}://${req.get("host")}`;
 }
 
@@ -348,6 +288,7 @@ function buildEventJsonLdForTown(req, townObj) {
 }
 
 // -------------------------
+// -------------------------
 // Rendering shell
 // -------------------------
 function renderShell({
@@ -364,35 +305,14 @@ function renderShell({
   const canonical = `${baseUrl}${canonicalPath}`;
 
   const year = new Date().getFullYear();
-  const SITE_OG_IMAGE = `${baseUrl}/og-share.png`;
 
-  const siteSchema =
-    SEO_FLAGS.enableJsonLd
-      ? {
-          "@context": "https://schema.org",
-          "@type": ["Organization", "LocalBusiness"],
-          name: "Reagal Events",
-          url: baseUrl,
-          logo: `${baseUrl}/banner1.jpg`,
-          image: `${baseUrl}/banner1.jpg`,
-          telephone: "07719877422",
-          address: {
-            "@type": "PostalAddress",
-            addressCountry: "GB",
-          },
-          sameAs: [
-            "https://www.facebook.com/story.php?story_fbid=610427098343014&id=100081271867855",
-            "https://www.tiktok.com/@the.wonder.circus",
-            "https://www.instagram.com/wondercircus_circus_of_wonders/",
-          ],
-        }
-      : null;
-
-  const mergedJsonLd = [siteSchema, ...(jsonLdObjects || [])].filter(Boolean);
+  // Use a real share image you host. banner1.jpg works as a starter.
+  const SITE_OG_IMAGE = `${baseUrl}/banner1.jpg`;
 
   const jsonLdScripts =
-    SEO_FLAGS.enableJsonLd && mergedJsonLd && mergedJsonLd.length
-      ? mergedJsonLd
+    SEO_FLAGS.enableJsonLd && jsonLdObjects && jsonLdObjects.length
+      ? jsonLdObjects
+          .filter(Boolean)
           .map((obj) => {
             const safe = JSON.stringify(obj).replace(/</g, "\\u003c");
             return `<script type="application/ld+json">${safe}</script>`;
@@ -400,26 +320,11 @@ function renderShell({
           .join("\n")
       : "";
 
-
-  // Cache-buster for CSS/JS so browsers fetch the latest assets after deploy
-  const assetV = APP_VERSION || (process.env.NODE_ENV === "production" ? "prod" : String(Date.now()));
   return `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-HF03R5RLBZ');
-  </script>
-
-  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
-  <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
 
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}"/>
@@ -439,43 +344,20 @@ function renderShell({
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="${escapeHtml(title)}"/>
   <meta name="twitter:description" content="${escapeHtml(description)}"/>
-  <meta property="og:image" content="${escapeHtml(SITE_OG_IMAGE)}"/>
-  <meta property="og:image:width" content="1080"/>
-  <meta property="og:image:height" content="333"/>
+  <meta name="twitter:image" content="${escapeHtml(SITE_OG_IMAGE)}"/>
 
-  <link rel="stylesheet" href="/styles.css?v=${escapeHtml(assetV)}"/>
+  <link rel="stylesheet" href="/styles.css"/>
 
+  <!-- Speed up third-party CSS -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-  <script defer src="https://unpkg.com/web-vitals@4/dist/web-vitals.iife.js"></script>
-  <script>
-    window.addEventListener('load', function () {
-      if (!window.webVitals || typeof window.gtag !== 'function') return;
-
-      function sendToGA(metric) {
-        gtag('event', metric.name, {
-          event_category: 'Web Vitals',
-          value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
-          event_label: metric.id,
-          non_interaction: true
-        });
-      }
-
-      webVitals.getCLS(sendToGA);
-      webVitals.getINP(sendToGA);
-      webVitals.getLCP(sendToGA);
-      webVitals.getFCP(sendToGA);
-      webVitals.getTTFB(sendToGA);
-    });
-  </script>
 
   ${headExtras || ""}
   ${jsonLdScripts}
 </head>
 <body>
   <header>
-    <img src="/banner1.jpg" alt="Reagal Events Banner" class="banner" decoding="async" fetchpriority="high">
+    <img src="/banner1.jpg" alt="Reagal Events Banner" class="banner">
     <h2 class="circus-font">Proudly Presents</h2>
     <div class="banner2-container"></div>
     <nav id="menu">
@@ -518,41 +400,39 @@ function renderShell({
     </div>
   </footer>
 
-  <!-- Autoscroll: bring menu into view, without breaking mobile -->
-<script>
-(function () {
-  // Only run autoscroll ONCE per page load
-  let ran = false;
+  <!-- Autoscroll: bring menu to top, but don't fight the user -->
+  <script>
+    (function () {
+      let cancelled = false;
 
-  function runAutoScroll() {
-    if (ran) return;
-    ran = true;
+      function cancel() { cancelled = true; cleanup(); }
+      function cleanup() {
+        window.removeEventListener('wheel', cancel, { passive: true });
+        window.removeEventListener('touchstart', cancel, { passive: true });
+        window.removeEventListener('keydown', cancel);
+      }
 
-    const reduce =
-      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const menu = document.getElementById('menu');
-    if (!menu) return;
+      window.addEventListener('wheel', cancel, { passive: true });
+      window.addEventListener('touchstart', cancel, { passive: true });
+      window.addEventListener('keydown', cancel);
 
-    // Scroll to menu position, but only if user hasn't already scrolled down
-    const alreadyScrolled = window.pageYOffset > 30;
-    if (alreadyScrolled) return;
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          if (cancelled) return;
 
-    const y = menu.getBoundingClientRect().top + window.pageYOffset;
+          // Respect reduced motion
+          const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          const menu = document.getElementById('menu');
+          if (!menu) return;
 
-    try {
-      window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
-    } catch (e) {
-      window.scrollTo(0, y);
-    }
-  }
+          const y = menu.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
 
-  window.addEventListener('load', function () {
-    // Faster than 2500ms; also avoids iOS oddities
-    setTimeout(runAutoScroll, 700);
-  });
-})();
-</script>
-
+          cleanup();
+        }, 2500); // longer delay like your original
+      });
+    })();
+  </script>
 </body>
 </html>`;
 }
@@ -578,14 +458,13 @@ async function fetchAllEvents(apiUrl, reference = null) {
 }
 
 async function buildGroupedEvents(reference = null) {
-  const ref = reference ? String(reference) : null; // Keep original casing
+  const ref = reference ? String(reference).toLowerCase() : null;
   let events = await fetchAllEvents("https://api.ticketsource.io/events", ref);
 
   if (ref) {
     events = events.filter((event) => {
-      const eventReference = event.attributes?.reference;
-      // Case-insensitive comparison
-      return eventReference && eventReference.toLowerCase() === ref.toLowerCase();
+      const eventReference = event.attributes?.reference?.toLowerCase();
+      return eventReference === ref;
     });
   }
 
@@ -659,6 +538,278 @@ async function buildGroupedEvents(reference = null) {
   return groupedEvents;
 }
 
+function buildTownIndex(groupedEvents, { comingSoonDays = 28 } = {}) {
+  const today = startOfTodayLocal();
+  const soonCutoff = new Date(today);
+  soonCutoff.setDate(soonCutoff.getDate() + comingSoonDays);
+
+  const towns = Object.keys(groupedEvents)
+    .map((town) => {
+      const events = groupedEvents[town] || [];
+      let minStart = null;
+      let maxEnd = null;
+
+      for (const ev of events) {
+        for (const d of ev.dates || []) {
+          const dt = new Date(d.startISO);
+          if (!minStart || dt < minStart) minStart = dt;
+          if (!maxEnd || dt > maxEnd) maxEnd = dt;
+        }
+      }
+
+      if (!minStart || !maxEnd) return null;
+
+      return {
+        town,
+        townSlug: slugifyTown(town),
+        startDateISO: minStart.toISOString(),
+        endDateISO: maxEnd.toISOString(),
+        status: "LATER",
+        events,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => new Date(a.startDateISO) - new Date(b.startDateISO));
+
+  const isSameLocalDay = (a, b) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+
+  for (const t of towns) {
+    const start = new Date(t.startDateISO);
+    const end = new Date(t.endDateISO);
+
+    if (start <= today && end >= today) {
+      t.status = isSameLocalDay(end, today) ? "FINAL_DAY" : "IN_TOWN_NOW";
+    } else if (start > today && start <= soonCutoff) {
+      t.status = "COMING_SOON";
+    } else if (end < today) {
+      t.status = "PAST";
+    } else {
+      t.status = "LATER";
+    }
+  }
+
+  const inTownNow = towns.filter((t) => t.status === "IN_TOWN_NOW" || t.status === "FINAL_DAY");
+  if (inTownNow.length > 0) {
+    const currentMaxEnd = new Date(
+      Math.max(...inTownNow.map((t) => new Date(t.endDateISO).getTime()))
+    );
+    const next = towns.find((t) => new Date(t.startDateISO) > currentMaxEnd);
+    if (next) next.status = "NEXT_STOP";
+  } else {
+    const next = towns.find((t) => new Date(t.startDateISO) > today);
+    if (next) next.status = "NEXT_STOP";
+  }
+
+  return towns.filter((t) => t.status !== "PAST");
+}
+
+// -------------------------
+// robots.txt + sitemap.xml
+// -------------------------
+if (SEO_FLAGS.enableRobotsTxt) {
+  app.get("/robots.txt", (req, res) => {
+    const baseUrl = getBaseUrl(req);
+    res.type("text/plain").send(`User-agent: *\nAllow: /\nSitemap: ${baseUrl}/sitemap.xml\n`);
+  });
+}
+
+if (SEO_FLAGS.enableSitemap) {
+  app.get("/sitemap.xml", async (req, res) => {
+    try {
+      const baseUrl = getBaseUrl(req);
+
+      const staticPaths = [
+        "/",
+        "/index.html",
+        "/all-shows.html",
+        "/gallery.html",
+        "/contact.html",
+        "/general-tour.html",
+        "/summer-season.html",
+        "/halloween-circus.html",
+        "/tour-locations",
+      ];
+
+      const groupedEvents = await buildGroupedEvents(null);
+      const townIndex = buildTownIndex(groupedEvents, { comingSoonDays: 365 });
+      const townPaths = townIndex.map((t) => `/circus-in/${t.townSlug}`);
+
+      const urls = [...new Set([...staticPaths, ...townPaths])]
+        .map((p) => `${baseUrl}${p}`)
+        .sort();
+
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    (u) => `  <url>
+    <loc>${escapeHtml(u)}</loc>
+  </url>`
+  )
+  .join("\n")}
+</urlset>`;
+
+      res.type("application/xml").send(xml);
+    } catch (e) {
+      console.error("Error /sitemap.xml:", e);
+      res.status(500).type("text/plain").send("Error building sitemap");
+    }
+  });
+}
+
+// -------------------------
+// API ROUTES
+// -------------------------
+app.get("/api/events", async (req, res) => {
+  try {
+    const reference = req.query.reference ? req.query.reference.toLowerCase() : null;
+    const groupedEvents = await buildGroupedEvents(reference);
+    res.json(groupedEvents);
+  } catch (error) {
+    console.error("Error /api/events:", error.message);
+    res.status(500).json({ error: "Failed to fetch events" });
+  }
+});
+
+app.get("/api/town-index", async (req, res) => {
+  try {
+    const groupedEvents = await buildGroupedEvents(null);
+    const townIndex = buildTownIndex(groupedEvents, { comingSoonDays: 28 });
+    res.json(townIndex);
+  } catch (error) {
+    console.error("Error /api/town-index:", error.message);
+    res.status(500).json({ error: "Failed to build town index" });
+  }
+});
+
+// -------------------------
+// Tour Locations hub page
+// -------------------------
+app.get("/tour-locations", async (req, res) => {
+  try {
+    const groupedEvents = await buildGroupedEvents(null);
+    const townIndex = buildTownIndex(groupedEvents, { comingSoonDays: 28 });
+
+    const badge = (status) => {
+      if (status === "FINAL_DAY") return "🔴 Final day";
+      if (status === "IN_TOWN_NOW") return "🟢 In town now";
+      if (status === "NEXT_STOP") return "🟡 Next stop";
+      if (status === "COMING_SOON") return "🟡 Coming soon";
+      return "🟣 Later";
+    };
+
+    const fmtRange = (t) => `${toDateLabel(t.startDateISO)} – ${toDateLabel(t.endDateISO)}`;
+
+    const inTown = townIndex.filter((t) => t.status === "IN_TOWN_NOW" || t.status === "FINAL_DAY");
+    const nextStop = townIndex.filter((t) => t.status === "NEXT_STOP");
+    const comingSoon = townIndex.filter((t) => t.status === "COMING_SOON");
+    const later = townIndex.filter((t) => t.status === "LATER");
+
+    const renderTownCard = (t) => `
+      <div class="town-page-box" style="margin:14px auto;">
+        <h3 style="margin:0 0 6px 0; color:#fff;">Family Friendly Circus in ${escapeHtml(t.town)}</h3>
+        <div style="font-weight:800; margin-bottom:6px; color:#fff;">${badge(t.status)}</div>
+        <div style="opacity:0.95; margin-bottom:10px; color:#fff;"><strong>${escapeHtml(fmtRange(t))}</strong></div>
+        <a class="town-booknow" href="/circus-in/${escapeHtml(t.townSlug)}">View dates</a>
+      </div>
+    `;
+
+    const bodyHtml = `
+      <section class="town-page-box">
+        <h1 style="margin-top:0;">Tour Locations</h1>
+        <p style="margin:10px auto; max-width:760px;">
+          Find where we’re <strong>in town now</strong>, the <strong>next stop</strong>, and upcoming locations.
+          Each location page shows dates, times and quick ticket booking.
+        </p>
+      </section>
+
+      ${inTown.length ? `<section><h2 style="text-align:center; margin:12px 0;">🟢 In town now</h2>${inTown.map(renderTownCard).join("")}</section>` : ""}
+
+      ${nextStop.length ? `<section><h2 style="text-align:center; margin:12px 0;">🟡 Next stop</h2>${nextStop.map(renderTownCard).join("")}</section>` : ""}
+
+      ${comingSoon.length ? `<section><h2 style="text-align:center; margin:12px 0;">🟡 Coming soon</h2>${comingSoon.map(renderTownCard).join("")}</section>` : ""}
+
+      ${
+        later.length
+          ? `<section>
+              <details class="town-page-box" style="cursor:pointer;">
+                <summary style="font-weight:800; font-size:18px;">🟣 Later tour locations</summary>
+                <div style="margin-top:10px;">
+                  ${later.map(renderTownCard).join("")}
+                </div>
+              </details>
+            </section>`
+          : ""
+      }
+
+      <section class="town-page-box" style="margin-bottom:20px;">
+        <p style="margin:0; color:#fff;">
+          Want all shows in one place?
+        </p>
+        <div style="margin-top:10px;">
+          <a class="town-booknow" href="/all-shows.html">View All Shows</a>
+        </div>
+      </section>
+    `;
+
+    const html = renderShell({
+      req,
+      title: "Tour Locations | Reagal Events",
+      description:
+        "Find tour locations: in town now, next stop, and upcoming towns. Click a location to view dates and book tickets.",
+      bodyHtml,
+      robots: "index, follow",
+      jsonLdObjects: SEO_FLAGS.enableJsonLd
+        ? [
+            {
+              "@context": "https://schema.org",
+              "@type": "CollectionPage",
+              name: "Tour Locations",
+              url: `${getBaseUrl(req)}${stripQuery(req.originalUrl)}`,
+            },
+          ]
+        : [],
+    });
+
+    res.send(html);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Error building tour locations page");
+  }
+});
+
+// -------------------------
+// Town page (SEO) + schema + improved layout
+// -------------------------
+// -------------------------
+// Town page (SEO) + schema + improved layout
+// -------------------------
+app.get("/circus-in/:townSlug", async (req, res) => {
+  try {
+    const groupedEvents = await buildGroupedEvents(null);
+    const townIndex = buildTownIndex(groupedEvents, { comingSoonDays: 28 });
+
+    const slug = String(req.params.townSlug || "").toLowerCase();
+    const townObj = townIndex.find((t) => t.townSlug === slug);
+
+    if (!townObj) {
+      const html = renderShell({
+        req,
+        title: `Family Friendly Circus | Reagal Events`,
+        description: "No upcoming dates currently listed. Please check View All Shows.",
+        bodyHtml: `
+          <div class="town-page-box">
+            <h1 style="color:#fff;">Reagal Events</h1>
+            <p style="color:#fff;">No upcoming dates are currently listed for this location. Please check <a href="/all-shows.html">View All Shows</a>.</p>
+          </div>`,
+        robots: "noindex, follow",
+      });
+      res.set("X-Robots-Tag", "noindex, follow");
+      return res.status(404).send(html);
+    }
 
     const townName = townObj.town;
 
@@ -732,20 +883,12 @@ async function buildGroupedEvents(reference = null) {
           <div class="town-page-box town-events town-wide" style="color:#fff;">
             <div class="event-flex">
               <div class="event-left">
-                ${
-                  ev.thumbnail
-                    ? `<img src="${escapeHtml(ev.thumbnail)}" alt="${escapeHtml(
-                        thumbAlt
-                      )}" class="event-thumb">`
-                    : ""
-                }
+                ${ev.thumbnail ? `<img src="${escapeHtml(ev.thumbnail)}" alt="${escapeHtml(thumbAlt)}" class="event-thumb">` : ""}
               </div>
 
               <div class="event-right">
                 <h3 style="color:#fff; margin:0 0 6px 0;">${escapeHtml(ev.eventName)}</h3>
-                <div class="town-range" style="color:#fff; margin:0 0 10px 0;">${escapeHtml(
-                  rangeLine
-                )}</div>
+                <div class="town-range" style="color:#fff; margin:0 0 10px 0;">${escapeHtml(rangeLine)}</div>
 
                 <div class="town-row" style="color:#fff;">
                   <div class="town-field" style="color:#fff;">
@@ -807,11 +950,14 @@ async function buildGroupedEvents(reference = null) {
       ...(faqSchema ? [faqSchema] : []),
     ];
 
+    // CSS is injected ONLY on this page to widen boxes + force white status + event layout
     const headExtras = `
       <style>
+        /* widen the semi-transparent boxes on this page only */
         .town-page-box.town-wide { max-width: 1200px !important; }
         .town-page-box { max-width: 1200px !important; }
 
+        /* hero block */
         .town-hero { max-width: 1100px; margin: 0 auto; text-align: center; color:#fff; }
         .town-hero * { color:#fff !important; }
         .town-hero h1 {
@@ -825,25 +971,30 @@ async function buildGroupedEvents(reference = null) {
         .town-hero .extra { margin: 8px 0 0 0; width: 100%; max-width: none; line-height: 1.2; }
         .town-hero .btnrow { margin-top: 10px; display: flex; justify-content: center; }
 
+        /* event box layout */
         .event-flex { display:flex; gap:18px; align-items:center; justify-content:center; }
         .event-left { flex: 0 0 260px; display:flex; justify-content:center; }
         .event-right { flex: 1 1 auto; min-width: 320px; }
         .event-thumb { width: 260px; max-width: 100%; height:auto; border-radius:12px; display:block; }
 
+        /* ✅ EXACT LAYOUT YOU WANT:
+           Middle stack (Date above Time) + Book button on right */
         .town-events .town-row{
           display: grid !important;
-          grid-template-columns: 280px auto;
+          grid-template-columns: 280px auto; /* left = stacked selects, right = button */
           column-gap: 18px;
           align-items: center;
           justify-content: start;
         }
 
+        /* Date (first field) goes top-left */
         .town-events .town-row .town-field:nth-child(1){
           grid-column: 1;
           grid-row: 1;
           width: 280px;
         }
 
+        /* Time (second field) goes under Date */
         .town-events .town-row .town-field:nth-child(2){
           grid-column: 1;
           grid-row: 2;
@@ -851,6 +1002,7 @@ async function buildGroupedEvents(reference = null) {
           margin-top: 12px;
         }
 
+        /* Book button sits on the right, centered vertically */
         .town-events .town-row .town-booknow{
           grid-column: 2;
           grid-row: 1 / span 2;
@@ -859,6 +1011,7 @@ async function buildGroupedEvents(reference = null) {
           white-space: nowrap;
         }
 
+        /* consistent label + control sizing */
         .town-events .town-row .town-field span{
           display:block;
           margin: 0 0 6px 0;
@@ -876,6 +1029,7 @@ async function buildGroupedEvents(reference = null) {
           .event-left { flex: 0 0 auto; }
           .event-right { min-width: auto; width: 100%; }
 
+          /* mobile stack */
           .town-events .town-row{
             grid-template-columns: 1fr;
             row-gap: 12px;
@@ -912,13 +1066,7 @@ async function buildGroupedEvents(reference = null) {
 
           ${weekendLine ? `<p class="extra" style="font-weight:800;">${escapeHtml(weekendLine)}</p>` : ""}
 
-          ${
-            nextTown
-              ? `<p class="extra"><strong>Next stop:</strong> <a href="/circus-in/${escapeHtml(
-                  nextTown.townSlug
-                )}">${escapeHtml(nextTown.town)}</a></p>`
-              : ""
-          }
+          ${nextTown ? `<p class="extra"><strong>Next stop:</strong> <a href="/circus-in/${escapeHtml(nextTown.townSlug)}">${escapeHtml(nextTown.town)}</a></p>` : ""}
 
           <div class="btnrow">
             <a class="town-booknow" href="/tour-locations">See all tour locations</a>
@@ -938,7 +1086,7 @@ async function buildGroupedEvents(reference = null) {
       bodyHtml,
       robots: "index, follow",
       headExtras,
-      jsonLdObjects
+      jsonLdObjects,
     });
 
     res.send(html);
@@ -947,6 +1095,11 @@ async function buildGroupedEvents(reference = null) {
     res.status(500).send("Error building town page");
   }
 });
+
+
+
+// Disable favicon
+app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 // Fallback
 app.get("*", (req, res) => {

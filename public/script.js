@@ -40,12 +40,10 @@
           window.matchMedia &&
           window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        // Wait a tick for layout to settle (banners/images can shift the menu)
-        requestAnimationFrame(() => {
-          const y = menu.getBoundingClientRect().top + window.pageYOffset;
-          window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
-          cleanup();
-        });
+        const y = menu.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+
+        cleanup();
       }, delay);
     });
   }
@@ -243,8 +241,6 @@
   // ----------------------------
   document.addEventListener("DOMContentLoaded", () => {
     autoScrollToMenu({ delay: 2500 });
-
-    reportWebVitals();
 
     // All Shows
     if (document.getElementById("events-container")) {

@@ -1141,10 +1141,6 @@ app.get("/circus-in/:townSlug", async (req, res) => {
 });
 
 
-
-// Disable favicon
-app.get("/favicon.ico", (req, res) => res.status(204).end());
-
 // Fallback
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));

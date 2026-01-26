@@ -1,4 +1,4 @@
-/* Reagal Events - consolidated styles.css (no duplicates / no contradictions)
+/* Reagal Events - consolidated styles.css (updated menu fix)
    ---------------------------------------------------------------
    Notes:
    - Global site uses dark "glass" overlays.
@@ -20,7 +20,7 @@ body {
   margin: 0;
   padding: 0;
 
-  /* ✅ OPTIMISED: prefer WebP, fallback to PNG (no visual change) */
+  /* ✅ OPTIMISED: prefer WebP, fallback to PNG */
   background-image: image-set(
     url('background.webp') type('image/webp'),
     url('background.png') type('image/png')
@@ -34,7 +34,7 @@ body {
   overflow-y: auto;
 }
 
-/* ✅ Optional perf tweak: fixed backgrounds can be slow on mobile */
+/* Optional perf tweak for mobile */
 @media (max-width: 768px){
   body{ background-attachment: scroll; }
 }
@@ -54,13 +54,11 @@ html, body {
 
 .container { width: 100%; max-width: 100%; }
 
-/* Optional wrapper */
 #main-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 
-  /* ✅ OPTIMISED: prefer WebP, fallback to PNG */
   background-image: image-set(
     url('background.webp') type('image/webp'),
     url('background.png') type('image/png')
@@ -71,7 +69,6 @@ html, body {
   background-size: cover;
 }
 
-/* Same mobile perf tweak for wrapper */
 @media (max-width: 768px){
   #main-container{ background-attachment: scroll; }
 }
@@ -94,11 +91,8 @@ header {
   height: 400px;
 }
 
-/* Banner2 */
 .banner2-container {
   position: relative;
-
-  /* ✅ OPTIMISED: prefer WebP, fallback to JPG */
   background-image: image-set(
     url('banner2.webp') type('image/webp'),
     url('banner2.jpg') type('image/jpeg')
@@ -106,7 +100,6 @@ header {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-
   height: 400px;
 }
 
@@ -136,49 +129,57 @@ header {
 }
 
 /* -------------------------
-   Menu
+   Menu (FIXED)
 ------------------------- */
 #menu {
-  position: absolute;
-  bottom: -10px;
+  position: relative; /* ensures it stays below banner */
   width: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 1px 0;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 5px 0;
+  box-sizing: border-box;
+  z-index: 30;
 }
 
 #menu ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  list-style-type: none;
+  gap: 12px;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
-#menu ul li { margin: 5px 10px; }
+#menu li {
+  margin: 0;
+  padding: 0;
+  flex: 0 1 auto;
+}
 
-#menu ul li a {
+#menu a {
+  display: inline-block;
+  padding: 8px 14px;
+  font-size: 1rem;
+  font-weight: bold;
   color: white;
   text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: bold;
+  text-align: center;
 }
 
-#menu ul li a:hover { color: gold; }
+#menu a:hover { color: gold; }
 
-/* Portrait menu tweaks */
+/* Mobile adjustments */
 @media (max-width: 768px) {
   #menu ul {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: center;
+    gap: 6px;
   }
-  #menu ul li {
-    flex: 1 1 5%;
-    text-align: center;
+
+  #menu a {
+    padding: 6px 8px;
+    font-size: 0.85rem;
+    white-space: normal; /* allow wrapping on small screens */
   }
-  #menu ul li a { font-size: 0.8rem; }
-  #menu ul li:nth-child(n+8) { display: none; }
 }
 
 /* -------------------------
@@ -277,8 +278,6 @@ section {
 
 /* -------------------------
    Events (All Shows / Tour pages)
-   - Keep outer "glass" DARK
-   - Keep details panel LIGHT with BLACK text
 ------------------------- */
 .event {
   display: flex;
@@ -464,7 +463,7 @@ section {
   background: rgba(0,0,0,0.6);
 }
 
-/* Desktop gallery layout: thumbs | viewer | thumbs */
+/* Desktop gallery layout */
 @media (min-width: 900px) {
   #main-content {
     display: grid;
@@ -473,14 +472,10 @@ section {
     column-gap: 20px;
     align-items: start;
   }
-
   .gallery-title { grid-column: 1 / -1; }
-
   #carousel { grid-column: 2; grid-row: 2; }
-
   .gallery-left { grid-column: 1; grid-row: 2; width: 100%; }
   .gallery-right { grid-column: 3; grid-row: 2; width: 100%; }
-
   .gallery-left, .gallery-right { grid-template-columns: repeat(3, 1fr); }
 }
 
@@ -515,7 +510,6 @@ section {
    Halloween page theme overrides
 ------------------------- */
 body.halloween-page {
-  /* ✅ OPTIMISED: prefer WebP, fallback to PNG */
   background-image: image-set(
     url('Hbackground.webp') type('image/webp'),
     url('Hbackground.png') type('image/png')
@@ -525,14 +519,11 @@ body.halloween-page {
   background-attachment: fixed;
   background-size: cover;
 }
-
-/* same mobile perf tweak */
 @media (max-width: 768px){
   body.halloween-page{ background-attachment: scroll; }
 }
 
 body.halloween-page .banner2-container {
-  /* ✅ OPTIMISED: prefer WebP, fallback to JPG */
   background-image: image-set(
     url('Hbanner2.webp') type('image/webp'),
     url('Hbanner2.jpg') type('image/jpeg')
@@ -589,8 +580,6 @@ body.halloween-page p {
 .town-card a {
   text-decoration: none;
   color: inherit;
-
-  /* 3-column layout: Town | Dates | Badge */
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -600,7 +589,6 @@ body.halloween-page p {
 /* Neutralise legacy wrapper impact */
 .town-header { display: contents; }
 
-/* Town (left) */
 .town-name{
   grid-column: 1;
   justify-self: start;
@@ -609,7 +597,6 @@ body.halloween-page p {
   line-height: 1.15;
 }
 
-/* Dates (center) */
 .town-dates{
   grid-column: 2;
   justify-self: center;
@@ -622,7 +609,6 @@ body.halloween-page p {
   white-space: nowrap;
 }
 
-/* Badge (right) */
 .town-badge{
   grid-column: 3;
   justify-self: end;
@@ -656,9 +642,10 @@ body.halloween-page p {
   margin: 18px auto;
   padding: 18px 22px;
   border-radius: 18px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.28);
+  color: #fff;
   text-align: center;
+<<<<<<< HEAD
 }
 
 .town-events {
@@ -798,3 +785,4 @@ body.halloween-page p {
 
 
 select { max-width: 100%; }
+  line-height: 1.5;

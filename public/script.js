@@ -7,17 +7,21 @@
 
   // ----------------------------
   // Autoscroll: menu to top
+  // - waits for: (1) minimum delay (banner time) AND (2) events rendered
+  // - does NOT depend on window 'load' (so it still works if called after load)
+  // - cancels if user interacts
   // ----------------------------
-  function autoScrollToMenu(options = {}) {
-    const delay = Number(options.delay ?? 2500);
-    const menuId = options.menuId ?? "menu";
-
+  function autoScrollToMenuWhenReady({
+    menuId = "menu",
+    minDelayMs = 2500,
+    readyPromise = Promise.resolve(),
+  } = {}) {
     let cancelled = false;
 
-    function cancel() {
+    const cancel = () => {
       cancelled = true;
       cleanup();
-    }
+    };
 
     function cleanup() {
       window.removeEventListener("wheel", cancel, { passive: true });
@@ -29,22 +33,70 @@
     window.addEventListener("touchstart", cancel, { passive: true });
     window.addEventListener("keydown", cancel);
 
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        if (cancelled) return;
+    const start = Date.now();
+    const minDelay = new Promise((resolve) =>
+      setTimeout(resolve, Math.max(0, Number(minDelayMs) || 0))
+    );
 
-        const menu = document.getElementById(menuId);
-        if (!menu) return;
+    Promise.allSettled([minDelay, readyPromise]).then(() => {
+      if (cancelled) return;
 
-        const reduce =
-          window.matchMedia &&
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // Give layout a moment to settle (especially after DOM writes)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (cancelled) return;
 
-        const y = menu.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+          const menu = document.getElementById(menuId);
+          if (!menu) return;
 
-        cleanup();
-      }, delay);
+          const reduce =
+            window.matchMedia &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+          const y = menu.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+
+          cleanup();
+        });
+      });
+    });
+  }
+
+  function waitForEventsRendered({
+    container,
+    timeoutMs = 12000,
+  } = {}) {
+    return new Promise((resolve) => {
+      const start = Date.now();
+      const tick = () => {
+        // If there is no container, treat as "ready".
+        if (!container) return resolve();
+
+        // Any event cards OR an explicit no-events message means we're done.
+        const hasEventCards =
+          container.querySelector?.(".event") ||
+          container.querySelector?.(".event-card") ||
+          container.querySelector?.(".event-item");
+        const hasNoEvents =
+          container.querySelector?.(".no-events-message") ||
+          document.querySelector?.(".no-events-message");
+
+        // Or: container has children and isn't showing a spinner-only state.
+        const hasChildren = container.children && container.children.length > 0;
+        const spinner = container.querySelector?.(".loading-spinner");
+        const spinnerVisible =
+          spinner &&
+          window.getComputedStyle(spinner).display !== "none" &&
+          window.getComputedStyle(spinner).visibility !== "hidden";
+
+        if (hasEventCards || hasNoEvents || (hasChildren && !spinnerVisible)) {
+          return resolve();
+        }
+
+        if (Date.now() - start > timeoutMs) return resolve();
+        requestAnimationFrame(tick);
+      };
+      tick();
     });
   }
 
@@ -241,9 +293,11 @@
   // ----------------------------
   document.addEventListener("DOMContentLoaded", () => {
     const renderTasks = [];
+    const scrollTargets = [];
 
     // All Shows
     if (document.getElementById("events-container")) {
+      scrollTargets.push(document.getElementById("events-container"));
       renderTasks.push(
         renderEventsPage({
           containerId: "events-container",
@@ -255,6 +309,7 @@
 
     // General Tour
     if (document.getElementById("general-events")) {
+      scrollTargets.push(document.getElementById("general-events"));
       renderTasks.push(
         renderEventsPage({
           containerId: "general-events",
@@ -267,6 +322,7 @@
 
     // Summer Season
     if (document.getElementById("summer-events")) {
+      scrollTargets.push(document.getElementById("summer-events"));
       renderTasks.push(
         renderEventsPage({
           containerId: "summer-events",
@@ -280,6 +336,7 @@
 
     // Halloween Circus
     if (document.getElementById("halloween-events")) {
+      scrollTargets.push(document.getElementById("halloween-events"));
       renderTasks.push(
         renderEventsPage({
           containerId: "halloween-events",
@@ -291,9 +348,28 @@
       );
     }
 
-    // Autoscroll AFTER events render/layout settles (so the menu lands correctly)
-    Promise.allSettled(renderTasks).finally(() => {
-      autoScrollToMenu({ delay: 350 });
+    const eventsReady = (async () => {
+      // Wait for the render promises (if any)
+      await Promise.allSettled(renderTasks);
+      // Then also wait for the DOM to actually contain event/no-event content
+      const containers = scrollTargets.length
+        ? scrollTargets
+        : [
+            document.getElementById("events-container"),
+            document.getElementById("general-events"),
+            document.getElementById("summer-events"),
+            document.getElementById("halloween-events"),
+          ].filter(Boolean);
+      await Promise.allSettled(
+        containers.map((c) => waitForEventsRendered({ container: c }))
+      );
+    })();
+
+    // Always wait at least 2.5s so banners are visible; then scroll once ready.
+    autoScrollToMenuWhenReady({
+      minDelayMs: 2500,
+      readyPromise: eventsReady,
+      menuId: "menu",
     });
   });
 })();

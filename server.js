@@ -67,6 +67,10 @@ app.use(
   })
 );
 
+
+// Redirect /index.html to / to avoid duplicate indexing
+app.get("/index.html", (req, res) => res.redirect(301, "/"));
+
 // -------------------------
 // Helpers
 // -------------------------
@@ -516,10 +520,12 @@ function renderShell({
     </div>
   </footer>
 
-  <!-- Autoscroll: bring menu to top, but don't fight the user -->
+  <!-- Autoscroll: bring menu to top, but only after:
+       - minimum banner time (2.5s), and
+       - events have appeared (or "no events" message), if this page has events -->
   <script>
     (function () {
-      let cancelled = false;
+      var cancelled = false;
 
       function cancel() { cancelled = true; cleanup(); }
       function cleanup() {
@@ -528,24 +534,50 @@ function renderShell({
         window.removeEventListener('keydown', cancel);
       }
 
+      function sleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
+
+      function pageLooksLikeEventsPage() {
+        return !!document.querySelector('[id$="-events"], #events-container, .events-container');
+      }
+
+      async function waitForEvents(maxWaitMs) {
+        if (!pageLooksLikeEventsPage()) return;
+
+        var start = Date.now();
+        while (Date.now() - start < maxWaitMs) {
+          if (document.querySelector('.event')) return;
+          if (document.querySelector('.no-events-message')) return;
+
+          // Fallback: any events container has children
+          var containers = document.querySelectorAll('[id$="-events"], #events-container, .events-container');
+          for (var i = 0; i < containers.length; i++) {
+            if (containers[i] && containers[i].children && containers[i].children.length > 0) return;
+          }
+
+          await sleep(80);
+        }
+      }
+
       window.addEventListener('wheel', cancel, { passive: true });
       window.addEventListener('touchstart', cancel, { passive: true });
       window.addEventListener('keydown', cancel);
 
       window.addEventListener('load', function() {
-        setTimeout(function() {
+        Promise.all([
+          sleep(2500),      // minimum banner time
+          waitForEvents(12000) // wait for events if applicable
+        ]).then(function() {
           if (cancelled) return;
 
-          // Respect reduced motion
-          const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          const menu = document.getElementById('menu');
+          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var menu = document.getElementById('menu');
           if (!menu) return;
 
-          const y = menu.getBoundingClientRect().top + window.pageYOffset;
+          var y = menu.getBoundingClientRect().top + window.pageYOffset;
           window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
 
           cleanup();
-        }, 2500); // longer delay like your original
+        }).catch(function() { cleanup(); });
       });
     })();
   </script>
@@ -838,8 +870,7 @@ if (SEO_FLAGS.enableSitemap) {
 
       const staticPaths = [
         "/",
-        "/index.html",
-        "/all-shows.html",
+                "/all-shows.html",
         "/gallery.html",
         "/contact.html",
         "/general-tour.html",

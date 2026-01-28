@@ -1,93 +1,79 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
-  <script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HF03R5RLBZ"></script>
+<script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-HF03R5RLBZ');
   </script>
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>All Shows | Reagal Events</title>
-  <meta name="description" content="Browse all upcoming Reagal Events shows by town. Pick a date, choose a time, and book tickets online.">
-  <meta name="robots" content="index, follow">
-
-  <!-- Open Graph -->
-  <meta property="og:site_name" content="Reagal Events">
-  <meta property="og:locale" content="en_GB">
-  <meta property="og:title" content="All Shows | Reagal Events">
-  <meta property="og:description" content="Browse all upcoming Reagal Events shows by town. Pick a date, choose a time, and book tickets online.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="/banner1.jpg">
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="All Shows | Reagal Events">
-  <meta name="twitter:description" content="Browse all upcoming Reagal Events shows by town. Pick a date, choose a time, and book tickets online.">
-  <meta name="twitter:image" content="/banner1.jpg">
-
-  <link rel="stylesheet" href="styles.css">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-  <script src="script.js" defer></script>
-</head>
-
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>All Shows | Reagal Events</title>
+<meta content="Browse all upcoming Reagal Events shows by town and date. Find your nearest circus tour stop and book tickets online." name="description"/>
+<meta content="index, follow" name="robots"/>
+<!-- Open Graph -->
+<meta content="Reagal Events" property="og:site_name"/>
+<meta content="en_GB" property="og:locale"/>
+<meta content="All Shows | Reagal Events" property="og:title"/>
+<meta content="Browse all upcoming Reagal Events shows by town and date. Find your nearest circus tour stop and book tickets online." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://reagalevents.com/banner1.jpg" property="og:image"/>
+<!-- Twitter -->
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="All Shows | Reagal Events" name="twitter:title"/>
+<meta content="Browse all upcoming Reagal Events shows by town and date. Find your nearest circus tour stop and book tickets online." name="twitter:description"/>
+<meta content="https://reagalevents.com/banner1.jpg" name="twitter:image"/>
+<link href="styles.css" rel="stylesheet"/>
+<link crossorigin="" href="https://cdnjs.cloudflare.com" rel="preconnect"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+<script defer="" src="script.js"></script>
+<link href="https://reagalevents.com/all-shows.html" rel="canonical"/><meta content="https://reagalevents.com/all-shows.html" property="og:url"/><link href="/favicon.ico" rel="icon" sizes="any"/><link href="/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="/favicon-16.png" rel="icon" sizes="16x16" type="image/png"/><link href="/apple-touch-icon.png" rel="apple-touch-icon"/><link href="/site.webmanifest" rel="manifest"/><meta content="#0b0b0b" name="theme-color"/><link crossorigin="" href="https://www.googletagmanager.com" rel="preconnect"/><script data-seo="org" type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Reagal Events", "url": "https://reagalevents.com", "logo": "https://reagalevents.com/favicon-512.png", "sameAs": ["https://www.facebook.com/reagalevents/", "https://www.tiktok.com/@reagalevents"]}</script></head>
 <body>
-  <header>
-    <img src="banner1.jpg" alt="Reagal Events Banner" class="banner">
-    <h2 class="circus-font">Proudly Presents</h2>
-    <div class="banner2-container"></div>
-
-    <nav id="menu">
-      <ul>
-        <li><a href="index.html">Welcome</a></li>
-        <li><a href="all-shows.html">View All Shows</a></li>
-        <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="contact.html">Contact Us</a></li>
-        <li><a href="general-tour.html">General Tour</a></li>
-        <li><a href="summer-season.html">Summer Season</a></li>
-        <li><a href="halloween-circus.html">Halloween Circus</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- ✅ Title + description in the same shaded box style as the rest of the site -->
-  <section class="page-title-box">
-    <h1 class="all-shows-title">All Shows</h1>
-    <p class="all-shows-description">Discover all our exciting shows happening near you!</p>
-  </section>
-
-  <div id="events-container"></div>
-
-  <footer>
-    <div class="footer-container">
-      <div class="social-links">
-        <a href="https://www.facebook.com/reagalevents" target="_blank" class="social-icon" rel="noopener">
-          <i class="fa-brands fa-facebook-f"></i>
-        </a>
-        <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon" rel="noopener">
-          <i class="fa-brands fa-tiktok"></i>
-        </a>
-      </div>
-
-      <p class="footer-text">&copy; 2025 Reagal Events. All rights reserved.</p>
-
-      <div class="ticketsource-button">
-        <a href="https://www.ticketsource.co.uk/reagalevents">
-          <img border="0" width="130" height="56" alt="Book now"
-               src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
-        </a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
+<header>
+<img alt="Reagal Events Banner" class="banner" src="banner1.jpg"/>
+<h2 class="circus-font">Proudly Presents</h2>
+<div class="banner2-container"></div>
+<nav id="menu">
+<ul>
+<li><a href="index.html">Welcome</a></li>
+<li><a href="all-shows.html">View All Shows</a></li>
+<li><a href="gallery.html">Gallery</a></li>
+<li><a href="contact.html">Contact Us</a></li>
+<li><a href="general-tour.html">General Tour</a></li>
+<li><a href="summer-season.html">Summer Season</a></li>
+<li><a href="halloween-circus.html">Halloween Circus</a></li>
+</ul>
+</nav>
+</header>
+<!-- ✅ Title + description in the same shaded box style as the rest of the site -->
+<section class="page-title-box">
+<h1 class="all-shows-title">All Shows</h1>
+<p class="all-shows-description">Discover all our exciting shows happening near you!</p>
+</section>
+<div id="events-container"></div>
+<footer>
+<div class="footer-container">
+<div class="social-links">
+<a class="social-icon" href="https://www.facebook.com/reagalevents" rel="noopener" target="_blank">
+<i class="fa-brands fa-facebook-f"></i>
+</a>
+<a class="social-icon" href="https://www.tiktok.com/@the.wonder.circus" rel="noopener" target="_blank">
+<i class="fa-brands fa-tiktok"></i>
+</a>
+</div>
+<p class="footer-text">© 2025 Reagal Events. All rights reserved.</p>
+<div class="ticketsource-button">
+<a href="https://www.ticketsource.co.uk/reagalevents">
+<img alt="Book now" border="0" height="56" src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png" width="130"/>
+</a>
+</div>
+</div>
+</footer>
+<script>
     async function fetchEvents() {
       try {
         const response = await fetch("/api/events");

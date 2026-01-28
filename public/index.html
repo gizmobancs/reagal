@@ -30,11 +30,14 @@
   <meta name="twitter:title" content="Reagal Events">
   <meta name="twitter:description" content="Family-friendly circus shows, seasonal events, and touring performances across the UK. Find your next town and book tickets online.">
   <meta name="twitter:image" content="/banner1.jpg">
-
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <script src="script.js" defer></script>
 
   <!-- ✅ Homepage-only visual refinements (keeps page looking EXACTLY like your working version) -->
@@ -219,9 +222,29 @@
 
   <script>
     async function loadTownBadges() {
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+      async function fetchJsonWithRetry(url, attempts = 3) {
+        let lastErr;
+        for (let i = 0; i < attempts; i++) {
+          try {
+            const res = await fetch(url, { cache: "no-store" });
+            if (!res.ok) {
+              const text = await res.text().catch(() => "");
+              throw new Error(`HTTP ${res.status} ${res.statusText} ${text}`.trim());
+            }
+            return await res.json();
+          } catch (e) {
+            lastErr = e;
+            // small backoff: 500ms, 1200ms, 2500ms
+            await sleep([500, 1200, 2500][i] ?? 2500);
+          }
+        }
+        throw lastErr;
+      }
+
       try {
-        const res = await fetch("/api/town-index");
-        const towns = await res.json();
+        const towns = await fetchJsonWithRetry("/api/town-index", 3);
 
         const inTown = towns.filter(
           t => t.status === "IN_TOWN_NOW" || t.status === "FINAL_DAY"
@@ -231,23 +254,18 @@
           (a, b) => new Date(a.startDateISO) - new Date(b.startDateISO)
         );
 
-        let nextStop = [];
+        // pick ONE "current" town (the one that ends last)
+        const currentTown = inTown.length
+          ? [...inTown].sort((a, b) => new Date(b.endDateISO) - new Date(a.endDateISO))[0]
+          : null;
 
-        if (inTown.length > 0) {
-          const currentEnd = new Date(
-            Math.max(...inTown.map(t => new Date(t.endDateISO)))
-          );
+        let nextTown = null;
 
-          const nextTown = sorted.find(
-            t => new Date(t.startDateISO) > currentEnd
-          );
-
-          if (nextTown) nextStop = [nextTown];
+        if (currentTown) {
+          const currentEnd = new Date(currentTown.endDateISO);
+          nextTown = sorted.find(t => new Date(t.startDateISO) > currentEnd) || null;
         } else {
-          const firstFuture = sorted.find(
-            t => new Date(t.startDateISO) > new Date()
-          );
-          if (firstFuture) nextStop = [firstFuture];
+          nextTown = sorted.find(t => new Date(t.startDateISO) > new Date()) || null;
         }
 
         const inTownEl = document.getElementById("in-town-now");
@@ -262,7 +280,7 @@
         function renderTown(t, badgeOverride = null) {
           const badge = badgeOverride ?? (
             t.status === "FINAL_DAY"
-              ? "🔴 Final day"
+              ? "🔴 Last day"
               : t.status === "IN_TOWN_NOW"
               ? "🟢 In town now"
               : "🟡 Coming soon"
@@ -283,12 +301,60 @@
           `;
         }
 
-        inTownEl.innerHTML = inTown.length
-          ? `<h2>🟢 In town now</h2>` + inTown.map(t => renderTown(t)).join("")
+        // Helpers for "Currently in / Next stop" wording
+        const startOfToday = () => {
+          const d = new Date();
+          return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        };
+
+        const isWeekend = (d) => {
+          const day = d.getDay(); // 0 Sun ... 6 Sat
+          return day === 5 || day === 6 || day === 0;
+        };
+
+        // "Final weekend in <town>" if we're currently in town, it's Fri/Sat/Sun, and the run ends this weekend (within 2 days)
+        const isFinalWeekend = (t) => {
+          try {
+            if (!t || t.status !== "IN_TOWN_NOW") return false;
+            const today = startOfToday();
+            const end = new Date(t.endDateISO);
+            const diffDays = Math.floor((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+            return isWeekend(today) && isWeekend(end) && diffDays >= 0 && diffDays <= 2;
+          } catch {
+            return false;
+          }
+        };
+
+        // "Currently in / Next stop" line (with links) — adapts for last day / final weekend
+        const currentLabel = currentTown
+          ? currentTown.status === "FINAL_DAY"
+            ? "Last day in"
+            : isFinalWeekend(currentTown)
+              ? "Final weekend in"
+              : "Currently in"
           : "";
 
-        comingSoonEl.innerHTML = nextStop.length
-          ? `<h2>🟡 Next stop</h2>` + nextStop.map(t => renderTown(t, "🟡 Next stop")).join("")
+        const nowNextLine =
+          currentTown
+            ? `
+              <div style="text-align:center;margin:10px 0 14px; font-weight:700;">
+                <span>${currentLabel} </span>
+                <a href="/circus-in/${currentTown.townSlug}" style="text-decoration:underline;">${currentTown.town}</a>
+                ${
+                  nextTown
+                    ? `&nbsp;•&nbsp; <span>Next stop </span><a href="/circus-in/${nextTown.townSlug}" style="text-decoration:underline;">${nextTown.town}</a>`
+                    : ""
+                }
+              </div>
+            `
+            : "";
+
+        inTownEl.innerHTML = currentTown
+          ? nowNextLine + `<h2>🟢 In town now</h2>` + renderTown(currentTown)
+          : "";
+
+        comingSoonEl.innerHTML = nextTown
+          ? `<h2>🟡 Next stop</h2>` + renderTown(nextTown, "🟡 Next stop")
           : "";
 
       } catch (err) {

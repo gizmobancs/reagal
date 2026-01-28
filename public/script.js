@@ -240,47 +240,60 @@
   // Init (page-aware)
   // ----------------------------
   document.addEventListener("DOMContentLoaded", () => {
-    autoScrollToMenu({ delay: 2500 });
+    const renderTasks = [];
 
     // All Shows
     if (document.getElementById("events-container")) {
-      renderEventsPage({
-        containerId: "events-container",
-        reference: null,
-        mode: "all",
-      });
+      renderTasks.push(
+        renderEventsPage({
+          containerId: "events-container",
+          reference: null,
+          mode: "all",
+        })
+      );
     }
 
     // General Tour
     if (document.getElementById("general-events")) {
-      renderEventsPage({
-        containerId: "general-events",
-        reference: "General",
-        mode: "tour",
-        loadingId: "loading",
-      });
+      renderTasks.push(
+        renderEventsPage({
+          containerId: "general-events",
+          reference: "General",
+          mode: "tour",
+          loadingId: "loading",
+        })
+      );
     }
 
     // Summer Season
     if (document.getElementById("summer-events")) {
-      renderEventsPage({
-        containerId: "summer-events",
-        reference: "Summer",
-        mode: "tour",
-        spinnerSelector: ".loading-spinner",
-        noEventsSelector: ".no-events-message",
-      });
+      renderTasks.push(
+        renderEventsPage({
+          containerId: "summer-events",
+          reference: "Summer",
+          mode: "tour",
+          spinnerSelector: ".loading-spinner",
+          noEventsSelector: ".no-events-message",
+        })
+      );
     }
 
     // Halloween Circus
     if (document.getElementById("halloween-events")) {
-      renderEventsPage({
-        containerId: "halloween-events",
-        reference: "Halloween",
-        mode: "tour",
-        spinnerSelector: ".loading-spinner",
-        noEventsSelector: ".no-events-message",
-      });
+      renderTasks.push(
+        renderEventsPage({
+          containerId: "halloween-events",
+          reference: "Halloween",
+          mode: "tour",
+          spinnerSelector: ".loading-spinner",
+          noEventsSelector: ".no-events-message",
+        })
+      );
     }
+
+    // Autoscroll AFTER events render/layout settles (so the menu lands correctly)
+    Promise.allSettled(renderTasks).finally(() => {
+      autoScrollToMenu({ delay: 350 });
+    });
   });
 })();

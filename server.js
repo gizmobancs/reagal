@@ -130,6 +130,72 @@ function withinDays(dateObj, days) {
   return dateObj >= today && dateObj <= cutoff;
 }
 
+function isSameLocalDay(a, b) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+function buildTourNowNextHtml(townIndex) {
+  const today = startOfTodayLocal();
+
+  const sorted = [...(townIndex || [])].sort(
+    (a, b) => new Date(a.startDateISO) - new Date(b.startDateISO)
+  );
+
+  // "Current" = any town whose date range includes today (prefer FINAL_DAY/IN_TOWN_NOW)
+  const currentTown =
+    sorted.find((t) => t.status === "FINAL_DAY") ||
+    sorted.find((t) => t.status === "IN_TOWN_NOW") ||
+    sorted.find((t) => {
+      const s = new Date(t.startDateISO);
+      const e = new Date(t.endDateISO);
+      const startDay = new Date(s.getFullYear(), s.getMonth(), s.getDate());
+      const endDay = new Date(e.getFullYear(), e.getMonth(), e.getDate());
+      return today >= startDay && today <= endDay;
+    }) ||
+    null;
+
+  if (!currentTown) {
+    // Fallback: show next stop only
+    const nextOnly = sorted.find((t) => t.status === "NEXT_STOP") || sorted[0];
+    if (!nextOnly) return "";
+    return `<p class="tour-now-next"><strong>Next stop</strong> <a href="/circus-in/${escapeHtml(
+      nextOnly.townSlug
+    )}">${escapeHtml(nextOnly.town)}</a></p>`;
+  }
+
+  const end = new Date(currentTown.endDateISO);
+  const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+  const isFinalDay = isSameLocalDay(today, endDay) || currentTown.status === "FINAL_DAY";
+  const isFinalWeekend =
+    !isFinalDay && isWeekend(today) && withinDays(endDay, 2) && isWeekend(endDay);
+
+  let leftLabel = "Currently in";
+  if (isFinalDay) leftLabel = "Last day in";
+  else if (isFinalWeekend) leftLabel = "Final weekend in";
+
+  // Next town after current end
+  const nextTown =
+    sorted.find((t) => t.status === "NEXT_STOP") ||
+    sorted.find((t) => new Date(t.startDateISO) > endDay) ||
+    null;
+
+  const left = `<strong>${escapeHtml(leftLabel)}</strong> <a href="/circus-in/${escapeHtml(
+    currentTown.townSlug
+  )}">${escapeHtml(currentTown.town)}</a>`;
+
+  const right = nextTown
+    ? `<span class="dot">•</span> <strong>Next stop</strong> <a href="/circus-in/${escapeHtml(
+        nextTown.townSlug
+      )}">${escapeHtml(nextTown.town)}</a>`
+    : "";
+
+  return `<p class="tour-now-next">${left}${right}</p>`;
+}
+
 // -------------------------
 // Venue extraction + adaptive description
 // -------------------------
@@ -390,6 +456,12 @@ function renderShell({
   <meta name="twitter:description" content="${escapeHtml(description)}"/>
   <meta name="twitter:image" content="${escapeHtml(SITE_OG_IMAGE)}"/>
 
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico" sizes="any"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png"/>
+  <link rel="apple-touch-icon" href="/favicon-512.png"/>
+
   <link rel="stylesheet" href="/styles.css"/>
 
   <!-- Speed up third-party CSS -->
@@ -481,6 +553,68 @@ function renderShell({
 </html>`;
 }
 
+
+// TicketSource resilience knobs (safe defaults)
+const TS_TIMEOUT_MS = Number(process.env.TS_TIMEOUT_MS || 12000);
+const TS_CONCURRENCY = Number(process.env.TS_CONCURRENCY || 6);
+const TS_MAX_RETRIES = Number(process.env.TS_MAX_RETRIES || 2);
+const TS_CACHE_TTL_MS = Number(process.env.TS_CACHE_TTL_MS || 300000); // 5 min
+
+// Simple in-memory cache: { key -> { ts, data } }
+const __eventsCache = new Map();
+
+function pLimit(concurrency) {
+  let activeCount = 0;
+  const queue = [];
+  const next = () => {
+    activeCount--;
+    if (queue.length > 0) queue.shift()();
+  };
+  const run = (fn, resolve, reject) => {
+    activeCount++;
+    Promise.resolve()
+      .then(fn)
+      .then((val) => {
+        resolve(val);
+        next();
+      })
+      .catch((err) => {
+        reject(err);
+        next();
+      });
+  };
+  return (fn) =>
+    new Promise((resolve, reject) => {
+      if (activeCount < concurrency) run(fn, resolve, reject);
+      else queue.push(run.bind(null, fn, resolve, reject));
+    });
+}
+
+const __limit = pLimit(Math.max(1, TS_CONCURRENCY));
+
+function isRetryableAxiosError(err) {
+  const status = err?.response?.status;
+  if (!status) return true; // network/DNS/timeout
+  return status === 429 || (status >= 500 && status <= 599);
+}
+
+async function axiosGetWithRetry(url, config = {}, attempt = 0) {
+  try {
+    return await axios.get(url, { timeout: TS_TIMEOUT_MS, ...config });
+  } catch (err) {
+    if (attempt >= TS_MAX_RETRIES || !isRetryableAxiosError(err)) throw err;
+
+    const status = err?.response?.status;
+    const retryAfter = Number(err?.response?.headers?.["retry-after"] || 0);
+    const backoff = retryAfter
+      ? retryAfter * 1000
+      : [600, 1400, 2600][attempt] || 2600;
+
+    await new Promise((r) => setTimeout(r, backoff));
+    return axiosGetWithRetry(url, config, attempt + 1);
+  }
+}
+
 // -------------------------
 // TicketSource fetch
 // -------------------------
@@ -490,7 +624,7 @@ async function fetchAllEvents(apiUrl, reference = null) {
 
   while (nextUrl) {
     const params = reference ? { reference } : {};
-    const response = await axios.get(nextUrl, {
+    const response = await axiosGetWithRetry(nextUrl, {
       headers: { Authorization: `Bearer ${API_KEY}` },
       params,
     });
@@ -503,7 +637,23 @@ async function fetchAllEvents(apiUrl, reference = null) {
 
 async function buildGroupedEvents(reference = null) {
   const ref = reference ? String(reference).toLowerCase() : null;
-  let events = await fetchAllEvents("https://api.ticketsource.io/events", ref);
+  const cacheKey = ref || "__all__";
+  const cached = __eventsCache.get(cacheKey);
+  const now = Date.now();
+  if (cached && now - cached.ts < TS_CACHE_TTL_MS) {
+    return cached.data;
+  }
+
+  let events;
+  try {
+    events = await fetchAllEvents("https://api.ticketsource.io/events", ref);
+  } catch (err) {
+    if (cached) {
+      console.warn("TicketSource fetch failed; serving stale cache for", cacheKey, err?.message || err);
+      return cached.data;
+    }
+    throw err;
+  }
 
   if (ref) {
     events = events.filter((event) => {
@@ -513,21 +663,41 @@ async function buildGroupedEvents(reference = null) {
   }
 
   const venueRequests = events.map((event) =>
-    axios.get(event.links.venues, { headers: { Authorization: `Bearer ${API_KEY}` } })
-  );
-  const dateRequests = events.map((event) =>
-    axios.get(event.links.dates, { headers: { Authorization: `Bearer ${API_KEY}` } })
+    __limit(() =>
+      axiosGetWithRetry(event.links.venues, {
+        headers: { Authorization: `Bearer ${API_KEY}` },
+      })
+    )
   );
 
-  const venuesResponses = await Promise.all(venueRequests);
-  const datesResponses = await Promise.all(dateRequests);
+  const dateRequests = events.map((event) =>
+    __limit(() =>
+      axiosGetWithRetry(event.links.dates, {
+        headers: { Authorization: `Bearer ${API_KEY}` },
+      })
+    )
+  );
+
+  const venuesResponses = await Promise.allSettled(venueRequests);
+  const datesResponses = await Promise.allSettled(dateRequests);
 
   const groupedEvents = {};
   const today = startOfTodayLocal();
 
   events.forEach((event, index) => {
-    const venues = venuesResponses[index].data.data;
-    const dates = datesResponses[index].data.data;
+    const venues = venuesResponses[index].status === "fulfilled"
+      ? venuesResponses[index].value.data.data
+      : [];
+    const dates = datesResponses[index].status === "fulfilled"
+      ? datesResponses[index].value.data.data
+      : [];
+
+    if (venuesResponses[index].status !== "fulfilled") {
+      console.warn("Venue fetch failed for event:", event?.attributes?.name || event?.id, venuesResponses[index].reason?.message || venuesResponses[index].reason);
+    }
+    if (datesResponses[index].status !== "fulfilled") {
+      console.warn("Dates fetch failed for event:", event?.attributes?.name || event?.id, datesResponses[index].reason?.message || datesResponses[index].reason);
+    }
 
     const town = venues[0]?.attributes?.address?.line_3 || "Unknown Town";
     const venueInfo = pickVenueInfo(venues[0]);
@@ -579,6 +749,7 @@ async function buildGroupedEvents(reference = null) {
     groupedEvents[town].push(eventDetails);
   });
 
+  __eventsCache.set(cacheKey, { ts: Date.now(), data: groupedEvents });
   return groupedEvents;
 }
 
@@ -886,6 +1057,7 @@ app.get("/circus-in/:townSlug", async (req, res) => {
 
     const familyLine = SEO_FLAGS.enableFamilyIntentLine ? buildFamilyIntentLine(townName) : "";
     const weekendLine = buildWeekendLine(townObj);
+    const tourNowNextHtml = buildTourNowNextHtml(townIndex);
 
     const title = `Family Friendly Circus in ${townName} | Reagal Events`;
     const desc = `Family-friendly circus and entertainment in ${townName}. ${badgeText.replace(
@@ -1001,16 +1173,23 @@ app.get("/circus-in/:townSlug", async (req, res) => {
         .town-page-box.town-wide { max-width: 1200px !important; }
         .town-page-box { max-width: 1200px !important; }
 
+        /* make the glass box adapt to content + long town names */
+        .town-page-box { padding: clamp(16px, 2.6vw, 28px) !important; }
+
         /* hero block */
         .town-hero { max-width: 1100px; margin: 0 auto; text-align: center; color:#fff; }
         .town-hero * { color:#fff !important; }
         .town-hero h1 {
           margin: 0 0 6px 0;
-          font-size: clamp(28px, 3.4vw, 52px);
-          line-height: 1.05;
-          white-space: nowrap;
+          font-size: clamp(26px, 3.0vw, 48px);
+          line-height: 1.08;
+          white-space: normal;
+          overflow-wrap: anywhere;
+          text-wrap: balance;
         }
         .town-hero .status { margin: 0 0 8px 0; font-weight: 800; }
+        .town-hero .tour-now-next { margin: 6px 0 10px 0; font-weight: 800; }
+        .town-hero .tour-now-next .dot { padding: 0 10px; opacity: 0.95; }
         .town-hero .desc { margin: 0; width: 100%; max-width: none; line-height: 1.2; }
         .town-hero .extra { margin: 8px 0 0 0; width: 100%; max-width: none; line-height: 1.2; }
         .town-hero .btnrow { margin-top: 10px; display: flex; justify-content: center; }
@@ -1093,16 +1272,18 @@ app.get("/circus-in/:townSlug", async (req, res) => {
         }
 
         @media (max-width: 600px) {
-          .town-hero h1 { white-space: normal; }
+          .town-hero .tour-now-next { font-size: 15px; line-height: 1.2; }
         }
       </style>
     `;
 
     const bodyHtml = `
-      <div class="town-page-box" style="padding:10px 14px;">
+      <div class="town-page-box">
         <div class="town-hero">
           <h1>Family Friendly Circus in ${escapeHtml(townName)}</h1>
           <div class="status">${escapeHtml(badgeText)}</div>
+
+          ${tourNowNextHtml}
 
           <p class="desc">${escapeHtml(autoDesc)}</p>
 

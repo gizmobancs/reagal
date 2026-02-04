@@ -946,3 +946,13 @@ body.halloween-page p {
   }
   .footer-nap{ text-align: center; }
 }
+/* Mobile portrait: add space between header and menu */
+@media (max-width: 600px) {
+  header {
+    margin-bottom: 8px;
+  }
+
+  #menu {
+    margin-top: 6px;
+  }
+}

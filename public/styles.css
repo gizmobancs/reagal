@@ -374,6 +374,11 @@ section {
 /* -------------------------
    Gallery
 ------------------------- */
+/*
+  Many pages use <main id="main-content">.
+  Gallery needs a special desktop grid layout, but other pages should remain centred.
+  So the desktop grid rules are scoped to body.gallery-page.
+*/
 #main-content {
   display: flex;
   flex-direction: column;
@@ -457,7 +462,7 @@ section {
 
 /* Desktop gallery layout: thumbs | viewer | thumbs */
 @media (min-width: 900px) {
-  #main-content {
+  body.gallery-page #main-content {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     grid-template-rows: auto auto;
@@ -726,4 +731,218 @@ body.halloween-page p {
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
+}
+
+
+/* About Us pages */
+.about-grid{
+  max-width: 1200px;
+  margin: 0 auto 22px auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  padding: 0 18px;
+}
+.about-card{
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 18px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  min-height: 240px;
+}
+.about-card img{
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  object-position: center;
+  background: rgba(0,0,0,0.2);
+}
+.about-card-content{
+  padding: 14px 14px 16px 14px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.about-card-content h2{
+  margin: 0 0 8px 0;
+  font-size: 22px;
+}
+.about-card-content p{
+  margin: 0 0 12px 0;
+  opacity: 0.95;
+}
+
+/* Prevent desktop cards becoming extremely tall due to long copy */
+@media (min-width: 901px){
+  .about-card{ grid-template-columns: 420px 1fr; }
+  .about-card-content p{
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* About subpages: keep content centred on desktop */
+  .about-panel{ text-align: center; }
+  .about-panel p{
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .about-gallery{
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .about-gallery-caption{ text-align: center; }
+}
+.about-card-content a{
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 800;
+  padding: 10px 14px;
+  border-radius: 14px;
+  color: #fff;
+  background: rgba(128, 0, 255, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.28);
+}
+.about-card-content a:hover{ background: rgba(128, 0, 255, 0.75); }
+
+.about-article{
+  max-width: 1400px;
+  margin: 0 auto 22px auto;
+  padding: 0 18px;
+}
+.about-panel{
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 18px;
+  padding: 16px;
+  color: #fff;
+}
+.about-panel h1{ margin: 0 0 10px 0; }
+.about-panel p{ line-height: 1.55; }
+
+.about-gallery{
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 14px;
+  align-items: stretch;
+}
+.about-gallery img{
+  width: 100%;
+  height: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  background: rgba(0,0,0,0.25);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.about-gallery-caption{
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 16px;
+  padding: 14px;
+}
+.about-gallery-controls{
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.about-gallery-controls button{
+  cursor: pointer;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(128, 0, 255, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.28);
+}
+.about-gallery-controls button:hover{ background: rgba(128, 0, 255, 0.75); }
+
+@media (max-width: 900px){
+  .about-grid{ grid-template-columns: 1fr; }
+  .about-card{ grid-template-columns: 1fr; }
+  .about-card img{ height: 240px; object-fit: contain; }
+  .about-gallery{ grid-template-columns: 1fr; }
+  .about-gallery img{ max-height: 380px; }
+}
+/* ===============================
+   ABOUT US – READ MORE BUTTON FIX
+   =============================== */
+
+/* Ensure Read More buttons only wrap text */
+.read-more-btn,
+.about-read-more,
+.about-card a,
+.about-section a {
+    display: inline-block;
+    width: auto;
+    max-width: fit-content;
+    padding: 10px 18px;
+    margin-top: 12px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Prevent parent containers from forcing full width */
+.about-card,
+.about-section {
+    text-align: center;
+}
+
+/* Mobile safety – keep buttons tidy */
+@media (max-width: 768px) {
+    .read-more-btn,
+    .about-read-more,
+    .about-card a,
+    .about-section a {
+        padding: 10px 16px;
+        font-size: 0.95rem;
+    }
+}
+
+
+/* Homepage SEO paragraph block */
+.seo-intro{
+  margin-top: 18px;
+}
+
+/* Footer contact (NAP) – keep consistent with footer styling */
+.footer-contact{
+  text-align:center;
+  font-size:0.9rem;
+  opacity:0.9;
+  padding: 8px 10px 16px;
+}
+.footer-contact a{
+  color:#fff;
+  text-decoration: underline;
+}
+.footer-contact p{ margin: 6px 0; }
+
+
+/* Footer NAP block (inside footer-container) */
+.footer-nap{
+  text-align: right;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  opacity: 0.95;
+}
+.footer-nap p{ margin: 2px 0; }
+.footer-nap a{ color:#fff; text-decoration: underline; }
+
+@media (max-width: 700px){
+  .footer-container{
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+  }
+  .footer-nap{ text-align: center; }
 }

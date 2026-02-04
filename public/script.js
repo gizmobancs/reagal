@@ -116,6 +116,30 @@
     return [...new Set(list)];
   }
 
+
+
+  // ----------------------------
+  // Date sorting helpers (UK dd/mm/yyyy)
+  // ----------------------------
+  function parseUkDate(dateStr) {
+    const m = String(dateStr || "").match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!m) return null;
+    const d = parseInt(m[1], 10);
+    const mo = parseInt(m[2], 10) - 1;
+    const y = parseInt(m[3], 10);
+    const dt = new Date(y, mo, d);
+    return Number.isNaN(dt.getTime()) ? null : dt;
+  }
+
+  function sortUkDates(dateStrings) {
+    return [...dateStrings].sort((a, b) => {
+      const da = parseUkDate(a);
+      const db = parseUkDate(b);
+      const ta = da ? da.getTime() : Number.POSITIVE_INFINITY;
+      const tb = db ? db.getTime() : Number.POSITIVE_INFINITY;
+      return ta - tb;
+    });
+  }
   // ----------------------------
   // Shared event renderer (same UX as before)
   // - groups by town (server returns this shape)
@@ -166,7 +190,21 @@
         ([, events]) => Array.isArray(events) && events.length
       );
 
-      if (!townEntries.length) {
+      
+      // Sort towns by earliest show date (UK dd/mm/yyyy)
+      townEntries.sort((a, b) => {
+        const aDates = (a[1] || []).flatMap(ev => (ev.dates || []).map(d => d.date));
+        const bDates = (b[1] || []).flatMap(ev => (ev.dates || []).map(d => d.date));
+        const aMin = sortUkDates(unique(aDates))[0];
+        const bMin = sortUkDates(unique(bDates))[0];
+        const da = parseUkDate(aMin);
+        const db = parseUkDate(bMin);
+        const ta = da ? da.getTime() : Number.POSITIVE_INFINITY;
+        const tb = db ? db.getTime() : Number.POSITIVE_INFINITY;
+        return ta - tb;
+      });
+
+if (!townEntries.length) {
         if (noEventsEl) {
           noEventsEl.style.display = "block";
         } else {
@@ -178,7 +216,7 @@
       townEntries.forEach(([town, events]) => {
         // Combine all dates for dropdowns
         const allDates = events.flatMap((ev) => ev.dates || []);
-        const uniqueDates = unique(allDates.map((d) => d.date));
+        const uniqueDates = sortUkDates(unique(allDates.map((d) => d.date)));
 
         if (!uniqueDates.length) return;
 

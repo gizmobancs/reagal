@@ -1076,6 +1076,31 @@ app.get("/circus-in/:townSlug", async (req, res) => {
     const thisEnd = new Date(townObj.endDateISO);
     const nextTown = sorted.find((t) => new Date(t.startDateISO) > thisEnd) || null;
 
+    // Internal linking: nearby tour locations (helps SEO crawl depth)
+    const currentIndex = sorted.findIndex((t) => t.townSlug === townObj.townSlug);
+    const neighborSlice = sorted
+      .filter((t) => t.townSlug !== townObj.townSlug)
+      .slice(Math.max(0, currentIndex - 3), Math.min(sorted.length, currentIndex + 4))
+      .slice(0, 6);
+
+    const neighborsHtml = neighborSlice.length
+      ? `
+        <div class="town-page-box town-wide" style="margin-top:14px;">
+          <h2 style="color:#fff; text-align:center; margin:0 0 10px 0;">Other tour locations</h2>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+            ${neighborSlice
+              .map(
+                (t) =>
+                  `<a class="town-booknow" style="padding:10px 14px;" href="/circus-in/${escapeHtml(t.townSlug)}">${escapeHtml(
+                    t.town
+                  )}</a>`
+              )
+              .join("")}
+          </div>
+        </div>
+      `
+      : "";
+
     const primaryVenueInfo = townObj.events?.[0]?.venueInfo || {};
     const autoDesc = buildAdaptiveTownDescription({
       townName: townObj.town,
@@ -1329,6 +1354,8 @@ app.get("/circus-in/:townSlug", async (req, res) => {
           </div>
         </div>
       </div>
+
+      ${neighborsHtml}
 
       ${eventsHtml}
 

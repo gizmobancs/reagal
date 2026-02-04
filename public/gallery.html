@@ -32,7 +32,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
 <script defer="" src="script.js"></script>
 <link href="https://reagalevents.com/gallery.html" rel="canonical"/><meta content="https://reagalevents.com/gallery.html" property="og:url"/><link href="/favicon.ico" rel="icon" sizes="any"/><link href="/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="/favicon-16.png" rel="icon" sizes="16x16" type="image/png"/><link href="/apple-touch-icon.png" rel="apple-touch-icon"/><link href="/site.webmanifest" rel="manifest"/><meta content="#0b0b0b" name="theme-color"/><link crossorigin="" href="https://www.googletagmanager.com" rel="preconnect"/><script data-seo="org" type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Reagal Events", "url": "https://reagalevents.com", "logo": "https://reagalevents.com/favicon-512.png", "sameAs": ["https://www.facebook.com/reagalevents/", "https://www.tiktok.com/@reagalevents"]}</script></head>
-<body>
+<body class="gallery-page">
 <header>
 <img alt="Reagal Events Banner" class="banner" src="banner1.jpg"/>
 <h2 class="circus-font">Proudly Presents</h2>
@@ -41,7 +41,9 @@
 <ul>
 <li><a href="index.html">Welcome</a></li>
 <li><a href="all-shows.html">View All Shows</a></li>
+<li><a href="/tour-locations">Tour Locations</a></li>
 <li><a href="gallery.html">Gallery</a></li>
+<li><a href="about-us.html">About Us</a></li>
 <li><a href="contact.html">Contact Us</a></li>
 <li><a href="general-tour.html">General Tour</a></li>
 <li><a href="summer-season.html">Summer Season</a></li>
@@ -83,67 +85,301 @@
 <img alt="Book now" border="0" height="56" src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png" width="130"/>
 </a>
 </div>
+
+
+<div class="footer-nap">
+  <p><strong>Reagal Events</strong></p>
+  <p><a href="tel:07719877422">07719 877422</a></p>
+  <p>United Kingdom</p>
+  <p>Animal licence number: 19/00613/AWEA</p>
+</div>
 </div>
 </footer>
-<!-- Gallery JS (updated for .webp first, with jpg/JPG fallback) -->
+<!-- Gallery JS -->
 <script>
-    const imageCount = 31;
-    const galleryFolder = '/gallery/';
-    const images = document.querySelector('.carousel-images');
-    const galleryLeft = document.getElementById('gallery-left');
-    const galleryRight = document.getElementById('gallery-right');
-    const prevButton = document.getElementById('prev');
-    const nextButton = document.getElementById('next');
-    let currentIndex = 0;
-    let hoverTimeout;
+  const imagesData = [
+  {
+    "src": "/gallery/a-front-view-on-the-wonder-circus.webp",
+    "alt": "A Front View on the Wonder Circus"
+  },
+  {
+    "src": "/gallery/a-mesmerised-audience-as-miss-carolyn-roberts-presents-her-beautiful-horses.webp",
+    "alt": "A Mesmerised Audience as Miss Carolyn Roberts Presents Her Beautiful Horses"
+  },
+  {
+    "src": "/gallery/a-view-of-the-wonder-circus-from-the-front.webp",
+    "alt": "A View of the Wonder Circus from the Front"
+  },
+  {
+    "src": "/gallery/a-young-lola-and-elvis-roberts-with-their-papa-john-roberts.webp",
+    "alt": "A Young Lola and Elvis Roberts with Their Papa John Roberts"
+  },
+  {
+    "src": "/gallery/adorable-pony-in-the-wonder-circus.webp",
+    "alt": "Adorable Pony in the Wonder Circus"
+  },
+  {
+    "src": "/gallery/artist-pose-for-a-photo-at-our-halloween-circus-in-peterborough.webp",
+    "alt": "Artist Pose for a Photo at our Halloween Circus in Peterborough"
+  },
+  {
+    "src": "/gallery/artist-take-their-compliments-after-the-western-themed-circus-show.webp",
+    "alt": "Artist Take Their Compliments after the Western Themed Circus Show"
+  },
+  {
+    "src": "/gallery/artists-peter-sandow-jana-roberts-and-carolyn-roberts-smile-for-a-selfie-back-stage-during-the-show.webp",
+    "alt": "Artists Peter Sandow Jana Roberts and Carolyn Roberts Smile for a Selfie Back Stage During the Show"
+  },
+  {
+    "src": "/gallery/audience-take-there-seasts-in-the-wonder-circus-bigtop.webp",
+    "alt": "Audience Take There Seasts in the Wonder Circus Bigtop"
+  },
+  {
+    "src": "/gallery/beautiful-night-picture-of-reagal-evernts-wonder-circus-bigtop.webp",
+    "alt": "Beautiful Night Picture of Reagal Evernts Wonder Circus Bigtop"
+  },
+  {
+    "src": "/gallery/britains-youngest-clow-clown-elvis.webp",
+    "alt": "Britains Youngest Clow Clown Elvis"
+  },
+  {
+    "src": "/gallery/cammilla-the-camel-strutting-around-the-circus-ring.webp",
+    "alt": "Cammilla the Camel Strutting Around the Circus Ring"
+  },
+  {
+    "src": "/gallery/carolyn-roberts-and-one-of-her-shetland-ponies-in-the-reagal-events-wonder-circus-big-top.webp",
+    "alt": "Carolyn Roberts and One of Her Shetland Ponies in the Reagal Events Wonder Circus Big Top"
+  },
+  {
+    "src": "/gallery/carolyn-roberts-ensuring-back-doors-are-show-ready.webp",
+    "alt": "Carolyn Roberts Ensuring Back Doors Are Show Ready"
+  },
+  {
+    "src": "/gallery/childerns-swing-boats-at-the-wonder-circus-skegness.webp",
+    "alt": "Childerns Swing Boats at the Wonder Circus Skegness"
+  },
+  {
+    "src": "/gallery/circus-artist-angel-bojilov-lacing-up-the-bigtop.webp",
+    "alt": "Circus Artist Angel Bojilov Lacing Up the Bigtop"
+  },
+  {
+    "src": "/gallery/circus-artists-on-parade-float-skeggness.webp",
+    "alt": "Circus Artists on Parade Float Skeggness"
+  },
+  {
+    "src": "/gallery/circus-cast-take-their-compliments-in-the-wonder-circus-big-top.webp",
+    "alt": "Circus Cast Take Their Compliments in the Wonder Circus Big Top"
+  },
+  {
+    "src": "/gallery/circus-children-pose-for-photo-at-halloween-circus-peterborough.webp",
+    "alt": "Circus Children Pose for Photo at Halloween Circus Peterborough"
+  },
+  {
+    "src": "/gallery/circus-crew-enjoying-an-ice-cream-during-a-hot-summers-build-up.webp",
+    "alt": "Circus Crew Enjoying an Ice Cream During a Hot Summers Build Up"
+  },
+  {
+    "src": "/gallery/circus-girls-enjoying-their-opening-dance-number.webp",
+    "alt": "Circus Girls Enjoying Their Opening Dance Number"
+  },
+  {
+    "src": "/gallery/circus-girls-perforing-their-opening-dance-number.webp",
+    "alt": "Circus Girls Perforing Their Opening Dance Number"
+  },
+  {
+    "src": "/gallery/circus-girls-ready-for-build-up.webp",
+    "alt": "Circus Girls Ready for Build Up"
+  },
+  {
+    "src": "/gallery/circus-group-poto-as-elvis-robers-gets-award-for-best-small-car-at-skegness-parade.webp",
+    "alt": "Circus Group Poto as Elvis Robers Gets Award for Best Small Car at Skegness Parade"
+  },
+  {
+    "src": "/gallery/clown-elvis-and-his-papa-jonco-comedy-slosh.webp",
+    "alt": "Clown Elvis and His Papa Jonco Comedy Slosh"
+  },
+  {
+    "src": "/gallery/clown-elvis-drives-his-award-winning-fire-truck-at-skegness-parade.webp",
+    "alt": "Clown Elvis Drives His Award Winning Fire Truck at Skegness Parade"
+  },
+  {
+    "src": "/gallery/clown-elvis-having-fun-wetting-the-audience.webp",
+    "alt": "Clown Elvis Having Fun Wetting the Audience"
+  },
+  {
+    "src": "/gallery/comedy-slosh-act-at-the-wonder-circus-charity-nigh-the-big-night-out.webp",
+    "alt": "Comedy Slosh Act at the Wonder Circus Charity Nigh the Big Night Out"
+  },
+  {
+    "src": "/gallery/crazy-shinannigans-at-the-big-night-out-charity-event.webp",
+    "alt": "Crazy Shinannigans at the Big Night Out Charity Event"
+  },
+  {
+    "src": "/gallery/elvis-and-lola-roberts-performing-the-classic-radio-gag.webp",
+    "alt": "Elvis and Lola Roberts Performing the Classic Radio Gag"
+  },
+  {
+    "src": "/gallery/entrance-to-the-circus-at-skegness.webp",
+    "alt": "Entrance to the Circus at Skegness"
+  },
+  {
+    "src": "/gallery/fire-man-clown-elvis-patrolling-the-circus.webp",
+    "alt": "Fire Man Clown Elvis Patrolling the Circus"
+  },
+  {
+    "src": "/gallery/george-the-mouse-says-hello-in-the-circus-ring.webp",
+    "alt": "George the Mouse Says Hello in the Circus Ring"
+  },
+  {
+    "src": "/gallery/happy-pony-on-hind-legs-showing-off-their-skills.webp",
+    "alt": "Happy Pony on Hind Legs Showing Off Their Skills"
+  },
+  {
+    "src": "/gallery/jana-roberts-performs-in-the-ring.webp",
+    "alt": "Jana Roberts Performs in the Ring"
+  },
+  {
+    "src": "/gallery/john-roberts-and-peter-sandow-come-out-of-retirement-for-comedy-slosh-carwash-at-charity-event-big-night-out-skegness.webp",
+    "alt": "John Roberts and Peter Sandow Come Out of Retirement for Comedy Slosh Carwash at Charity Event Big Night Out Skegness"
+  },
+  {
+    "src": "/gallery/john-roberts-in-his-mini-digger-knocking-in-the-stakes.webp",
+    "alt": "John Roberts in His Mini Digger Knocking in the Stakes"
+  },
+  {
+    "src": "/gallery/jonco-stretches-to-pass-gizmo-the-paste-brush-clown-slosh.webp",
+    "alt": "Jonco Stretches to Pass Gizmo the Paste Brush Clown Slosh"
+  },
+  {
+    "src": "/gallery/lola-roberts-being-captured-by-gizmo-on-the-big-night-out-charity-show.webp",
+    "alt": "Lola Roberts Being Captured By Gizmo on the Big Night Out Charity Show"
+  },
+  {
+    "src": "/gallery/mayor-of-skegness-visits-reagal-events-charity-event.webp",
+    "alt": "Mayor of Skegness Visits Reagal Events Charity Event"
+  },
+  {
+    "src": "/gallery/mayor-of-skegness-with-some-of-the-artist-from-the-big-night-out-by-reagal-events.webp",
+    "alt": "Mayor of Skegness with Some of the Artist from the Big Night Out By Reagal Events"
+  },
+  {
+    "src": "/gallery/miss-carolyn-roberts-and-her-beautiful-horse-cookie.webp",
+    "alt": "Miss Carolyn Roberts and Her Beautiful Horse Cookie"
+  },
+  {
+    "src": "/gallery/miss-carolyn-roberts-showing-love-in-the-ring.webp",
+    "alt": "Miss Carolyn Roberts Showing Love in the Ring"
+  },
+  {
+    "src": "/gallery/miss-lola-roberts-ready-for-hr-opening-dance-number.webp",
+    "alt": "Miss Lola Roberts Ready for Hr Opening Dance Number"
+  },
+  {
+    "src": "/gallery/number-1-in-command-tuna-takes-his-bow.webp",
+    "alt": "Number 1 in Command Tuna Takes His Bow"
+  },
+  {
+    "src": "/gallery/peeping-trough-the-fence-at-our-lovely-bigtop.webp",
+    "alt": "Peeping Trough the Fence at our Lovely Bigtop"
+  },
+  {
+    "src": "/gallery/rainbow-over-the-wonder-circus.webp",
+    "alt": "Rainbow Over the Wonder Circus"
+  },
+  {
+    "src": "/gallery/reagal-events-wonder-circus-new-ticket-office.webp",
+    "alt": "Reagal Events Wonder Circus New Ticket Office"
+  },
+  {
+    "src": "/gallery/rollason-stage-school-group-photo-before-performing-at-the-circus.webp",
+    "alt": "Rollason Stage School Group Photo before Performing at the Circus"
+  },
+  {
+    "src": "/gallery/shetland-pony-act-in-the-wonder-circus-bigtop.webp",
+    "alt": "Shetland Pony Act in the Wonder Circus Bigtop"
+  },
+  {
+    "src": "/gallery/some-of-our-charming-mascot-characters.webp",
+    "alt": "Some of our Charming Mascot Characters"
+  },
+  {
+    "src": "/gallery/the-amazing-transforming-car-in-the-wonder-circus-big-top.webp",
+    "alt": "The Amazing Transforming Car in the Wonder Circus Big Top"
+  },
+  {
+    "src": "/gallery/the-beautiful-miss-jana-roberts-and-her-world-famous-hoola-hoops.webp",
+    "alt": "The Beautiful Miss Jana Roberts and Her World Famous Hoola Hoops"
+  },
+  {
+    "src": "/gallery/this-beauty-will-have-you-questioning-if-unicorns-really-are-just-things-of-legend.webp",
+    "alt": "This Beauty Will Have You Questioning If Unicorns Really Are Just Things of Legend"
+  },
+  {
+    "src": "/gallery/two-artist-walking-the-tightrope-at-reagal-events-wonder-circus.webp",
+    "alt": "Two Artist Walking the Tightrope at Reagal Events Wonder Circus"
+  },
+  {
+    "src": "/gallery/vintage-clown-heads-repainted-and-ready-to-greet-guests.webp",
+    "alt": "Vintage Clown Heads Repainted and Ready to Greet Guests"
+  },
+  {
+    "src": "/gallery/warren-and-hid-dogs-performing-at-the-wonder-circus-skegness.webp",
+    "alt": "Warren and Hid Dogs Performing at the Wonder Circus Skegness"
+  },
+  {
+    "src": "/gallery/wonder-circus-all-set-up.webp",
+    "alt": "Wonder Circus All Set Up"
+  },
+  {
+    "src": "/gallery/wonder-circus-ring-is-set.webp",
+    "alt": "Wonder Circus Ring Is Set"
+  },
+  {
+    "src": "/gallery/wonder-circus-team-packing-the-tent-away-for-travel.webp",
+    "alt": "Wonder Circus Team Packing the Tent Away for Travel"
+  }
+];
+  const images = document.querySelector('.carousel-images');
+  const galleryLeft = document.getElementById('gallery-left');
+  const galleryRight = document.getElementById('gallery-right');
+  const prevButton = document.getElementById('prev');
+  const nextButton = document.getElementById('next');
+  let currentIndex = 0;
+  let hoverTimeout;
 
-    for (let i = 1; i <= imageCount; i++) {
-      const img = new Image();
+  // Build carousel + thumbnails
+  imagesData.forEach((item, idx) => {
+    const cImg = document.createElement('img');
+    cImg.src = item.src;
+    cImg.alt = item.alt;
+    images.appendChild(cImg);
 
-      // ✅ Prefer WebP (smaller/faster)
-      img.src = `${galleryFolder}img${i}.webp`;
-      img.alt = `Gallery image ${i}`;
+    const tImg = document.createElement('img');
+    tImg.src = item.src;
+    tImg.alt = item.alt;
 
-      // ✅ Fallbacks: .jpg then .JPG (for older sets / mixed case)
-      img.onerror = () => {
-        if (img.src.endsWith(`img${i}.webp`)) {
-          img.src = `${galleryFolder}img${i}.jpg`;
-        } else if (img.src.endsWith(`img${i}.jpg`)) {
-          img.src = `${galleryFolder}img${i}.JPG`;
-        }
-      };
+    tImg.addEventListener('mouseenter', () => hover(idx));
+    tImg.addEventListener('mouseleave', () => clearTimeout(hoverTimeout));
 
-      img.onload = () => {
-        const cImg = document.createElement('img');
-        cImg.src = img.src;
-        cImg.alt = img.alt;
-        images.appendChild(cImg);
+    (idx < Math.ceil(imagesData.length / 2) ? galleryLeft : galleryRight).appendChild(tImg);
+  });
 
-        if (images.children.length === 1) updateCarousel(0);
+  function hover(i){
+    hoverTimeout = setTimeout(() => updateCarousel(i), 200);
+  }
 
-        const tImg = document.createElement('img');
-        tImg.src = img.src;
-        tImg.alt = img.alt;
-        tImg.addEventListener('mouseenter', () => hover(i - 1));
-        tImg.addEventListener('mouseleave', () => clearTimeout(hoverTimeout));
+  function updateCarousel(i){
+    [...images.children].forEach((img, idx) => {
+      img.style.display = idx === i ? 'block' : 'none';
+    });
+    currentIndex = i;
+  }
 
-        (i <= imageCount / 2 ? galleryLeft : galleryRight).appendChild(tImg);
-      };
-    }
+  prevButton.onclick = () => updateCarousel((currentIndex - 1 + imagesData.length) % imagesData.length);
+  nextButton.onclick = () => updateCarousel((currentIndex + 1) % imagesData.length);
 
-    function hover(i){
-      hoverTimeout = setTimeout(() => updateCarousel(i), 300);
-    }
-
-    function updateCarousel(i){
-      [...images.children].forEach((img, idx) => {
-        img.style.display = idx === i ? 'block' : 'none';
-      });
-      currentIndex = i;
-    }
-
-    prevButton.onclick = () => updateCarousel((currentIndex - 1 + imageCount) % imageCount);
-    nextButton.onclick = () => updateCarousel((currentIndex + 1) % imageCount);
-  </script>
+  // init
+  if (imagesData.length) updateCarousel(0);
+</script>
 </body>
 </html>

@@ -410,4 +410,29 @@ if (!townEntries.length) {
       menuId: "menu",
     });
   });
+
+
+  // ----------------------------
+  // Nav: hide current page link (saves menu space)
+  // ----------------------------
+  document.addEventListener("DOMContentLoaded", () => {
+    const nav = document.querySelector("#menu");
+    if (!nav) return;
+
+    const path = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+
+    nav.querySelectorAll("a[href]").forEach((a) => {
+      const href = (a.getAttribute("href") || "").trim();
+
+      // Ignore external links and hash links
+      if (!href || href.startsWith("http") || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+
+      const h = href.replace(/^\//, "").toLowerCase();
+
+      if (h === path) {
+        const li = a.closest("li");
+        if (li) li.style.display = "none";
+      }
+    });
+  });
 })();

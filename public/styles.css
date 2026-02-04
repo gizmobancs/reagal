@@ -151,8 +151,8 @@ header {
     }
 
     /* Limit the menu to 2 rows */
-    #menu ul li:nth-child(n+8) {
-        display: none; /* Hides items beyond the 6th one */
+    #menu ul li:nth-child(n+11) {
+        display: none; /* hides items beyond the 10th */
     }
 }
 

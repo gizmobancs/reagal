@@ -483,8 +483,10 @@ function renderShell({
     <nav id="menu">
       <ul>
         <li><a href="/index.html">Welcome</a></li>
-        <li><a href="/all-shows.html">View All Shows</a></li>
+        <li><a href="/all-shows.html">All Shows</a></li>
+        <li><a href="/tour-locations">Tour Locations</a></li>
         <li><a href="/gallery.html">Gallery</a></li>
+        <li><a href="/about-us.html">About Us</a></li>
         <li><a href="/contact.html">Contact Us</a></li>
         <li><a href="/general-tour.html">General Tour</a></li>
         <li><a href="/summer-season.html">Summer Season</a></li>

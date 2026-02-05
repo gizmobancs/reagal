@@ -946,13 +946,22 @@ body.halloween-page p {
   }
   .footer-nap{ text-align: center; }
 }
-/* Mobile portrait: add space between header and menu */
+
+/* Mobile portrait: keep menu clear of welcome title box (tight spacing) */
 @media (max-width: 600px) {
-  header {
-    margin-bottom: 8px;
+  #menu{
+    position: relative;
+    z-index: 5;
+    margin-bottom: 0 !important; /* remove extra gap */
   }
 
-  #menu {
-    margin-top: 6px;
+  /* Tight, controlled nudge */
+  #welcome.page-title-box{
+    margin-top: 0 !important;
+    transform: translateY(-35px); /* nudge UP - adjust to taste */
+    margin-bottom: 0 !important; /* remove extra gap */
   }
 }
+
+
+

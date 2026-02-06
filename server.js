@@ -478,8 +478,9 @@ function renderShell({
 <body>
   <header>
     <img src="/banner1.jpg" alt="Reagal Events Banner" class="banner">
-    <h2 class="circus-font">Proudly Presents</h2>
-    <div class="banner2-container"></div>
+    <div class="banner2-container">
+      <h2 class="circus-font">Proudly Presents</h2>
+    </div>
     <nav id="menu">
       <ul>
         <li><a href="/index.html">Welcome</a></li>
@@ -1123,9 +1124,13 @@ app.get("/circus-in/:townSlug", async (req, res) => {
       ""
     )} — view dates and book tickets.`;
 
-    const eventsHtml = (townObj.events || [])
-      .map((ev, evIndex) => {
-        const byDay = {};
+    const eventsHtml = (() => {
+      const allEvents = townObj.events || [];
+      if (!allEvents.length) return "";
+
+      // Merge ALL TicketSource events for this town into ONE card (same UX as Oundle/General Tour)
+      const byDay = {};
+      for (const ev of allEvents) {
         for (const d of ev.dates || []) {
           const dayKey = toDateLabel(d.startISO);
           byDay[dayKey] = byDay[dayKey] || [];
@@ -1135,33 +1140,37 @@ app.get("/circus-in/:townSlug", async (req, res) => {
             startISO: d.startISO,
           });
         }
+      }
 
-        const dayKeys = Object.keys(byDay).sort(
-          (a, b) =>
-            new Date(byDay[a][0].startISO).getTime() - new Date(byDay[b][0].startISO).getTime()
-        );
-        for (const k of dayKeys) {
-          byDay[k].sort((x, y) => new Date(x.startISO) - new Date(y.startISO));
-        }
+      const dayKeys = Object.keys(byDay).sort(
+        (a, b) =>
+          new Date(byDay[a][0].startISO).getTime() - new Date(byDay[b][0].startISO).getTime()
+      );
+      for (const k of dayKeys) {
+        byDay[k].sort((x, y) => new Date(x.startISO) - new Date(y.startISO));
+      }
 
-        const rangeLine = `${toDateLabel(townObj.startDateISO)} – ${toDateLabel(townObj.endDateISO)}`;
-        const dataJson = JSON.stringify(byDay).replace(/</g, "\\u003c");
+      const rangeLine = `${toDateLabel(townObj.startDateISO)} – ${toDateLabel(townObj.endDateISO)}`;
+      const dataJson = JSON.stringify(byDay).replace(/</g, "\\u003c");
 
-        const dateSelectId = `dateSel_${evIndex}`;
-        const timeSelectId = `timeSel_${evIndex}`;
-        const linkId = `bookLink_${evIndex}`;
+      const dateSelectId = `dateSel_0`;
+      const timeSelectId = `timeSel_0`;
+      const linkId = `bookLink_0`;
 
-        const thumbAlt = ev.thumbnail ? `Family-friendly circus in ${townName} by Reagal Events` : "";
+      const primary = allEvents[0] || {};
+      const displayName = primary.eventName || "Circus Show";
+      const thumb = primary.thumbnail || "";
+      const thumbAlt = thumb ? `Family-friendly circus in ${townName} by Reagal Events` : "";
 
-        return `
+      return `
           <div class="town-page-box town-events town-wide" style="color:#fff;">
             <div class="event-flex">
               <div class="event-left">
-                ${ev.thumbnail ? `<img src="${escapeHtml(ev.thumbnail)}" alt="${escapeHtml(thumbAlt)}" class="event-thumb">` : ""}
+                ${thumb ? `<img src="${escapeHtml(thumb)}" alt="${escapeHtml(thumbAlt)}" class="event-thumb">` : ""}
               </div>
 
               <div class="event-right">
-                <h3 style="color:#fff; margin:0 0 6px 0;">${escapeHtml(ev.eventName)}</h3>
+                <h3 style="color:#fff; margin:0 0 6px 0;">${escapeHtml(displayName)}</h3>
                 <div class="town-range" style="color:#fff; margin:0 0 10px 0;">${escapeHtml(rangeLine)}</div>
 
                 <div class="town-row" style="color:#fff;">
@@ -1195,27 +1204,24 @@ app.get("/circus-in/:townSlug", async (req, res) => {
               function repopulateTimes() {
                 const day = dateSel.value;
                 const times = byDay[day] || [];
-                timeSel.innerHTML = times.map(t => '<option value="' + t.time + '">' + t.time + '</option>').join('');
+                // Times already sorted earliest-first above.
+                timeSel.innerHTML = times.map(t => '<option value="' + (t.bookNowLink || '#') + '">' + t.time + '</option>').join('');
                 updateLink();
               }
 
               function updateLink() {
-                const day = dateSel.value;
-                const times = byDay[day] || [];
-                const chosen = timeSel.value;
-                const match = times.find(t => t.time === chosen) || times[0];
-                link.href = match ? match.bookNowLink : "#";
+                link.href = timeSel.value || "#";
               }
 
               dateSel.addEventListener("change", repopulateTimes);
               timeSel.addEventListener("change", updateLink);
 
+              // init
               repopulateTimes();
             })();
           </script>
-        `;
-      })
-      .join("");
+      `;
+    })();;
 
     const { html: faqHtml, schema: faqSchema } = buildFaqBlock(townName, primaryVenueInfo);
 

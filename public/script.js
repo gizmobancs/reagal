@@ -184,9 +184,34 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const eventsByTown = await res.json();
 
+      // Normalise API shape:
+      // - If server returns an object keyed by town, use it as-is.
+      // - If server returns a flat array of events, group them by town so we always render ONE card per town.
+      const normaliseByTown = (data) => {
+        if (!data) return {};
+        if (!Array.isArray(data)) return data;
+
+        const byTown = {};
+        data.forEach((ev) => {
+          const town =
+            ev?.town ||
+            ev?.townName ||
+            ev?.location ||
+            ev?.city ||
+            ev?.venueTown ||
+            ev?.venue?.town ||
+            "Unknown";
+          if (!byTown[town]) byTown[town] = [];
+          byTown[town].push(ev);
+        });
+        return byTown;
+      };
+
+      const eventsByTownMap = normaliseByTown(eventsByTown);
+
       container.innerHTML = "";
 
-      const townEntries = Object.entries(eventsByTown || {}).filter(
+      const townEntries = Object.entries(eventsByTownMap || {}).filter(
         ([, events]) => Array.isArray(events) && events.length
       );
 
@@ -299,7 +324,34 @@ if (!townEntries.length) {
           timeDropdown.innerHTML = `<option value="">Select a time</option>`;
 
           const filtered = allDates.filter((d) => d.date === selectedDate);
-          filtered.forEach((d) => {
+
+// Sort times earliest first (robust to 24h and am/pm formats)
+const timeToMinutes = (t) => {
+  if (!t) return Number.POSITIVE_INFINITY;
+  const raw = String(t).trim().toLowerCase().replace(/\./g, ":");
+  const ampmMatch = raw.match(/(am|pm)$/);
+  let s = raw;
+  let ampm = null;
+  if (ampmMatch) {
+    ampm = ampmMatch[1];
+    s = raw.slice(0, -2).trim();
+  }
+  s = s.replace(/\s+/g, "");
+  const m = s.match(/^(\d{1,2})(?::(\d{2}))?$/);
+  if (!m) return Number.POSITIVE_INFINITY;
+  let h = parseInt(m[1], 10);
+  const mi = parseInt(m[2] || "0", 10);
+  if (ampm) {
+    if (h === 12) h = 0;
+    if (ampm === "pm") h += 12;
+  }
+  return h * 60 + mi;
+};
+
+filtered
+  .slice()
+  .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
+  .forEach((d) => {
             const opt = document.createElement("option");
             opt.value = d.bookNowLink;
             opt.textContent = d.time;

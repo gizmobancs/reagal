@@ -976,3 +976,25 @@ body.halloween-page p {
 }
 
 
+
+
+
+/* === Banner2 Proudly Presents: lock to top of banner2 + smooth scaling === */
+.banner2-container { position: relative; }
+.banner2-container .circus-font {
+  position: absolute !important;
+  top: 6px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+
+  /* Smooth scale across phones, foldables/tablets, and desktop */
+  font-size: clamp(18px, 2.2vw, 36px) !important;
+}
+
+/* Desktop ~15% larger */
+@media (min-width: 1024px) {
+  .banner2-container .circus-font { font-size: 1.15em; }
+}

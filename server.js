@@ -872,15 +872,24 @@ if (SEO_FLAGS.enableSitemap) {
       const baseUrl = getBaseUrl(req);
 
       const staticPaths = [
-        "/",
-                "/all-shows.html",
-        "/gallery.html",
-        "/contact.html",
-        "/general-tour.html",
-        "/summer-season.html",
-        "/halloween-circus.html",
-        "/tour-locations",
-      ];
+  "/",
+  "/all-shows.html",
+  "/gallery.html",
+  "/contact.html",
+  "/general-tour.html",
+  "/summer-season.html",
+  "/halloween-circus.html",
+  "/tour-locations",
+
+  // About hub + subpages
+  "/about-us.html",
+  "/about-who-we-are.html",
+  "/about-our-heritage.html",
+  "/about-our-beautiful-animals.html",
+  "/about-life-on-the-road.html",
+  "/about-our-trucks-and-transport.html",
+];
+
 
       const groupedEvents = await buildGroupedEvents(null);
       const townIndex = buildTownIndex(groupedEvents, { comingSoonDays: 365 });

@@ -93,11 +93,11 @@ header {
   color: gold;
   text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black;
   z-index: 20;
-  top: 170px;
+  top: 6px;
 }
 
 @media (max-width: 768px) {
-  .circus-font { font-size: 1.5rem; top: 50px; }
+  .circus-font { font-size: 1.5rem; top: 6px; }
 }
 @media (max-width: 480px) {
   .circus-font { font-size: 1rem; }
@@ -963,5 +963,16 @@ body.halloween-page p {
   }
 }
 
+/* Foldable / medium widths: nudge "Proudly Presents" up so it sits on the banner join */
+@media (min-width: 600px) and (max-width: 900px) {
+  header h2.circus-font {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 6px;   /* adjust if needed */
+    z-index: 10;
+    margin: 0;
+  }
+}
 
 

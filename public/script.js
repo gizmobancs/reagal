@@ -6,6 +6,39 @@
   "use strict";
 
   // ----------------------------
+  // Fixed background layer (zoom-stable on desktop)
+  //
+  // The site originally used CSS background-attachment: fixed. On desktop,
+  // browser zoom can make fixed-attachment backgrounds *appear* to stay
+  // static while the rest of the page scales, which looks like elements are
+  // zooming independently. We render the background as a fixed element
+  // instead, preserving the same visual behaviour (background stays put as
+  // content scrolls) while zoom scales everything together.
+  // ----------------------------
+  (function ensureBackgroundLayer() {
+    try {
+      if (document.getElementById("bg-layer")) return;
+      const bg = document.createElement("div");
+      bg.id = "bg-layer";
+      bg.setAttribute("aria-hidden", "true");
+      const mount = () => {
+        if (document.getElementById("bg-layer")) return;
+        document.documentElement.style.background = "transparent";
+        document.body.prepend(bg);
+      };
+
+      // If script is loaded in <head>, wait until body exists.
+      if (!document.body) {
+        document.addEventListener("DOMContentLoaded", mount, { once: true });
+      } else {
+        mount();
+      }
+    } catch (e) {
+      // no-op
+    }
+  })();
+
+  // ----------------------------
   // Autoscroll: menu to top
   // - waits for: (1) minimum delay (banner time) AND (2) events rendered
   // - does NOT depend on window 'load' (so it still works if called after load)
@@ -461,6 +494,20 @@ filtered
       readyPromise: eventsReady,
       menuId: "menu",
     });
+
+    // Sticky mobile CTA: Buy Tickets (conversion boost)
+    (function addStickyMobileCta(){
+      try {
+        if (document.querySelector(".sticky-mobile-cta")) return;
+        const a = document.createElement("a");
+        a.className = "sticky-mobile-cta";
+        // Mobile sticky CTA should take users to the full chronological list
+        a.href = "/all-shows.html";
+        a.textContent = "Buy Tickets";
+        a.setAttribute("aria-label", "Buy tickets - view all upcoming shows");
+        document.body.appendChild(a);
+      } catch (e) { /* no-op */ }
+    })();
   });
 
 

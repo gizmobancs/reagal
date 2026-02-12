@@ -1,11 +1,16 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
+const compression = require("compression");
 const path = require("path");
 
 const app = express();
 app.disable("x-powered-by");
 const PORT = process.env.PORT || 3000;
+
+// Simple in-memory cache for SEO endpoints (prevents crawler bursts hammering TicketSource)
+const SITEMAP_TTL_MS = parseInt(process.env.SITEMAP_TTL_MS || "", 10) || 6 * 60 * 60 * 1000; // default 6 hours
+let sitemapCache = { xml: null, ts: 0, etag: null };
 
 /**
  * IMPORTANT:
@@ -42,6 +47,7 @@ const SEO_FLAGS = {
 app.set("trust proxy", 1);
 
 app.use(cors());
+app.use(compression());
 
 app.use(
   express.static(path.join(__dirname, "public"), {
@@ -115,6 +121,11 @@ function toTimeLabel(iso) {
 }
 
 function getBaseUrl(req) {
+  // Prefer an explicit public base URL so canonicals/sitemap/schema remain correct behind proxies/CDNs.
+  // Example: https://www.reagalevents.com
+  if (PUBLIC_BASE_URL) {
+    return PUBLIC_BASE_URL.replace(/\/+$/, "");
+  }
   const proto = req.headers["x-forwarded-proto"] || req.protocol;
   return `${proto}://${req.get("host")}`;
 }
@@ -502,27 +513,52 @@ function renderShell({
   </main>
 
   <footer>
-    <div class="footer-container">
-      <div class="social-links">
-        <a href="https://www.facebook.com/story.php?story_fbid=610427098343014&id=100081271867855" target="_blank" class="social-icon" rel="noopener">
-          <i class="fa-brands fa-facebook-f"></i>
-        </a>
-        <a href="https://www.tiktok.com/@the.wonder.circus" target="_blank" class="social-icon" rel="noopener">
-          <i class="fa-brands fa-tiktok"></i>
-        </a>
-        <a href="https://www.instagram.com/wondercircus_circus_of_wonders/" target="_blank" class="social-icon" rel="noopener">
-          <i class="fa-brands fa-instagram"></i>
-        </a>
-      </div>
-      <p class="footer-text">&copy; ${year} Reagal Events. All rights reserved.</p>
-      <div class="ticketsource-button">
-        <a href="https://www.ticketsource.co.uk/reagalevents">
-          <img border="0" width="130" height="56" alt="Book now"
-          src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png">
-        </a>
-      </div>
+<div class="footer-container">
+  <div class="footer-left">
+    <div class="social-links">
+      <a class="social-icon" href="https://www.facebook.com/Reagalevents" rel="noopener" target="_blank" aria-label="Reagal Events on Facebook">
+        <i class="fa-brands fa-facebook-f"></i>
+      </a>
+      <a class="social-icon" href="https://www.tiktok.com/@the.wonder.circus" rel="noopener" target="_blank" aria-label="The Wonder Circus on TikTok">
+        <i class="fa-brands fa-tiktok"></i>
+      </a>
     </div>
-  </footer>
+  </div>
+
+  <div class="footer-center footer-authority">
+    <p class="footer-authority-title"><strong>Reagal Events</strong></p>
+    <p class="footer-authority-text">
+      A traditional touring circus bringing family-friendly live entertainment to towns across the UK.
+      Explore our tour locations, learn about life on the road, and find official media assets.
+    </p>
+    <div class="footer-authority-links">
+      <a href="/press-media.html">Press &amp; Media</a>
+      <span class="footer-link-sep">•</span>
+      <a href="/how-a-traditional-touring-circus-works.html">How it works</a>
+      <span class="footer-link-sep">•</span>
+      <a href="/life-on-the-road-with-reagal-events.html">Life on the road</a>
+      <span class="footer-link-sep">•</span>
+      <a href="/circus-animal-welfare-standards.html">Animal welfare</a>
+    </div>
+  </div>
+
+  <div class="footer-right">
+    <div class="ticketsource-button">
+      <a href="https://www.ticketsource.co.uk/Reagalevents" rel="noopener" target="_blank">
+        <img src="https://www.ticketsource.co.uk/images/bookNow/bookNow-black-small.png" alt="Book now" width="130" height="56" loading="lazy"/>
+      </a>
+    </div>
+    <div class="footer-nap">
+      <p><strong>Reagal Events</strong></p>
+      <p><a href="tel:07719877422">07719 877422</a></p>
+      <p>United Kingdom</p>
+      <p>Animal licence number: 19/00613/AWEA</p>
+    </div>
+  </div>
+
+  <p class="footer-text">© 2026 Reagal Events. All rights reserved.</p>
+</div>
+</footer>
 
   <!-- Autoscroll: bring menu to top, but only after:
        - minimum banner time (2.5s), and
@@ -585,6 +621,7 @@ function renderShell({
       });
     })();
   </script>
+  <script src="/script.js" defer></script>
 </body>
 </html>`;
 }
@@ -872,6 +909,18 @@ if (SEO_FLAGS.enableSitemap) {
     try {
       const baseUrl = getBaseUrl(req);
 
+      // If cache is fresh, serve it immediately
+      const now = Date.now();
+      if (sitemapCache.xml && now - sitemapCache.ts < SITEMAP_TTL_MS) {
+        if (sitemapCache.etag && req.headers["if-none-match"] === sitemapCache.etag) {
+          return res.status(304).end();
+        }
+        res.setHeader("Content-Type", "application/xml; charset=utf-8");
+        if (sitemapCache.etag) res.setHeader("ETag", sitemapCache.etag);
+        res.setHeader("Cache-Control", "public, max-age=3600"); // allow short CDN/browser caching too
+        return res.status(200).send(sitemapCache.xml);
+      }
+
       const staticPaths = [
   "/",
   "/all-shows.html",
@@ -889,6 +938,12 @@ if (SEO_FLAGS.enableSitemap) {
   "/about-our-beautiful-animals.html",
   "/about-life-on-the-road.html",
   "/about-our-trucks-and-transport.html",
+
+  // Authority pages
+  "/press-media.html",
+  "/how-a-traditional-touring-circus-works.html",
+  "/life-on-the-road-with-reagal-events.html",
+  "/circus-animal-welfare-standards.html",
 ];
 
 
@@ -911,7 +966,11 @@ ${urls
   .join("\n")}
 </urlset>`;
 
-      res.type("application/xml").send(xml);
+      const etag = "W/\"" + Buffer.from(xml).length + "-" + Date.now().toString(16) + "\"" ;
+      sitemapCache = { xml, ts: Date.now(), etag };
+      res.setHeader("ETag", etag);
+      res.setHeader("Cache-Control", "public, max-age=3600");
+      res.type("application/xml; charset=utf-8").send(xml);
     } catch (e) {
       console.error("Error /sitemap.xml:", e);
       res.status(500).type("text/plain").send("Error building sitemap");
@@ -1128,7 +1187,8 @@ app.get("/circus-in/:townSlug", async (req, res) => {
     const weekendLine = buildWeekendLine(townObj);
     const tourNowNextHtml = buildTourNowNextHtml(townIndex);
 
-    const title = `Family Friendly Circus in ${townName} | Reagal Events`;
+    const showYear = new Date(townObj.startDateISO).getFullYear();
+    const title = `🎪 Circus in ${townName} ${showYear} – Family Touring Show | Reagal Events`;
     const desc = `Family-friendly circus and entertainment in ${townName}. ${badgeText.replace(
       /^[^\w]+/,
       ""
@@ -1360,6 +1420,8 @@ app.get("/circus-in/:townSlug", async (req, res) => {
           ${tourNowNextHtml}
 
           <p class="desc">${escapeHtml(autoDesc)}</p>
+
+          <p class="extra" style="margin-top:12px;">Planning your visit? Read our <a href="/plan-your-visit.html">Plan Your Visit</a> guide, see our <a href="/circus-animal-welfare-standards.html">animal welfare standards</a>, or explore <a href="/life-on-the-road-with-reagal-events.html">life on the road</a> with Reagal Events.</p>
 
           ${familyLine ? `<p class="extra" style="opacity:0.95;">${escapeHtml(familyLine)}</p>` : ""}
 

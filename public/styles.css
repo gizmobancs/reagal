@@ -20,13 +20,25 @@ body {
   margin: 0;
   padding: 0;
 
-  background: url('background.webp') no-repeat center center fixed;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  /* Background is rendered via #bg-layer so desktop browser zoom scales
+     the entire page consistently (fixed-attachment backgrounds can appear
+     to stay static while other elements zoom). */
+  --bg-image: url('background.webp');
+  background: none;
 
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+/* Fixed background layer that behaves correctly under desktop zoom */
+#bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* Sticky-ish footer structure */
@@ -49,8 +61,7 @@ html, body {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  background: url('background.webp') no-repeat center center fixed;
-  background-size: cover;
+  background: transparent;
 }
 
 /* -------------------------
@@ -239,18 +250,40 @@ section {
 /* -------------------------
    Footer
 ------------------------- */
+
+/* -------------------------
+   Links
+------------------------- */
+/* Default links: keep readable (white + underline) for body content */
+a { color: #ffffff; }
+main a, .page-title-box a { text-decoration: underline; text-underline-offset: 2px; }
+main a:hover, .page-title-box a:hover { opacity: 0.9; }
+
+/* Navigation + button-style links should not be underlined */
+nav a, #menu a, .social-icon, .ticketsource-button a,
+.footer-authority-links a { text-decoration: none; }
+
+/* -------------------------
+   Footer
+------------------------- */
 .footer-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
   padding: 1em;
   background-color: rgba(0, 0, 0, 0.4);
-  color: white;
+  border-radius: 15px;
+  margin-top: 30px;
   width: 100%;
 }
 
-.social-links { display: flex; gap: 15px; }
+.footer-left { display: flex; align-items: center; justify-content: flex-start; }
+.footer-center { flex: 1; text-align: center; }
+.footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; text-align: right; }
 
+.social-links { display: flex; gap: 15px; }
 .social-icon {
   font-size: 24px;
   color: white;
@@ -259,12 +292,49 @@ section {
 .social-icon:hover { color: #ffcc00; transform: scale(1.2); }
 
 .footer-text {
+  width: 100%;
   text-align: center;
-  flex-grow: 1;
   font-size: 1rem;
+  margin-top: 6px;
 }
 
 .ticketsource-button img { width: 130px; height: 56px; }
+
+.footer-nap p { margin: 2px 0; }
+
+/* Authority centre block (button-style links) */
+.footer-authority-title { margin: 0; }
+.footer-authority-text { margin: 6px 0 10px; font-size: 0.95rem; line-height: 1.45; }
+.footer-authority-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+/* Hide separators when using pill links */
+.footer-authority-links .footer-link-sep { display: none; }
+
+.footer-authority-links a {
+  font-weight: 800;
+  padding: 8px 12px;
+  border-radius: 14px;
+  color: #fff;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.footer-authority-links a:hover {
+  background: rgba(128, 0, 255, 0.55);
+}
+
+/* Footer responsive */
+@media (max-width: 800px) {
+  .footer-container { justify-content: center; text-align: center; }
+  .footer-left, .footer-right { width: 100%; justify-content: center; align-items: center; text-align: center; }
+  .footer-right { align-items: center; }
+  .social-links { justify-content: center; }
+}
+
 
 /* -------------------------
    Events (All Shows / Tour pages)
@@ -511,9 +581,7 @@ section {
    Halloween page theme overrides
 ------------------------- */
 body.halloween-page {
-  background: url('Hbackground.webp') no-repeat center center fixed;
-  background-size: cover;
-  background-position: center;
+  --bg-image: url('Hbackground.webp');
 }
 
 body.halloween-page .banner2-container {
@@ -720,6 +788,62 @@ body.halloween-page p {
   text-align: center;
 }
 
+
+
+/* Reusable black glass panel (used on new content pages) */
+.glass-box{
+  max-width: 1100px;
+  margin: 18px auto 14px auto;
+  padding: 16px 18px;
+  border-radius: 18px;
+
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  text-align: left;
+}
+.glass-box h2, .glass-box h3{ text-align: left; }
+
+.article-hero{
+  margin: 10px 0 14px;
+}
+.article-hero img{
+  width: 100%;
+  height: auto;
+  max-height: 440px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+}
+
+/* Press summary: slightly larger for readability */
+.press-summary{
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+.licence-number{
+  margin: 10px 0 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* Footer authority link buttons (keep the "boxed" look) */
+.footer-authority-links a.footer-link-button{
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.22);
+  text-decoration: none;
+  color: #fff;
+  line-height: 1;
+}
+.footer-authority-links a.footer-link-button:hover{
+  background: rgba(0,0,0,0.48);
+  border-color: rgba(255,255,255,0.34);
+}
 .page-title-box,
 .page-title-box * {
   color: #fff;
@@ -947,8 +1071,10 @@ body.halloween-page p {
   .footer-nap{ text-align: center; }
 }
 
-/* Mobile portrait: keep menu clear of welcome title box (tight spacing) */
-@media (max-width: 600px) {
+/* Mobile portrait (touch devices only): keep menu clear of welcome title box (tight spacing)
+   Note: limiting to coarse pointers prevents desktop browser zoom from accidentally
+   triggering mobile breakpoint nudges. */
+@media (max-width: 600px) and (pointer: coarse) {
   #menu{
     position: relative;
     z-index: 5;
@@ -963,8 +1089,9 @@ body.halloween-page p {
   }
 }
 
-/* Foldable / medium widths: nudge "Proudly Presents" up so it sits on the banner join */
-@media (min-width: 600px) and (max-width: 900px) {
+/* Foldable / medium widths (touch devices only): nudge "Proudly Presents" up so it sits on the banner join
+   Note: limiting to coarse pointers prevents desktop browser zoom from triggering this rule. */
+@media (min-width: 600px) and (max-width: 900px) and (pointer: coarse) {
   header h2.circus-font {
     position: absolute;
     left: 50%;
@@ -997,4 +1124,155 @@ body.halloween-page p {
 /* Desktop ~15% larger */
 @media (min-width: 1024px) {
   .banner2-container .circus-font { font-size: 1.15em; }
+}
+
+
+/* -------------------------
+   FAQ (homepage)
+------------------------- */
+.faq details {
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 10px 0;
+  background: rgba(0,0,0,0.25);
+}
+.faq summary {
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq details[open] summary { margin-bottom: 8px; }
+.faq p { margin: 0; line-height: 1.45; }
+
+/* Simple list */
+.simple-link-list { margin: 10px 0 0 18px; }
+.simple-link-list li { margin: 6px 0; }
+
+
+/* Link readability: white + underline for body content */
+a{ color:#fff; }
+main a{ text-decoration: underline; text-underline-offset: 3px; }
+
+/* Exceptions */
+nav a, .social-links a, .footer-authority-links a.footer-link-button, .ticketsource-button a{
+  text-decoration: none !important;
+}
+
+
+/* -------------------------
+   Sticky Mobile CTA
+------------------------- */
+.sticky-mobile-cta{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 14px;
+  z-index: 9999;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.28);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+}
+@media (min-width: 901px){
+  .sticky-mobile-cta{ display:none; }
+}
+@media (max-width: 900px){
+  body{ padding-bottom: 72px; }
+}
+
+/* Trust strip (homepage) */
+.trust-strip{ text-align:center; }
+.trust-strip .trust-items{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:10px; }
+.trust-pill{ display:inline-block; padding:10px 14px; border-radius:14px; background: rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.22); color:#fff; font-weight:800; }
+
+/* Inline links: white + underline (readability) */
+main a{ color:#fff; text-decoration: underline; text-underline-offset: 3px; }
+/* keep button/box links looking like buttons */
+.town-booknow, .footer-authority-link, nav a{ text-decoration: none; }
+
+
+/* FAQ dropdowns */
+details.faq-item{ width: min(950px, 96%); margin: 10px auto; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.22); border-radius: 16px; padding: 12px 14px; }
+details.faq-item summary{ cursor:pointer; font-weight:900; color:#fff; }
+details.faq-item p{ margin:10px 0 0 0; }
+
+
+.press-photo-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.press-photo-grid figure{
+  margin: 0;
+}
+.press-photo-grid img{
+  width: 100%;
+  height: auto;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+}
+.press-photo-grid figcaption{
+  margin-top: 8px;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+@media (max-width: 700px){
+  .press-photo-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Press photo grid */
+.press-photo-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap:14px;
+  align-items:start;
+}
+.press-photo{
+  margin:0;
+}
+.press-photo a img{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:14px;
+}
+.press-photo figcaption{
+  margin-top:8px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.press-photo-caption{
+  font-size:0.95rem;
+  opacity:0.95;
+}
+.press-download-link{
+  display:inline-block;
+  width:fit-content;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.25);
+  background:rgba(0,0,0,0.35);
+  color:#fff;
+  text-decoration:none;
+}
+.press-download-link:hover{
+  text-decoration:underline;
+}
+.press-show-description{
+  font-size:1.05rem;
+  line-height:1.5;
 }
